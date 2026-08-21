@@ -12,9 +12,14 @@
         <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
             <img src="logo.png" alt="حكاية HIKAYA" style="height: 55px; border-radius: 8px; background: #fff; padding: 2px;">
         </a>
+        
         <div style="display: flex; align-items: center; gap: 15px;">
             <a href="index.html" style="color: #e2b714; text-decoration: none; font-weight: bold; font-size: 0.9rem;">الرئيسية</a>
             <a href="submit.html" style="color: #cbd5e1; text-decoration: none; font-size: 0.9rem;">شارك قصتك ✍️</a>
+            <!-- زر إنشاء حساب / تسجيل الدخول -->
+            <button onclick="openAuthModal()" style="background-color: #2e3a52; color: #fff; border: 1px solid #3e4c67; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                تسجيل الدخول / حساب جديد 👤
+            </button>
         </div>
     </header>
 
@@ -24,31 +29,55 @@
         <p style="color: #94a3b8; font-size: 1rem; max-width: 600px; margin: 0 auto 20px auto;">
             استمتع بقراءة أحدث القصص المميزة أو شارك إبداعك الأدبي مع القراء حول العالم!
         </p>
-        <a href="submit.html" style="display: inline-block; background-color: #e2b714; color: #121824; text-decoration: none; padding: 10px 24px; border-radius: 8px; font-weight: bold;">
-            انشر قصتك الآن 🚀
-        </a>
+
+        <!-- شريط البحث والبحث الصوتي -->
+        <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 8px; background-color: #121824; border: 1px solid #2e3a52; padding: 6px; border-radius: 8px;">
+            <input type="text" id="search-input" onkeyup="filterStories()" placeholder="ابحث عن عنوان قصة أو كاتب..." style="flex: 1; background: transparent; border: none; color: #fff; padding: 8px; font-size: 0.95rem; outline: none;">
+            <button onclick="startVoiceSearch()" title="البحث الصوتي" style="background: #2e3a52; border: none; color: #e2b714; font-size: 1.1rem; padding: 8px 12px; border-radius: 6px; cursor: pointer;">
+                🎤
+            </button>
+        </div>
     </section>
 
     <!-- قسم عرض القصص المقبولة تلقائياً -->
     <main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
         <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; text-align: center;">أحدث القصص المنشورة ✨</h2>
 
-        <!-- حاوية عرض القصص المجلوبة من Google Sheets -->
         <div id="stories-container" style="display: grid; gap: 20px;">
             <p style="color: #94a3b8; text-align: center;">جاري تحميل القصص المنشورة...</p>
         </div>
     </main>
 
-    <!-- كود جلب البيانات تلقائياً عند تغيير الحالة إلى "مقبول" -->
+    <!-- النافذة الانبثاقية لتسجيل الدخول / إنشاء حساب -->
+    <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background-color: #1e2638; padding: 30px; border-radius: 12px; border: 1px solid #2e3a52; width: 90%; max-width: 400px; text-align: center; position: relative;">
+            <span onclick="closeAuthModal()" style="position: absolute; top: 10px; left: 15px; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✖</span>
+            <h3 style="color: #fff; margin-bottom: 15px;">انضم إلى منصة حكاية</h3>
+            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px;">سجل دخولك أو أنشئ حساباً لمتابعة أحدث القصص والتفاعل معها.</p>
+            
+            <input type="email" placeholder="البريد الإلكتروني" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
+            <input type="password" placeholder="كلمة المرور" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
+            
+            <button onclick="alert('تم تسجيل الدخول بنجاح!')" style="width: 100%; background: #e2b714; color: #121824; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 15px;">
+                تسجيل الدخول / حساب جديد
+            </button>
+
+            <div style="border-top: 1px solid #2e3a52; padding-top: 15px;">
+                <button onclick="alert('جاري ربط حساب Google...')" style="width: 100%; background: #ffffff; color: #333; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>G</span> تسجيل باستخدام Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- أكواد JavaScript لتشغيل الميزات -->
     <script>
-        // ID جدول Google Sheets الخاص بك
         const sheetID = "1372MSEs4QJJH4LCo1FDw1gxd5SAOA854YRK0prIs7t0";
         const fetchURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
 
         fetch(fetchURL)
             .then(res => res.text())
             .then(data => {
-                // تنظيف الاستجابة القادمة من جوجل وتحويلها لنص مجرد
                 const json = JSON.parse(data.substring(47, data.length - 2));
                 const rows = json.table.rows;
                 const container = document.getElementById("stories-container");
@@ -57,23 +86,21 @@
                 let hasStories = false;
 
                 rows.forEach(row => {
-                    // ترتيب الأعمدة: [0: التاريخ, 1: الاسم, 2: العنوان, 3: التصنيف, 4: النص, 5: الحالة]
                     const author = (row.c[1] && row.c[1].v) ? row.c[1].v : "مجهول";
                     const title = (row.c[2] && row.c[2].v) ? row.c[2].v : "بدون عنوان";
                     const category = (row.c[3] && row.c[3].v) ? row.c[3].v : "عام";
                     const content = (row.c[4] && row.c[4].v) ? row.c[4].v : "";
                     const status = (row.c[5] && row.c[5].v) ? row.c[5].v : "";
 
-                    // التحقق من أن القصة مضاف لها حالة "مقبول"
                     if (status.trim() === "مقبول") {
                         hasStories = true;
                         container.innerHTML += `
-                            <div style="background-color: #1e2638; border-radius: 12px; padding: 25px; border: 1px solid #2e3a52; text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                            <div class="story-card" style="background-color: #1e2638; border-radius: 12px; padding: 25px; border: 1px solid #2e3a52; text-align: right;">
                                 <span style="color: #e2b714; font-size: 0.85rem; font-weight: bold; background-color: #121824; padding: 4px 10px; border-radius: 6px; border: 1px solid #2e3a52;">${category}</span>
-                                <h3 style="color: #ffffff; font-size: 1.4rem; margin: 15px 0 10px 0;">${title}</h3>
+                                <h3 class="story-title" style="color: #ffffff; font-size: 1.4rem; margin: 15px 0 10px 0;">${title}</h3>
                                 <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.8; white-space: pre-line;">${content}</p>
-                                <div style="color: #64748b; font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #2e3a52; padding-top: 10px; display: flex; justify-content: space-between;">
-                                    <span>بقلم: <strong style="color: #94a3b8;">${author}</strong></span>
+                                <div style="color: #64748b; font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #2e3a52; padding-top: 10px;">
+                                    <span>بقلم: <strong class="story-author" style="color: #94a3b8;">${author}</strong></span>
                                 </div>
                             </div>
                         `;
@@ -88,6 +115,62 @@
                 console.error(err);
                 document.getElementById("stories-container").innerHTML = '<p style="color: #ef4444; text-align: center;">تعذر تحميل القصص، تأكد من مشاركة الجدول كـ "عام".</p>';
             });
+
+        // 1. تصفية والبحث في القصص
+        function filterStories() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.story-card');
+
+            cards.forEach(card => {
+                const title = card.querySelector('.story-title').innerText.toLowerCase();
+                const author = card.querySelector('.story-author').innerText.toLowerCase();
+
+                if (title.includes(query) || author.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 2. ميزة البحث الصوتي (Web Speech API)
+        function startVoiceSearch() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            if (!SpeechRecognition) {
+                alert("متصفحك لا يدعم خاصية البحث الصوتي.");
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'ar-SA'; // تفعيل اللغة العربية
+
+            recognition.onstart = function() {
+                document.getElementById('search-input').placeholder = "جاري الاستماع إليك...";
+            };
+
+            recognition.onspeechend = function() {
+                recognition.stop();
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('search-input').value = transcript;
+                document.getElementById('search-input').placeholder = "ابحث عن عنوان قصة أو كاتب...";
+                filterStories();
+            };
+
+            recognition.start();
+        }
+
+        // 3. فتح وإغلاق نافذة الحساب
+        function openAuthModal() {
+            document.getElementById('auth-modal').style.display = 'flex';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
