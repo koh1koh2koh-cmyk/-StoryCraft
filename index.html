@@ -19,27 +19,38 @@
 
     <!-- محتوى الصفحة الرئيسية -->
     <main style="max-width: 1100px; margin: 40px auto; padding: 0 20px;">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <h1 style="color: #ffffff; font-size: 2rem;">عالم الرواية والقصص</h1>
-            <p style="color: #94a3b8;">اختر قصتك المفضلة وابدأ القرّاءة والتفاعل الآن</p>
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #ffffff; font-size: 2rem; margin-bottom: 10px;">عالم الرواية والقصص</h1>
+            <p style="color: #94a3b8;">اختر قصتك المفضلة وابدأ القراءة والتفاعل الآن</p>
+        </div>
+
+        <!-- شريط البحث التفاعلي -->
+        <div style="max-width: 500px; margin: 0 auto 40px auto; position: relative;">
+            <input type="text" id="searchInput" onkeyup="filterStories()" placeholder="🔍 ابحث عن قصة، كاتب، أو تصنيف..." 
+                   style="width: 100%; padding: 12px 20px; border-radius: 30px; border: 1px solid #2e3a52; background-color: #1e2638; color: #ffffff; font-size: 0.95rem; outline: none; box-sizing: border-box; transition: 0.3s;">
         </div>
 
         <!-- شبكة القصص -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        <div id="storiesContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
             
             <!-- بطاقة قصة: قرار على المحك -->
-            <div style="background-color: #1e2638; border-radius: 12px; border: 1px solid #2e3a52; overflow: hidden; display: flex; flex-direction: column;">
+            <div class="story-card" style="background-color: #1e2638; border-radius: 12px; border: 1px solid #2e3a52; overflow: hidden; display: flex; flex-direction: column;">
                 <img src="cover.jpg" alt="غلاف القصة" style="width: 100%; height: 180px; object-fit: cover;">
                 <div style="padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                     <div>
-                        <span style="color: #e2b714; font-size: 0.8rem; font-weight: bold;">إثارة وغموض</span>
-                        <h3 style="color: #fff; margin: 8px 0;">قرار على المحك (100 مليون دولار)</h3>
-                        <p style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">رحلة محمود المليئة بالخداع والغموض من أجل دفع الإيجار والنجاة...</p>
+                        <span class="story-category" style="color: #e2b714; font-size: 0.8rem; font-weight: bold;">إثارة وغموض</span>
+                        <h3 class="story-title" style="color: #fff; margin: 8px 0;">قرار على المحك (100 مليون دولار)</h3>
+                        <p class="story-desc" style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">رحلة محمود المليئة بالخداع والعاصفة المفاجئة والنجاة من القرش...</p>
                     </div>
                     <a href="story.html" style="display: block; text-align: center; background-color: #e2b714; color: #121824; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px;">اقرأ القصة الآن</a>
                 </div>
             </div>
 
+        </div>
+
+        <!-- رسالة عدم وجود نتائج -->
+        <div id="noResults" style="display: none; text-align: center; color: #94a3b8; margin-top: 30px;">
+            لا توجد قصص تطابق بحثك حالياً.
         </div>
     </main>
 
@@ -58,9 +69,32 @@
         </div>
     </div>
 
+    <!-- برمجة البحث والتسجيل -->
     <script>
         function toggleModal(show) { document.getElementById('signupModal').style.display = show ? 'flex' : 'none'; }
         function handleSignup(e) { e.preventDefault(); alert('تم إنشاء الحساب بنجاح!'); toggleModal(false); }
+
+        // دالة تصفية البحث الحية
+        function filterStories() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var cards = document.getElementsByClassName('story-card');
+            var hasResults = false;
+
+            for (var i = 0; i < cards.length; i++) {
+                var title = cards[i].querySelector('.story-title').innerText.toLowerCase();
+                var category = cards[i].querySelector('.story-category').innerText.toLowerCase();
+                var desc = cards[i].querySelector('.story-desc').innerText.toLowerCase();
+
+                if (title.includes(input) || category.includes(input) || desc.includes(input)) {
+                    cards[i].style.display = "flex";
+                    hasResults = true;
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+
+            document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
+        }
     </script>
 </body>
 </html>
