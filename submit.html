@@ -19,59 +19,19 @@
     </header>
 
     <!-- محتوى الصفحة -->
-    <main style="max-width: 700px; margin: 40px auto; padding: 0 20px;">
-        <div style="background-color: #1e2638; border-radius: 16px; border: 1px solid #2e3a52; padding: 30px;">
-            <div style="text-align: center; margin-bottom: 25px;">
-                <h1 style="color: #ffffff; font-size: 1.8rem; margin-bottom: 8px;">شارك قصتك مع العالم ✍️</h1>
-                <p style="color: #94a3b8; font-size: 0.95rem;">هل لديك موهبة في كتابة القصص والروايات؟ أرسل قصتك لمراجعتها ونشرها باسمك على منصة حكاية!</p>
-            </div>
+    <main style="max-width: 600px; margin: 50px auto; padding: 0 20px; text-align: center;">
+        <div style="background-color: #1e2638; border-radius: 16px; border: 1px solid #2e3a52; padding: 40px 25px;">
+            <h1 style="color: #ffffff; font-size: 1.8rem; margin-bottom: 10px;">شارك قصتك مع العالم ✍️</h1>
+            <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin-bottom: 30px;">
+                هل لديك موهبة في كتابة القصص والروايات؟ اضغط على الزر أدناه لإرسال قصتك مباشرة عبر النموذج المجاني ليتم مراجعتها ونشرها باسمك على المنصة!
+            </p>
 
-            <form onsubmit="handleStorySubmit(event)">
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 0.9rem; margin-bottom: 5px;">اسم الكاتب / المستعار *</label>
-                    <input type="text" id="authorName" required placeholder="أدخل اسمك" 
-                           style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2e3a52; background-color: #121824; color: #fff; outline: none; box-sizing: border-box;">
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 0.9rem; margin-bottom: 5px;">عنوان القصة *</label>
-                    <input type="text" id="storyTitle" required placeholder="عنوان مشوق للقصة" 
-                           style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2e3a52; background-color: #121824; color: #fff; outline: none; box-sizing: border-box;">
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 0.9rem; margin-bottom: 5px;">تصنيف القصة *</label>
-                    <select id="storyCategory" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #2e3a52; background-color: #121824; color: #fff; outline: none; box-sizing: border-box;">
-                        <option value="تحري وألغاز">تحري وألغاز</option>
-                        <option value="إثارة وغموض">إثارة وغموض</option>
-                        <option value="رعب ورعب نفسي">رعب ورعب نفسي</option>
-                        <option value="خيال علمي">خيال علمي</option>
-                        <option value="دراما وواقع">دراما وواقع</option>
-                    </select>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 0.9rem; margin-bottom: 5px;">نص القصة الكامل *</label>
-                    <textarea id="storyContent" rows="8" required placeholder="اكتب تفاصيل القصة هنا..." 
-                              style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2e3a52; background-color: #121824; color: #fff; outline: none; box-sizing: border-box; font-family: inherit; resize: vertical;"></textarea>
-                </div><button type="submit" style="width: 100%; background-color: #e2b714; color: #121824; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s;">
-                    إرسال القصة للمراجعة 🚀
-                </button>
-            </form>
-
-            <div id="successMessage" style="display: none; background-color: #064e3b; color: #a7f3d0; padding: 15px; border-radius: 8px; text-align: center; margin-top: 20px; border: 1px solid #059669;">
-                شُكراً لك! تم إرسال قصتك بنجاح، وسيتم مراجعتها ونشرها قريباً على المنصة. ✨
-            </div>
+            <!-- ضع رابطك المنسوخ بين العلامتين "https://docs.google.com/forms/d/e/1FAIpQLSc0SuW9ERZm2mcNDOIdWEUtlLo-uWwxMbaKrrGt7M07t7NY1g/viewform?usp=publish-editor" مكان الرابط أدناه -->
+            <a href="ضع_الرابط_المنسوخ_هنا" target="_blank" 
+               style="display: inline-block; width: 80%; background-color: #e2b714; color: #121824; text-decoration: none; padding: 14px 20px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(226, 183, 20, 0.2);">
+                فتح نموذج كتابة القصة 🚀
+            </a>
         </div>
     </main>
-
-    <script>
-        function handleStorySubmit(event) {
-            event.preventDefault();
-            // إظهار رسالة النجاح وإخفاء النموذج
-            document.querySelector('form').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'block';
-        }
-    </script>
 </body>
 </html>
