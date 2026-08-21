@@ -12,13 +12,13 @@
         <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
             <img src="logo.png" alt="حكاية HIKAYA" style="height: 55px; border-radius: 8px; background: #fff; padding: 2px;">
         </a>
-        <div>
-            <a href="index.html" style="color: #cbd5e1; text-decoration: none; margin-left: 15px; font-size: 0.9rem;">الرئيسية</a>
-            <button onclick="toggleModal(true)" style="background-color: #e2b714; color: #121824; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">إنشاء حساب</button>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="index.html" style="color: #cbd5e1; text-decoration: none; font-size: 0.9rem;">الرئيسية</a>
+            <a href="submit.html" style="color: #e2b714; text-decoration: none; font-weight: bold; font-size: 0.9rem;">شارك قصتك ✍️</a>
         </div>
     </header>
 
-    <!-- الجسم الرئيسي للقصة -->
+    <!-- محتوى القصة -->
     <main style="max-width: 1100px; margin: 30px auto; padding: 0 20px; display: flex; flex-wrap: wrap; gap: 25px;">
         <section style="flex: 2; min-width: 300px; background-color: #1e2638; padding: 25px; border-radius: 16px; border: 1px solid #2e3a52;">
             <div style="width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid #2e3a52;">
@@ -40,13 +40,11 @@
                     كانت الضحية تقود سيارتها في طريق منحدر بمنطقة معزولة، وفجأة اعترضت طريقها سيارة أخرى واصطدمت بها! أغمي على الضحية إثر الاصطدام، فنزل الجاني من سيارته وانهال عليها ضرباً مبرحاً. لكن الضحية نجت بأعجوبة بعد أن قاومت وتظاهرت بالموت تحسباً للنجاة.
                 </blockquote>
 
-                <p>انحصر الشبهة في 3 مشتبه بهم هم: صديق الضحية <strong style="color: #e2b714;">أنس</strong>، وصديقها الآخر <strong style="color: #e2b714;">محمد</strong>، وجارها <strong style="color: #e2b714;">أحمد</strong>.</p>
+                <p>انحصرت الشبهة في 3 مشتبه بهم هم: صديق الضحية <strong style="color: #e2b714;">أنس</strong>، وصديقها الآخر <strong style="color: #e2b714;">محمد</strong>، وجارها <strong style="color: #e2b714;">أحمد</strong>.</p>
 
                 <p>عندما رأى محمود صورة المكان المرفقة بالخبر، أدرك فوراً أنه يعرف غرفة الاستجواب هذه جيداً، فانطلق إلى هناك على الفور. كان الضابط يستعد لاستجواب الضحية فور إفاقتها من الغيبوبة، فدخل محمود وقال بثقة: <em>"يمكنني حل هذه القضية.. اجعلوني أنا من يستجوبها!"</em>.</p>
 
-                <p>استغرب الشرطي ورفض في البداية، لكن بعد إلحاح وإقناع طويل، وافق على إعطاء محمود الفرصة. سأل محمود الضحية مباشرة: <strong>"هل كان المجرم يضربك بيده اليمنى أم اليسرى؟"</strong>، فأجابت الضحية بوضوح: <em>"كان يستخدم يده اليسرى"</em>.</p>
-
-                <p>هنا اشتبه محمود بشخص معين، ولكن أراد دليلاً قاطعاً. ابتكر حيلة ذكية؛ أرسل الشرطي إلى منزل المشتبه به (الجار أحمد) لاستدعائه، وطلب من الشرطي أن يراقب يده فور صدور الإشارة. وعندما وصل الشرطي، أجرى محمود اتصالاُ بالهاتف الأرضي لمنزل أحمد، فطلب الشرطي من أحمد الرد على الهاتف.</p>
+                <p>استغرب الشرطي ورفض في البداية، لكن بعد إلحاح وإقناع طويل، وافق على إعطاء محمود الفرصة. سأل محمود الضحية مباشرة: <strong>"هل كان المجرم يضربك بيده اليمنى أم اليسرى؟"</strong>، فأجابت الضحية بوضوح: <em>"كان يستخدم يده اليسرى"</em>.</p><p>هنا اشتبه محمود بشخص معين، ولكن أراد دليلاً قاطعاً. ابتكر حيلة ذكية؛ أرسل الشرطي إلى منزل المشتبه به (الجار أحمد) لاستدعائه، وطلب من الشرطي أن يراقب يده فور صدور الإشارة. وعندما وصل الشرطي، أجرى محمود اتصالاُ بالهاتف الأرضي لمنزل أحمد، فطلب الشرطي من أحمد الرد على الهاتف.</p>
 
                 <p>أمسك أحمد سماعة الهاتف <strong style="color: #38bdf8;">بيده اليسرى</strong> للرد! فتحدث محمود مقلداً صوت الضحية وطلب منه الحضور فوراً مع الشرطي.</p>
 
@@ -64,7 +62,7 @@
             </div>
             <div id="chatBox" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
                 <div style="background-color: #121824; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; border-right: 3px solid #38bdf8;">
-                    <strong style="color: #38bdf8; display block;">علي:</strong>
+                    <strong style="color: #38bdf8; display: block;">علي:</strong>
                     <span style="color: #e2e8f0;">ذكاء محمود في استخدام الهاتف الأرضي كان حيلة عبقرية!</span>
                 </div>
             </div>
@@ -83,7 +81,7 @@
             if (input.value.trim() !== "") {
                 var msgDiv = document.createElement('div');
                 msgDiv.style.cssText = "background-color: #273349; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; border-right: 3px solid #38bdf8;";
-                msgDiv.innerHTML = '<strong style="color: #38bdf8; display: block;">أنت:</strong><span style="color: #e2e8f0;">' + input.value + '</span>';
+                msgDiv.innerHTML = '<strong style="color: #38bdf8; display: block;">أنت:</strong><span style="color: #e2e8f0;">' + input.value.replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</span>';
                 chatBox.appendChild(msgDiv);
                 chatBox.scrollTop = chatBox.scrollHeight;
                 input.value = '';
