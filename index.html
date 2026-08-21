@@ -6,7 +6,7 @@
     <title>حكاية - منصة القصص والروايات</title>
 
     <style>
-        /* شريط تقدم القراءة في أعلى الصفحة */
+        /* شريط تقدم القراءة أعلى الصفحة */
         #progress-container {
             position: fixed;
             top: 0;
@@ -23,7 +23,7 @@
             transition: width 0.1s ease;
         }
 
-        /* تحسينات التصميم العام */
+        /* التصميم العام للموقع */
         body {
             background-color: #121824;
             color: #e2e8f0;
@@ -33,7 +33,7 @@
             direction: rtl;
         }
 
-        /* تأثيرات الأزرار والبطاقات */
+        /* بطاقات القصص */
         .story-card {
             background-color: #1e2638;
             border-radius: 12px;
@@ -46,6 +46,7 @@
             border-color: #3e4c67;
         }
 
+        /* تنسيق الأزرار */
         .btn-action {
             background: #121824;
             border: 1px solid #2e3a52;
@@ -77,8 +78,8 @@
         <div id="progress-bar"></div>
     </div>
 
-    <!-- الهيدر الشامل -->
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; background-color: #1e2638; border-bottom: 1px solid #2e3a52; sticky; top: 0; z-index: 1000;">
+    <!-- الهيدر العلوي -->
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; background-color: #1e2638; border-bottom: 1px solid #2e3a52; position: sticky; top: 0; z-index: 1000;">
         <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
             <img src="logo.png" alt="حكاية HIKAYA" style="height: 50px; border-radius: 8px; background: #fff; padding: 2px;">
         </a>
@@ -95,14 +96,14 @@
         </div>
     </header>
 
-    <!-- الهيرو / القسم الترحيبي -->
+    <!-- الواجهة الرئيسية -->
     <section style="text-align: center; padding: 40px 20px; background-color: #182030; border-bottom: 1px solid #2e3a52;">
         <h1 style="color: #ffffff; font-size: 2rem; margin-bottom: 10px;">منصة حكاية للقصص والروايات 📖</h1>
         <p style="color: #94a3b8; font-size: 1rem; max-width: 600px; margin: 0 auto 20px auto;">
             استمتع بقراءة أحدث القصص المميزة، استمع إليها صوتياً، أو شارك إبداعك الأدبي!
         </p>
 
-        <!-- حقل البحث مع البحث الصوتي -->
+        <!-- حقل البحث وشريط التحكم -->
         <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 8px; background-color: #121824; border: 1px solid #2e3a52; padding: 6px; border-radius: 8px;">
             <input type="text" id="search-input" onkeyup="filterStories()" placeholder="ابحث عن عنوان قصة أو كاتب..." style="flex: 1; background: transparent; border: none; color: #fff; padding: 8px; font-size: 0.95rem; outline: none;">
             <button onclick="startVoiceSearch()" title="البحث الصوتي" style="background: #2e3a52; border: none; color: #e2b714; font-size: 1.1rem; padding: 8px 12px; border-radius: 6px; cursor: pointer;">
@@ -111,7 +112,7 @@
         </div>
     </section>
 
-    <!-- قسم عرض القصص المنشورة -->
+    <!-- قسم القصص المنشورة -->
     <main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
         <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; text-align: center;">أحدث القصص المنشورة ✨</h2>
         <div id="stories-container" style="display: grid; gap: 25px;">
@@ -270,7 +271,7 @@
             });
         };
 
-        // دالة الإعجابات المعدلة والآمنة
+        // إضافة وإلغاء الإعجاب
         window.toggleLike = async (storyId) => {
             if (!currentUser) return alert("يرجى تسجيل الدخول أولاً للإعجاب بالقصة!");
             
@@ -291,7 +292,7 @@
             }
         };
 
-        // الاستماع المباشر لعدد الإعجابات
+        // الاستماع لعدد الإعجابات
         window.listenToLikes = (storyId) => {
             const likesCollection = collection(db, "likes", String(storyId), "userLikes");
             
@@ -314,41 +315,84 @@
         };
     </script>
 
-    <!-- الأكواد المفيدة الإضافية بـ JavaScript -->
+    <!-- الأكواد الوظيفية وإصلاح الصوت الشامل -->
     <script>
-        // 1. حساب الوقت التقديري لقراءة القصة (كلمة/دقيقة)
+        // تخزين كافة نصوص القصص برمجياً لتفادي مشاكل الرموز وعلامات التنصيص
+        const storiesMap = new Map();
+
+        // 1. حساب وقت القراءة
         function calculateReadingTime(text) {
             const words = text.trim().split(/\s+/).length;
-            const minutes = Math.ceil(words / 150); // متوسط القراءة 150 كلمة في الدقيقة
+            const minutes = Math.ceil(words / 150);
             return `${minutes} دقيقة قراءة`;
         }
 
-        // 2. القراءة الصوتية للقصة (Text-to-Speech)
-        let isSpeaking = false;
-        function toggleSpeech(storyId, text) {
-            if ('speechSynthesis' in window) {
-                if (isSpeaking) {
-                    window.speechSynthesis.cancel();
-                    isSpeaking = false;
-                    document.getElementById(`speak-btn-${storyId}`).innerText = "🔊 استمع للقصة";
-                } else {
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'ar-SA';
-                    utterance.rate = 0.9;
-                    utterance.onend = () => {
-                        isSpeaking = false;
-                        document.getElementById(`speak-btn-${storyId}`).innerText = "🔊 استمع للقصة";
-                    };
-                    window.speechSynthesis.speak(utterance);
-                    isSpeaking = true;
-                    document.getElementById(`speak-btn-${storyId}`).innerText = "⏹️ إيقاف الصوت";
-                }
-            } else {
+        // 2. محرك القراءة الصوتية المصحح بالكامل
+        let currentSpeakingId = null;
+
+        function toggleSpeech(storyId) {
+            if (!('speechSynthesis' in window)) {
                 alert("متصفحك لا يدعم خاصية القراءة الصوتية.");
+                return;
             }
+
+            const synth = window.speechSynthesis;
+            const btn = document.getElementById(`speak-btn-${storyId}`);
+
+            // إذا كان الصوت يعمل على نفس القصة، قم ببيان الإيقاف
+            if (synth.speaking && currentSpeakingId === storyId) {
+                synth.cancel();
+                currentSpeakingId = null;
+                btn.innerText = "🔊 استمع للقصة";
+                return;
+            }
+
+            // إيقاف أي قراءة قديمة لقصة أخرى
+            synth.cancel();
+            if (currentSpeakingId && document.getElementById(`speak-btn-${currentSpeakingId}`)) {
+                document.getElementById(`speak-btn-${currentSpeakingId}`).innerText = "🔊 استمع للقصة";
+            }
+
+            const textToRead = storiesMap.get(storyId);
+            if (!textToRead) return;
+
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.lang = 'ar-SA';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+
+            // اختيار حزمة اللغة العربية المتاحة بالجهاز
+            const voices = synth.getVoices();
+            const arabicVoice = voices.find(voice => voice.lang.includes('ar'));
+            if (arabicVoice) utterance.voice = arabicVoice;
+
+            utterance.onstart = () => {
+                currentSpeakingId = storyId;
+                btn.innerText = "⏹️ إيقاف الصوت";
+            };
+
+            utterance.onend = () => {
+                currentSpeakingId = null;
+                btn.innerText = "🔊 استمع للقصة";
+            };
+
+            utterance.onerror = (e) => {
+                console.error("خطأ الصوت:", e);
+                currentSpeakingId = null;
+                btn.innerText = "🔊 استمع للقصة";
+            };
+
+            synth.speak(utterance);
         }
 
-        // 3. مشاركة القصة عبر WhatsApp أو نسخ الرابط
+        // تحميل حزمة الأصوات بشكل مسبق للتأكد من جاهزية المحرك الصوتي
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
+
+        // 3. مشاركة القصة
         function shareStory(title) {
             const shareText = `إليك قصة رائعة بعنوان "${title}" على موقع حكاية:\n${window.location.href}`;
             if (navigator.share) {
@@ -359,7 +403,7 @@
             }
         }
 
-        // 4. وضع القراءة المريح (تكبير الخط)
+        // 4. وضع القراءة المريح
         function toggleReaderMode(storyId) {
             const content = document.getElementById(`story-text-${storyId}`);
             if (content.style.fontSize === "1.2rem") {
@@ -371,7 +415,7 @@
             }
         }
 
-        // 5. شريط تقدم القراءة في أعلى الصفحة
+        // 5. شريط تقدم القراءة
         window.onscroll = function() {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -402,6 +446,10 @@
 
                     if (status.trim() === "مقبول") {
                         const storyId = `story_${index}`;
+                        
+                        // حفظ النص كاملاً في الـ Map لتشغيل القراءة الصوتية بأمان
+                        storiesMap.set(storyId, content);
+
                         const readingTime = calculateReadingTime(content);
 
                         container.innerHTML += `
@@ -414,14 +462,14 @@
                                 <h3 class="story-title" style="color: #ffffff; font-size: 1.4rem; margin: 15px 0 10px 0;">${title}</h3>
                                 <p id="story-text-${storyId}" style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.8; white-space: pre-line; transition: font-size 0.3s;">${content}</p>
                                 
-                                <div style="display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #2e3a52; padding-top: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #2e3a52; padding-top: 10px; flex-wrap: wrap; gap: 10px;">
                                     <span>بقلم: <strong class="story-author" style="color: #94a3b8;">${author}</strong></span>
                                     
-                                    <div style="display: flex; gap: 8px;">
+                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                                         <!-- زر القراءة الصوتية -->
-                                        <button id="speak-btn-${storyId}" onclick="toggleSpeech('${storyId}', \`${content.replace(/`/g, '')}\`)" class="btn-action">🔊 استمع للقصة</button>
+                                        <button id="speak-btn-${storyId}" onclick="toggleSpeech('${storyId}')" class="btn-action">🔊 استمع للقصة</button>
                                         
-                                        <!-- زر القراءة المريحة -->
+                                        <!-- زر وضع القراءة -->
                                         <button onclick="toggleReaderMode('${storyId}')" class="btn-action" title="تكبير الخط">👁️ وضع القراءة</button>
                                         
                                         <!-- زر المشاركة -->
@@ -456,7 +504,7 @@
                 });
             });
 
-        // 6. البحث الفوري في القصص
+        // 6. تصفية القصص بالبحث
         function filterStories() {
             const query = document.getElementById('search-input').value.toLowerCase();
             document.querySelectorAll('.story-card').forEach(card => {
