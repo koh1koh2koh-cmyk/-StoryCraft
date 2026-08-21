@@ -16,10 +16,13 @@
         <div style="display: flex; align-items: center; gap: 15px;">
             <a href="index.html" style="color: #e2b714; text-decoration: none; font-weight: bold; font-size: 0.9rem;">الرئيسية</a>
             <a href="submit.html" style="color: #cbd5e1; text-decoration: none; font-size: 0.9rem;">شارك قصتك ✍️</a>
-            <!-- زر إنشاء حساب / تسجيل الدخول -->
-            <button onclick="openAuthModal()" style="background-color: #2e3a52; color: #fff; border: 1px solid #3e4c67; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                تسجيل الدخول / حساب جديد 👤
-            </button>
+            
+            <!-- أزرار الحساب والتسجيل -->
+            <div id="user-section">
+                <button id="auth-btn" onclick="openAuthModal()" style="background-color: #2e3a52; color: #fff; border: 1px solid #3e4c67; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                    تسجيل الدخول / حساب جديد 👤
+                </button>
+            </div>
         </div>
     </header>
 
@@ -39,38 +42,114 @@
         </div>
     </section>
 
-    <!-- قسم عرض القصص المقبولة تلقائياً -->
+    <!-- قسم عرض القصص المقبولة -->
     <main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
         <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; text-align: center;">أحدث القصص المنشورة ✨</h2>
-
         <div id="stories-container" style="display: grid; gap: 20px;">
             <p style="color: #94a3b8; text-align: center;">جاري تحميل القصص المنشورة...</p>
         </div>
     </main>
 
-    <!-- النافذة الانبثاقية لتسجيل الدخول / إنشاء حساب -->
+    <!-- نافذة تسجيل الدخول الفعلية -->
     <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;">
         <div style="background-color: #1e2638; padding: 30px; border-radius: 12px; border: 1px solid #2e3a52; width: 90%; max-width: 400px; text-align: center; position: relative;">
             <span onclick="closeAuthModal()" style="position: absolute; top: 10px; left: 15px; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✖</span>
             <h3 style="color: #fff; margin-bottom: 15px;">انضم إلى منصة حكاية</h3>
-            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px;">سجل دخولك أو أنشئ حساباً لمتابعة أحدث القصص والتفاعل معها.</p>
             
-            <input type="email" placeholder="البريد الإلكتروني" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
-            <input type="password" placeholder="كلمة المرور" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
+            <input type="email" id="auth-email" placeholder="البريد الإلكتروني" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
+            <input type="password" id="auth-password" placeholder="كلمة المرور" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
             
-            <button onclick="alert('تم تسجيل الدخول بنجاح!')" style="width: 100%; background: #e2b714; color: #121824; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 15px;">
-                تسجيل الدخول / حساب جديد
-            </button>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button onclick="handleLogin()" style="flex: 1; background: #e2b714; color: #121824; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">
+                    تسجيل الدخول
+                </button>
+                <button onclick="handleSignUp()" style="flex: 1; background: #2e3a52; color: #fff; font-weight: bold; padding: 10px; border: 1px solid #3e4c67; border-radius: 6px; cursor: pointer;">
+                    حساب جديد
+                </button>
+            </div>
 
             <div style="border-top: 1px solid #2e3a52; padding-top: 15px;">
-                <button onclick="alert('جاري ربط حساب Google...')" style="width: 100%; background: #ffffff; color: #333; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <span>G</span> تسجيل باستخدام Google
+                <button onclick="handleGoogleLogin()" style="width: 100%; background: #ffffff; color: #333; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    تسجيل باستخدام Google 🚀
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- أكواد JavaScript لتشغيل الميزات -->
+    <!-- ربط مكتبات Firebase والربط المباشر بمشروعك -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // بيانات مشروعك الفعلي hikaya-5ff25
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
+            authDomain: "hikaya-5ff25.firebaseapp.com",
+            projectId: "hikaya-5ff25",
+            storageBucket: "hikaya-5ff25.firebasestorage.app",
+            messagingSenderId: "1031922678593",
+            appId: "1:1031922678593:web:c242a9e36ad40becc9bfc0",
+            measurementId: "G-KR76L2WSZ7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // متابعة حالة المستخدم والتسجيل الحقيقي
+        onAuthStateChanged(auth, (user) => {
+            const userSection = document.getElementById('user-section');
+            if (user) {
+                userSection.innerHTML = `
+                    <span style="color: #e2b714; font-size: 0.85rem; margin-left: 10px;">مرحباً، ${user.displayName || user.email.split('@')[0]}</span>
+                    <button onclick="window.logoutUser()" style="background-color: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">خروج</button>
+                `;
+                closeAuthModal();
+            } else {
+                userSection.innerHTML = `
+                    <button onclick="openAuthModal()" style="background-color: #2e3a52; color: #fff; border: 1px solid #3e4c67; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                        تسجيل الدخول / حساب جديد 👤
+                    </button>
+                `;
+            }
+        });
+
+        // دالة إنشاء حساب جديد
+        window.handleSignUp = () => {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if(!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور!");
+            
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(() => alert("تم إنشاء الحساب وتسجيل الدخول بنجاح!"))
+                .catch((err) => alert("خطأ: " + err.message));
+        };
+
+        // دالة تسجيل الدخول
+        window.handleLogin = () => {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if(!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور!");
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => alert("تم تسجيل الدخول بنجاح!"))
+                .catch((err) => alert("بيانات الدخول غير صحيحة!"));
+        };
+
+        // تسجيل الدخول بواسطة Google
+        window.handleGoogleLogin = () => {
+            signInWithPopup(auth, provider)
+                .then(() => alert("تم الدخول بحساب Google بنجاح!"))
+                .catch((err) => alert("حدث خطأ أثناء الاتصال بـ Google"));
+        };
+
+        // تسجيل الخروج
+        window.logoutUser = () => {
+            signOut(auth);
+        };
+    </script>
+
+    <!-- السكريبت الخاص بقراءة القصص والبحث -->
     <script>
         const sheetID = "1372MSEs4QJJH4LCo1FDw1gxd5SAOA854YRK0prIs7t0";
         const fetchURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
@@ -107,70 +186,32 @@
                     }
                 });
 
-                if (!hasStories) {
-                    container.innerHTML = '<p style="color: #94a3b8; text-align: center;">لا توجد قصص معروضة حالياً.</p>';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById("stories-container").innerHTML = '<p style="color: #ef4444; text-align: center;">تعذر تحميل القصص، تأكد من مشاركة الجدول كـ "عام".</p>';
+                if (!hasStories) container.innerHTML = '<p style="color: #94a3b8; text-align: center;">لا توجد قصص معروضة حالياً.</p>';
             });
 
-        // 1. تصفية والبحث في القصص
         function filterStories() {
             const query = document.getElementById('search-input').value.toLowerCase();
-            const cards = document.querySelectorAll('.story-card');
-
-            cards.forEach(card => {
+            document.querySelectorAll('.story-card').forEach(card => {
                 const title = card.querySelector('.story-title').innerText.toLowerCase();
                 const author = card.querySelector('.story-author').innerText.toLowerCase();
-
-                if (title.includes(query) || author.includes(query)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+                card.style.display = (title.includes(query) || author.includes(query)) ? 'block' : 'none';
             });
         }
 
-        // 2. ميزة البحث الصوتي (Web Speech API)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-            if (!SpeechRecognition) {
-                alert("متصفحك لا يدعم خاصية البحث الصوتي.");
-                return;
-            }
-
+            if (!SpeechRecognition) return alert("المتصفح لا يدعم البحث الصوتي.");
             const recognition = new SpeechRecognition();
-            recognition.lang = 'ar-SA'; // تفعيل اللغة العربية
-
-            recognition.onstart = function() {
-                document.getElementById('search-input').placeholder = "جاري الاستماع إليك...";
-            };
-
-            recognition.onspeechend = function() {
-                recognition.stop();
-            };
-
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                document.getElementById('search-input').value = transcript;
-                document.getElementById('search-input').placeholder = "ابحث عن عنوان قصة أو كاتب...";
+            recognition.lang = 'ar-SA';
+            recognition.onresult = (e) => {
+                document.getElementById('search-input').value = e.results[0][0].transcript;
                 filterStories();
             };
-
             recognition.start();
         }
 
-        // 3. فتح وإغلاق نافذة الحساب
-        function openAuthModal() {
-            document.getElementById('auth-modal').style.display = 'flex';
-        }
-
-        function closeAuthModal() {
-            document.getElementById('auth-modal').style.display = 'none';
-        }
+        function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
+        function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
     </script>
 </body>
 </html>
