@@ -1,0 +1,60 @@
+.modal-card {
+    background-color: #1e2638;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #2e3a52;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 1.8rem;
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+.modal-card h2 {
+    color: #ffffff;
+    margin-top: 0;
+}
+
+.modal-subtitle {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #2e3a52;
+    background-color: #121824;
+    color: #ffffff;
+}
+
+.btn-submit {
+    width: 100%;
+    background-color: #e2b714;
+    color: #121824;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
