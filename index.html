@@ -3,111 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حكاية - الرئيسية</title>
+    <title>حكاية - الصفحة الرئيسية</title>
 </head>
 <body style="background-color: #121824; color: #e2e8f0; font-family: sans-serif; margin: 0; padding: 0 0 50px 0; direction: rtl;">
 
-    <!-- الهيدر الشامل مع الشعار -->
+    <!-- الهيدر الشامل -->
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; background-color: #1e2638; border-bottom: 1px solid #2e3a52;">
         <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
             <img src="logo.png" alt="حكاية HIKAYA" style="height: 55px; border-radius: 8px; background: #fff; padding: 2px;">
         </a>
-        <div>
-            <button onclick="toggleModal(true)" style="background-color: #e2b714; color: #121824; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer;">إنشاء حساب</button>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <a href="index.html" style="color: #e2b714; text-decoration: none; font-weight: bold; font-size: 0.9rem;">الرئيسية</a>
+            <a href="submit.html" style="color: #cbd5e1; text-decoration: none; font-size: 0.9rem;">شارك قصتك ✍️</a>
         </div>
     </header>
 
-    <!-- محتوى الصفحة الرئيسية -->
-    <main style="max-width: 1100px; margin: 40px auto; padding: 0 20px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #ffffff; font-size: 2rem; margin-bottom: 10px;">عالم الرواية والقصص</h1>
-            <p style="color: #94a3b8;">اختر قصتك المفضلة وابدأ القراءة والتفاعل الآن</p>
-        </div>
+    <!-- الهيرو / القسم الترحيبي -->
+    <section style="text-align: center; padding: 40px 20px; background-color: #182030; border-bottom: 1px solid #2e3a52;">
+        <h1 style="color: #ffffff; font-size: 2rem; margin-bottom: 10px;">منصة حكاية للقصص والروايات 📖</h1>
+        <p style="color: #94a3b8; font-size: 1rem; max-width: 600px; margin: 0 auto 20px auto;">
+            استمتع بقراءة أحدث القصص المميزة أو شارك إبداعك الأدبي مع القراء حول العالم!
+        </p>
+        <a href="submit.html" style="display: inline-block; background-color: #e2b714; color: #121824; text-decoration: none; padding: 10px 24px; border-radius: 8px; font-weight: bold;">
+            انشر قصتك الآن 🚀
+        </a>
+    </section>
 
-        <!-- شريط البحث التفاعلي -->
-        <div style="max-width: 500px; margin: 0 auto 40px auto; position: relative;">
-            <input type="text" id="searchInput" onkeyup="filterStories()" placeholder="🔍 ابحث عن قصة، كاتب، أو تصنيف..." 
-                   style="width: 100%; padding: 12px 20px; border-radius: 30px; border: 1px solid #2e3a52; background-color: #1e2638; color: #ffffff; font-size: 0.95rem; outline: none; box-sizing: border-box;">
-        </div>
+    <!-- قسم عرض القصص المقبولة تلقائياً -->
+    <main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+        <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; text-align: center;">أحدث القصص المنشورة ✨</h2>
 
-        <!-- شبكة القصص -->
-        <div id="storiesContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-            
-            <!-- القصة الأولى: قرار على المحك -->
-            <div class="story-card" style="background-color: #1e2638; border-radius: 12px; border: 1px solid #2e3a52; overflow: hidden; display: flex; flex-direction: column;">
-                <img src="cover.jpg" alt="غلاف القصة" style="width: 100%; height: 180px; object-fit: cover;">
-                <div style="padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                    <div>
-                        <span class="story-category" style="color: #e2b714; font-size: 0.8rem; font-weight: bold;">إثارة وغموض</span>
-                        <h3 class="story-title" style="color: #fff; margin: 8px 0;">قرار على المحك (100 مليون دولار)</h3>
-                        <p class="story-desc" style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">رحلة محمود المليئة بالخداع والعاصفة المفاجئة والنجاة من القرش...</p>
-                    </div>
-                    <a href="story.html" style="display: block; text-align: center; background-color: #e2b714; color: #121824; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px;">اقرأ القصة الآن</a>
-                </div>
-            </div>
-
-            <!-- القصة الثانية الجديدة: ذهب تحت غطاء -->
-            <div class="story-card" style="background-color: #1e2638; border-radius: 12px; border: 1px solid #2e3a52; overflow: hidden; display: flex; flex-direction: column;">
-                <img src="cover.jpg" alt="غلاف القصة" style="width: 100%; height: 180px; object-fit: cover;">
-                <div style="padding: 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                    <div>
-                        <span class="story-category" style="color: #38bdf8; font-size: 0.8rem; font-weight: bold;">تحري وغاز</span>
-                        <h3 class="story-title" style="color: #fff; margin: 8px 0;">ذهب تحت غطاء</h3>
-                        <p class="story-desc" style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">محمود الذكي يتولى حل قضية اعتداء معقدة كشفتها تفاصيل اليد اليسرى وهاتف أرضي...</p>
-                    </div>
-                    <a href="story2.html" style="display: block; text-align: center; background-color: #38bdf8; color: #121824; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px;">اقرأ القصة الآن</a>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- رسالة عدم وجود نتائج -->
-        <div id="noResults" style="display: none; text-align: center; color: #94a3b8; margin-top: 30px;">
-            لا توجد قصص تطابق بحثك حالياً.
+        <!-- حاوية عرض القصص المجلوبة من Google Sheets -->
+        <div id="stories-container" style="display: grid; gap: 20px;">
+            <p style="color: #94a3b8; text-align: center;">جاري تحميل القصص المنشورة...</p>
         </div>
     </main>
 
-    <!-- نافذة التسجيل -->
-    <div id="signupModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 999;">
-        <div style="background-color: #1e2638; padding: 25px; border-radius: 12px; border: 1px solid #2e3a52; width: 90%; max-width: 350px; position: relative;">
-            <span onclick="toggleModal(false)" style="position: absolute; top: 10px; left: 15px; font-size: 1.5rem; color: #94a3b8; cursor: pointer;">&times;</span>
-            <h3 style="color: #ffffff; margin-top: 0;">إنشاء حساب</h3>
-            <form onsubmit="handleSignup(event)">
-                <div style="margin-bottom: 10px;">
-                    <label style="display: block; color: #cbd5e1; font-size: 0.85rem; margin-bottom: 3px;">الاسم</label>
-                    <input type="text" required style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #2e3a52; background: #121824; color: #fff; box-sizing: border-box;">
-                </div>
-                <button type="submit" style="width: 100%; background-color: #e2b714; color: #121824; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;">تسجيل</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- البرمجة -->
+    <!-- كود جلب البيانات تلقائياً عند تغيير الحالة إلى "مقبول" -->
     <script>
-        function toggleModal(show) { document.getElementById('signupModal').style.display = show ? 'flex' : 'none'; }
-        function handleSignup(e) { e.preventDefault(); alert('تم إنشاء الحساب بنجاح!'); toggleModal(false); }
+        // ضع ID جدول Google Sheets الخاص بك هنا بين التنصيص
+        const sheetID = "ضع_SPREADSHEET_ID_هنا";
+        const fetchURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
 
-        function filterStories() {
-            var input = document.getElementById('searchInput').value.toLowerCase().trim();
-            var cleanInput = input.replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي');
-            var cards = document.getElementsByClassName('story-card');
-            var hasResults = false;
+        fetch(fetchURL)
+            .then(res => res.text())
+            .then(data => {
+                // تنظيف الاستجابة القادمة من جوجل وتحويلها لنص مجرد
+                const json = JSON.parse(data.substring(47, data.length - 2));
+                const rows = json.table.rows;
+                const container = document.getElementById("stories-container");
+                container.innerHTML = "";
 
-            for (var i = 0; i < cards.length; i++) {
-                var title = cards[i].querySelector('.story-title').innerText.toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي');
-                var category = cards[i].querySelector('.story-category').innerText.toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي');
-                var desc = cards[i].querySelector('.story-desc').innerText.toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي');
+                let hasStories = false;
 
-                if (title.includes(cleanInput) || category.includes(cleanInput) || desc.includes(cleanInput)) {
-                    cards[i].style.display = "flex";
-                    hasResults = true;
-                } else {
-                    cards[i].style.display = "none";
+                rows.forEach(row => {
+                    // ترتيب الأعمدة: [0: التاريخ, 1: الاسم, 2: العنوان, 3: التصنيف, 4: النص, 5: الحالة]
+                    const author = (row.c[1] && row.c[1].v) ? row.c[1].v : "مجهول";
+                    const title = (row.c[2] && row.c[2].v) ? row.c[2].v : "بدون عنوان";
+                    const category = (row.c[3] && row.c[3].v) ? row.c[3].v : "عام";
+                    const content = (row.c[4] && row.c[4].v) ? row.c[4].v : "";
+                    const status = (row.c[5] && row.c[5].v) ? row.c[5].v : "";
+
+                    // التحقق من أن القصة مضاف لها حالة "مقبول"
+                    if (status.trim() === "مقبول") {
+                        hasStories = true;
+                        container.innerHTML += `
+                            <div style="background-color: #1e2638; border-radius: 12px; padding: 25px; border: 1px solid #2e3a52; text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                <span style="color: #e2b714; font-size: 0.85rem; font-weight: bold; background-color: #121824; padding: 4px 10px; border-radius: 6px; border: 1px solid #2e3a52;">${category}</span>
+                                <h3 style="color: #ffffff; font-size: 1.4rem; margin: 15px 0 10px 0;">${title}</h3>
+                                <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.8; white-space: pre-line;">${content}</p>
+                                <div style="color: #64748b; font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #2e3a52; padding-top: 10px; display: flex; justify-content: space-between;">
+                                    <span>بقلم: <strong style="color: #94a3b8;">${author}</strong></span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                if (!hasStories) {
+                    container.innerHTML = '<p style="color: #94a3b8; text-align: center;">لا توجد قصص معروضة حالياً.</p>';
                 }
-            }
-
-            document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
-        }
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById("stories-container").innerHTML = '<p style="color: #ef4444; text-align: center;">تعذر تحميل القصص، تأكد من مشاركة الجدول كـ "عام".</p>';
+            });
     </script>
 </body>
 </html>
