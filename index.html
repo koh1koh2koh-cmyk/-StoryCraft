@@ -17,7 +17,6 @@
             <a href="index.html" style="color: #e2b714; text-decoration: none; font-weight: bold; font-size: 0.9rem;">الرئيسية</a>
             <a href="submit.html" style="color: #cbd5e1; text-decoration: none; font-size: 0.9rem;">شارك قصتك ✍️</a>
             
-            <!-- أزرار الحساب والتسجيل -->
             <div id="user-section">
                 <button id="auth-btn" onclick="openAuthModal()" style="background-color: #2e3a52; color: #fff; border: 1px solid #3e4c67; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
                     تسجيل الدخول / حساب جديد 👤
@@ -33,7 +32,6 @@
             استمتع بقراءة أحدث القصص المميزة أو شارك إبداعك الأدبي مع القراء حول العالم!
         </p>
 
-        <!-- شريط البحث والبحث الصوتي -->
         <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 8px; background-color: #121824; border: 1px solid #2e3a52; padding: 6px; border-radius: 8px;">
             <input type="text" id="search-input" onkeyup="filterStories()" placeholder="ابحث عن عنوان قصة أو كاتب..." style="flex: 1; background: transparent; border: none; color: #fff; padding: 8px; font-size: 0.95rem; outline: none;">
             <button onclick="startVoiceSearch()" title="البحث الصوتي" style="background: #2e3a52; border: none; color: #e2b714; font-size: 1.1rem; padding: 8px 12px; border-radius: 6px; cursor: pointer;">
@@ -45,12 +43,12 @@
     <!-- قسم عرض القصص المقبولة -->
     <main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
         <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; text-align: center;">أحدث القصص المنشورة ✨</h2>
-        <div id="stories-container" style="display: grid; gap: 20px;">
+        <div id="stories-container" style="display: grid; gap: 25px;">
             <p style="color: #94a3b8; text-align: center;">جاري تحميل القصص المنشورة...</p>
         </div>
     </main>
 
-    <!-- نافذة تسجيل الدخول الفعلية -->
+    <!-- نافذة تسجيل الدخول -->
     <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;">
         <div style="background-color: #1e2638; padding: 30px; border-radius: 12px; border: 1px solid #2e3a52; width: 90%; max-width: 400px; text-align: center; position: relative;">
             <span onclick="closeAuthModal()" style="position: absolute; top: 10px; left: 15px; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✖</span>
@@ -60,12 +58,8 @@
             <input type="password" id="auth-password" placeholder="كلمة المرور" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
             
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button onclick="handleLogin()" style="flex: 1; background: #e2b714; color: #121824; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">
-                    تسجيل الدخول
-                </button>
-                <button onclick="handleSignUp()" style="flex: 1; background: #2e3a52; color: #fff; font-weight: bold; padding: 10px; border: 1px solid #3e4c67; border-radius: 6px; cursor: pointer;">
-                    حساب جديد
-                </button>
+                <button onclick="handleLogin()" style="flex: 1; background: #e2b714; color: #121824; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">تسجيل الدخول</button>
+                <button onclick="handleSignUp()" style="flex: 1; background: #2e3a52; color: #fff; font-weight: bold; padding: 10px; border: 1px solid #3e4c67; border-radius: 6px; cursor: pointer;">حساب جديد</button>
             </div>
 
             <div style="border-top: 1px solid #2e3a52; padding-top: 15px;">
@@ -76,12 +70,25 @@
         </div>
     </div>
 
-    <!-- ربط مكتبات Firebase والربط المباشر بمشروعك -->
+    <!-- نافذة تعديل البروفايل -->
+    <div id="profile-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background-color: #1e2638; padding: 30px; border-radius: 12px; border: 1px solid #2e3a52; width: 90%; max-width: 400px; text-align: center; position: relative;">
+            <span onclick="closeProfileModal()" style="position: absolute; top: 10px; left: 15px; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✖</span>
+            <h3 style="color: #fff; margin-bottom: 15px;">تعديل الملف الشخصي 👤</h3>
+            
+            <input type="text" id="profile-name" placeholder="الاسم الظاهر" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
+            <input type="url" id="profile-photo" placeholder="رابط صورة البروفايل (URL)" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
+            
+            <button onclick="saveProfile()" style="width: 100%; background: #e2b714; color: #121824; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">حفظ التغييرات</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs & Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // بيانات مشروعك الفعلي hikaya-5ff25
         const firebaseConfig = {
             apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
             authDomain: "hikaya-5ff25.firebaseapp.com",
@@ -94,15 +101,24 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // متابعة حالة المستخدم والتسجيل الحقيقي
+        let currentUser = null;
+
         onAuthStateChanged(auth, (user) => {
+            currentUser = user;
             const userSection = document.getElementById('user-section');
             if (user) {
+                const photo = user.photoURL || 'https://via.placeholder.com/40';
+                const name = user.displayName || user.email.split('@')[0];
                 userSection.innerHTML = `
-                    <span style="color: #e2b714; font-size: 0.85rem; margin-left: 10px;">مرحباً، ${user.displayName || user.email.split('@')[0]}</span>
-                    <button onclick="window.logoutUser()" style="background-color: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">خروج</button>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="${photo}" alt="profile" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid #e2b714;">
+                        <span style="color: #e2b714; font-size: 0.85rem;">${name}</span>
+                        <button onclick="openProfileModal()" style="background: transparent; color: #94a3b8; border: none; cursor: pointer; font-size: 0.8rem;">⚙️</button>
+                        <button onclick="window.logoutUser()" style="background-color: #ef4444; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">خروج</button>
+                    </div>
                 `;
                 closeAuthModal();
             } else {
@@ -114,42 +130,79 @@
             }
         });
 
-        // دالة إنشاء حساب جديد
         window.handleSignUp = () => {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             if(!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور!");
-            
-            createUserWithEmailAndPassword(auth, email, password)
-                .then(() => alert("تم إنشاء الحساب وتسجيل الدخول بنجاح!"))
-                .catch((err) => alert("خطأ: " + err.message));
+            createUserWithEmailAndPassword(auth, email, password).catch((err) => alert("خطأ: " + err.message));
         };
 
-        // دالة تسجيل الدخول
         window.handleLogin = () => {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             if(!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور!");
-
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => alert("تم تسجيل الدخول بنجاح!"))
-                .catch((err) => alert("بيانات الدخول غير صحيحة!"));
+            signInWithEmailAndPassword(auth, email, password).catch(() => alert("بيانات الدخول غير صحيحة!"));
         };
 
-        // تسجيل الدخول بواسطة Google
-        window.handleGoogleLogin = () => {
-            signInWithPopup(auth, provider)
-                .then(() => alert("تم الدخول بحساب Google بنجاح!"))
-                .catch((err) => alert("حدث خطأ أثناء الاتصال بـ Google"));
+        window.handleGoogleLogin = () => { signInWithPopup(auth, provider); };
+        window.logoutUser = () => { signOut(auth); };
+
+        // تعديل بيانات الملف الشخصي
+        window.saveProfile = () => {
+            const newName = document.getElementById('profile-name').value;
+            const newPhoto = document.getElementById('profile-photo').value;
+            if (!currentUser) return;
+
+            updateProfile(currentUser, {
+                displayName: newName || currentUser.displayName,
+                photoURL: newPhoto || currentUser.photoURL
+            }).then(() => {
+                alert("تم تحديث الملف الشخصي بنجاح!");
+                location.reload();
+            }).catch(err => alert("حدث خطأ: " + err.message));
         };
 
-        // تسجيل الخروج
-        window.logoutUser = () => {
-            signOut(auth);
+        // إضافة تعليق
+        window.addComment = (storyIndex) => {
+            if (!currentUser) return alert("يرجى تسجيل الدخول للتعليق!");
+            const input = document.getElementById(`comment-input-${storyIndex}`);
+            const text = input.value.trim();
+            if (!text) return;
+
+            addDoc(collection(db, "comments"), {
+                storyId: storyIndex,
+                text: text,
+                userName: currentUser.displayName || currentUser.email.split('@')[0],
+                userPhoto: currentUser.photoURL || 'https://via.placeholder.com/40',
+                createdAt: new Date()
+            }).then(() => {
+                input.value = "";
+            });
+        };
+
+        // تحميل التعليقات مباشرة
+        window.loadComments = (storyIndex) => {
+            const commentsDiv = document.getElementById(`comments-list-${storyIndex}`);
+            const q = query(collection(db, "comments"), where("storyId", "==", storyIndex));
+            onSnapshot(q, (snapshot) => {
+                commentsDiv.innerHTML = "";
+                snapshot.forEach(doc => {
+                    const c = doc.data();
+                    commentsDiv.innerHTML += `
+                        <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; background: #121824; padding: 10px; border-radius: 8px;">
+                            <img src="${c.userPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                            <div>
+                                <strong style="color: #e2b714; font-size: 0.8rem; display: block;">${c.userName}</strong>
+                                <span style="color: #cbd5e1; font-size: 0.85rem;">${c.text}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
         };
     </script>
 
-    <!-- السكريبت الخاص بقراءة القصص والبحث -->
+    <!-- سكريبت جلب القصص والبحث -->
     <script>
         const sheetID = "1372MSEs4QJJH4LCo1FDw1gxd5SAOA854YRK0prIs7t0";
         const fetchURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
@@ -162,7 +215,7 @@
                 const container = document.getElementById("stories-container");
                 container.innerHTML = "";
 
-                let hasStories = false;
+                let index = 0;
 
                 rows.forEach(row => {
                     const author = (row.c[1] && row.c[1].v) ? row.c[1].v : "مجهول";
@@ -172,7 +225,7 @@
                     const status = (row.c[5] && row.c[5].v) ? row.c[5].v : "";
 
                     if (status.trim() === "مقبول") {
-                        hasStories = true;
+                        const storyId = `story_${index}`;
                         container.innerHTML += `
                             <div class="story-card" style="background-color: #1e2638; border-radius: 12px; padding: 25px; border: 1px solid #2e3a52; text-align: right;">
                                 <span style="color: #e2b714; font-size: 0.85rem; font-weight: bold; background-color: #121824; padding: 4px 10px; border-radius: 6px; border: 1px solid #2e3a52;">${category}</span>
@@ -181,12 +234,22 @@
                                 <div style="color: #64748b; font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #2e3a52; padding-top: 10px;">
                                     <span>بقلم: <strong class="story-author" style="color: #94a3b8;">${author}</strong></span>
                                 </div>
+
+                                <!-- قسم التعليقات -->
+                                <div style="margin-top: 20px; border-top: 1px solid #2e3a52; padding-top: 15px;">
+                                    <h4 style="color: #fff; font-size: 0.95rem; margin-bottom: 10px;">💬 التعليقات:</h4>
+                                    <div id="comments-list-${storyId}" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;"></div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <input type="text" id="comment-input-${storyId}" placeholder="اكتب تعليقك هنا..." style="flex: 1; padding: 8px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; outline: none; font-size: 0.85rem;">
+                                        <button onclick="addComment('${storyId}')" style="background: #e2b714; color: #121824; border: none; font-weight: bold; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">إرسال</button>
+                                    </div>
+                                </div>
                             </div>
                         `;
+                        setTimeout(() => window.loadComments(storyId), 500);
+                        index++;
                     }
                 });
-
-                if (!hasStories) container.innerHTML = '<p style="color: #94a3b8; text-align: center;">لا توجد قصص معروضة حالياً.</p>';
             });
 
         function filterStories() {
@@ -212,6 +275,8 @@
 
         function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
         function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
+        function openProfileModal() { document.getElementById('profile-modal').style.display = 'flex'; }
+        function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
     </script>
 </body>
 </html>
