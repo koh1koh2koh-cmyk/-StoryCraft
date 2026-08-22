@@ -636,3 +636,228 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const analytics = firebase.analytics();
+
+        let allStories = [];
+        let currentCategory = 'الكل';
+
+        // ==========================================================================
+        // 2. جلب البيانات المحسن (حل مشكلة البطء والتعليق)
+        // ==========================================================================
+        db.collection("stories").onSnapshot(snapshot => {
+            allStories = [];
+            snapshot.forEach(doc => {
+                allStories.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // ترتيب القصص أوتوماتيكياً محلياً من الأحدث للأقدم فور وصول البيانات
+            allStories.sort((a, b) => {
+                const timeA = a.createdAt ? (a.createdAt.seconds || 0) : 0;
+                const timeB = b.createdAt ? (b.createdAt.seconds || 0) : 0;
+                return timeB - timeA;
+            });
+
+            renderStories();
+        }, error => {
+            console.error("Firebase Snapshot Error: ", error);
+            document.getElementById("storiesGrid").innerHTML = `
+                <div class="empty-state">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: var(--danger-color); margin-bottom: 15px;"></i>
+                    <p>تعذر جلب البيانات. يرجى التحقق من اتصال شبكة الإنترنت.</p>
+                </div>
+            `;
+        });
+
+        // ==========================================================================
+        // 3. إدارة التفاعلات المحلية
+        // ==========================================================================
+        function isLiked(id) {
+            const likedStories = JSON.parse(localStorage.getItem('hikaya_liked_stories') || '[]');
+            return likedStories.includes(id);
+        }
+
+        // ==========================================================================
+        // 4. معالجة وتصفية الواجهة
+        // ==========================================================================
+        function renderStories() {
+            const grid = document.getElementById("storiesGrid");
+            const query = document.getElementById("searchInput").value.toLowerCase().trim();
+            grid.innerHTML = "";
+
+            const filtered = allStories.filter(story => {
+                const matchCat = (currentCategory === 'الكل') || (story.category === currentCategory);
+                const titleMatch = story.title ? story.title.toLowerCase().includes(query) : false;
+                const contentMatch = story.content ? story.content.toLowerCase().includes(query) : false;
+                const authorMatch = story.author ? story.author.toLowerCase().includes(query) : false;
+                
+                return matchCat && (titleMatch || contentMatch || authorMatch);
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-folder-open" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <p>لا توجد قصص مطابقة للبحث أو التصنيف المختار حالياً.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(story => {
+                const hasLiked = isLiked(story.id);
+                const card = document.createElement("div");
+                card.className = "story-card";
+                
+                card.innerHTML = `
+                    <div class="story-header">
+                        <h2 class="story-title" onclick="openStoryModal('${story.id}')">${escapeHTML(story.title)}</h2>
+                        <span class="category-badge">${escapeHTML(story.category || 'عام')}</span>
+                    </div>
+                    <div class="story-meta">
+                        <span><i class="fa-solid fa-user-pen"></i> ${escapeHTML(story.author || 'كاتب مجهول')}</span>
+                        <span><i class="fa-solid fa-link"></i> ${escapeHTML(story.relation || 'غير محدد')}</span>
+                    </div>
+                    <div class="story-content">${escapeHTML(story.content)}</div>
+                    <div class="story-footer">
+                        <div class="action-btns">
+                            <button id="like-btn-${story.id}" class="action-btn ${hasLiked ? 'liked' : ''}" onclick="likeStory('${story.id}', ${story.likes || 0})">
+                                <i class="fa-solid fa-heart"></i> <span id="like-count-${story.id}">${story.likes || 0}</span>
+                            </button>
+                            <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(window.location.origin + '/story.html?id=' + story.id)}" target="_blank" class="action-btn">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                            <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.origin + '/story.html?id=' + story.id)}" target="_blank" class="action-btn">
+                                <i class="fa-brands fa-telegram"></i>
+                            </a>
+                            <button class="action-btn" onclick="reportStory('${story.id}')" style="color: var(--danger-color);">
+                                <i class="fa-solid fa-flag"></i> إبلاغ
+                            </button>
+                        </div>
+                        <div class="read-more-btn" onclick="openStoryModal('${story.id}')">
+                            قراءة كاملة <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ==========================================================================
+        // 5. تسجيل ومزامنة الإعجابات
+        // ==========================================================================
+        async function likeStory(id, currentLikes) {
+            if (isLiked(id)) {
+                alert("لقد قمت بالإعجاب بهذه القصة سابقاً! ❤️");
+                return;
+            }
+
+            try {
+                await db.collection("stories").doc(id).update({
+                    likes: currentLikes + 1
+                });
+
+                const likedStories = JSON.parse(localStorage.getItem('hikaya_liked_stories') || '[]');
+                likedStories.push(id);
+                localStorage.setItem('hikaya_liked_stories', JSON.stringify(likedStories));
+
+                const btn = document.getElementById(`like-btn-${id}`);
+                const countSpan = document.getElementById(`like-count-${id}`);
+                if (btn) {
+                    btn.classList.add('liked');
+                    if (countSpan) countSpan.innerText = currentLikes + 1;
+                }
+            } catch (error) {
+                console.error("Error updating likes: ", error);
+            }
+        }
+
+        // ==========================================================================
+        // 6. التحكم بالتبويبات
+        // ==========================================================================
+        function filterCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderStories();
+        }
+
+        // ==========================================================================
+        // 7. فتح وإغلاق النافذة المنبثقة
+        // ==========================================================================
+        function openStoryModal(id) {
+            const story = allStories.find(s => s.id === id);
+            if (!story) return;
+
+            const modal = document.getElementById('storyModal');
+            const content = document.getElementById('modalContent');
+            const shareUrl = encodeURIComponent(window.location.origin + '/story.html?id=' + story.id);
+
+            content.innerHTML = `
+                <span class="category-badge" style="margin-bottom: 10px; display: inline-block;">${escapeHTML(story.category || 'عام')}</span>
+                <h1 style="font-size: 2rem; color: var(--text-white); margin-bottom: 10px;">${escapeHTML(story.title)}</h1>
+                <div class="story-meta">
+                    <span>✍️ الكاتب: ${escapeHTML(story.author || 'غير معروف')}</span>
+                    <span>🔗 المصدر: ${escapeHTML(story.relation || 'غير محدد')}</span>
+                </div>
+                <div class="modal-body">${escapeHTML(story.content)}</div>
+                <div class="share-box-modal">
+                    <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted);">مشاركة القصة عبر:</span>
+                    <a href="https://api.whatsapp.com/send?text=${shareUrl}" target="_blank" class="share-btn-modal wa"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
+                    <a href="https://t.me/share/url?url=${shareUrl}" target="_blank" class="share-btn-modal tg"><i class="fa-brands fa-telegram"></i> تليجرام</a>
+                </div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeStoryModal() {
+            const modal = document.getElementById('storyModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('storyModal');
+            if (event.target === modal) {
+                closeStoryModal();
+            }
+        }
+
+        // ==========================================================================
+        // 8. نظام إرسال البلاغات
+        // ==========================================================================
+        async function reportStory(id) {
+            const reason = prompt("يرجى كتابة سبب الإبلاغ لمراجعته من الإدارة:");
+            if (reason && reason.trim() !== "") {
+                try {
+                    await db.collection("reports").add({
+                        storyId: id,
+                        reason: reason.trim(),
+                        createdAt: new Date()
+                    });
+                    alert("تم إرسال البلاغ بنجاح، شكراً لمساعدتك.");
+                } catch (e) {
+                    console.error("Report failure: ", e);
+                    alert("حدث خطأ أثناء الإبلاغ، يرجى المحاولة لاحقاً.");
+                }
+            }
+        }
+
+        // ==========================================================================
+        // 9. تنقية المدخلات من أجل الحماية
+        // ==========================================================================
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>
