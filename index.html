@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
     
-    <!-- الخطوط والأيقونات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -24,7 +23,6 @@
             --radius-sm: 8px;
             --radius-md: 14px;
             --radius-lg: 20px;
-            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.25);
             --transition: all 0.3s ease;
         }
 
@@ -153,7 +151,8 @@
     </footer>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz7aibrX9HU7bPkGUYipqmcAVZqMQH2Um6qJP8KqWESaVqJYqlhJp9-MVqmcMi0ZKVo/exec';
+        // الرابط الجديد الخاص بك
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzytiqTfBAaAMqGefmPn6z_yxbJj-Kliw3pSAtB6U7IRoCVzl1xxfm6Hyfhx-Q1UCuv/exec';
 
         let allStories = [];
         let currentCategory = 'الكل';
@@ -174,14 +173,14 @@
                         })).reverse();
                         renderStories();
                     } else {
-                        throw new Error('فشل جلب البيانات');
+                        throw new Error('بيانات غير مقبولة');
                     }
                 })
                 .catch(err => {
                     console.error("Error:", err);
                     document.getElementById("storiesGrid").innerHTML = `
                         <div class="empty-state">
-                            <p>حدث خطأ في تحميل البيانات، تأكد من إعادة نشر الإصدار الجديد (New Deployment) في Apps Script.</p>
+                            <p>تعذر تحميل البيانات، جاري المتابعة...</p>
                         </div>
                     `;
                 });
