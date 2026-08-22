@@ -1,536 +1,244 @@
-<!DOCTYPE html>
+<!DOCTYPE1 html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حكاية - منصة القصص والروايات</title>
+    <title>StoryCraft - منصة القصص</title>
+    
+    <!-- ResponsiveVoice لقراءة النصوص صوتياً بكفاءة عالية -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE_KEY"></script>
+    
+    <!-- مكتبات Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
-        /* شريط تقدم القراءة أعلى الصفحة */
-        #progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: transparent;
-            z-index: 2000;
-        }
-        #progress-bar {
-            height: 100%;
-            background: #e2b714;
-            width: 0%;
-            transition: width 0.1s ease;
-        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; margin: 0; padding: 20px; direction: rtl; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; color: #333; }
+        
+        /* نموذج إضافة قصة */
+        .story-form, .story-card { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        input[type="text"], input[type="url"], textarea { width: 100%; padding: 10px; margin: 8px 0 15px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 15px; }
+        
+        /* أزرار */
+        .btn { padding: 10px 18px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; margin-left: 5px; }
+        .btn-add { background-color: #28a745; color: white; width: 100%; }
+        .btn-edit { background-color: #ffc107; color: #000; }
+        .btn-audio { background-color: #007bff; color: white; }
+        .btn-delete { background-color: #dc3545; color: white; }
+        .btn-close { background-color: #6c757d; color: white; }
+        .btn:hover { opacity: 0.9; }
 
-        /* التصميم العام للموقع */
-        body {
-            background-color: #121824;
-            color: #e2e8f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0 0 50px 0;
-            direction: rtl;
-        }
+        /* عرض القصة */
+        .story-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
+        .story-title { font-size: 22px; color: #111; margin-top: 0; }
+        .story-content { font-size: 17px; line-height: 1.8; color: #444; white-space: pre-line; }
+        .actions { margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
 
-        /* بطاقات القصص */
-        .story-card {
-            background-color: #1e2638;
-            border-radius: 12px;
-            padding: 25px;
-            border: 1px solid #2e3a52;
-            text-align: right;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .story-card:hover {
-            border-color: #3e4c67;
-        }
-
-        /* تنسيق الأزرار */
-        .btn-action {
-            background: #121824;
-            border: 1px solid #2e3a52;
-            color: #94a3b8;
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-        .btn-action:hover {
-            border-color: #e2b714;
-            color: #e2b714;
-        }
-
-        .liked {
-            color: #ef4444 !important;
-            border-color: #ef4444 !important;
-        }
+        /* نافذة التعديل المنبثقة Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-body { background: #fff; width: 90%; max-width: 550px; padding: 25px; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <!-- شريط تقدم القراءة -->
-    <div id="progress-container">
-        <div id="progress-bar"></div>
+<div class="container">
+    <h1>📚 StoryCraft</h1>
+
+    <!-- نموذج إضافة قصة جديدة -->
+    <div class="story-form">
+        <h3>إضافة قصة جديدة</h3>
+        <input type="text" id="new-title" placeholder="عنوان القصة...">
+        <input type="url" id="new-image" placeholder="رابط صورة القصة (اختياري)...">
+        <textarea id="new-content" rows="4" placeholder="اكتب القصة هنا مع التشكيل..."></textarea>
+        <button class="btn btn-add" onclick="addStory()">نشر القصة</button>
     </div>
 
-    <!-- الهيدر العلوي -->
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; background-color: #1e2638; border-bottom: 1px solid #2e3a52; position: sticky; top: 0; z-index: 1000;">
-        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
-            <img src="logo.png" alt="حكاية HIKAYA" style="height: 50px; border-radius: 8px; background: #fff; padding: 2px;">
-        </a>
+    <!-- قائمة عرض القصص -->
+    <div id="stories-list"></div>
+</div>
+
+<!-- نافذة التعديل (Modal) -->
+<div class="modal-overlay" id="edit-modal">
+    <div class="modal-body">
+        <h3>تعديل القصة</h3>
+        <input type="hidden" id="edit-id">
+        <label>عنوان القصة:</label>
+        <input type="text" id="edit-title">
+        <label>رابط الصورة:</label>
+        <input type="url" id="edit-image">
+        <label>محتوى القصة:</label>
+        <textarea id="edit-content" rows="6"></textarea>
         
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <a href="index.html" style="color: #e2b714; text-decoration: none; font-weight: bold; font-size: 0.9rem;">الرئيسية</a>
-            <a href="submit.html" style="color: #cbd5e1; text-decoration: none; font-size: 0.9rem;">شارك قصتك ✍️</a>
-            
-            <div id="user-section">
-                <button id="auth-btn" onclick="openAuthModal()" style="background-color: #2e3a52; color: #fff; border: 1px solid #3e4c67; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                    تسجيل الدخول / حساب جديد 👤
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- الواجهة الرئيسية -->
-    <section style="text-align: center; padding: 40px 20px; background-color: #182030; border-bottom: 1px solid #2e3a52;">
-        <h1 style="color: #ffffff; font-size: 2rem; margin-bottom: 10px;">منصة حكاية للقصص والروايات 📖</h1>
-        <p style="color: #94a3b8; font-size: 1rem; max-width: 600px; margin: 0 auto 20px auto;">
-            استمتع بقراءة أحدث القصص المميزة، استمع إليها صوتياً، أو شارك إبداعك الأدبي!
-        </p>
-
-        <!-- حقل البحث وشريط التحكم -->
-        <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 8px; background-color: #121824; border: 1px solid #2e3a52; padding: 6px; border-radius: 8px;">
-            <input type="text" id="search-input" onkeyup="filterStories()" placeholder="ابحث عن عنوان قصة أو كاتب..." style="flex: 1; background: transparent; border: none; color: #fff; padding: 8px; font-size: 0.95rem; outline: none;">
-            <button onclick="startVoiceSearch()" title="البحث الصوتي" style="background: #2e3a52; border: none; color: #e2b714; font-size: 1.1rem; padding: 8px 12px; border-radius: 6px; cursor: pointer;">
-                🎤
-            </button>
-        </div>
-    </section>
-
-    <!-- قسم القصص المنشورة -->
-    <main style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
-        <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; text-align: center;">أحدث القصص المنشورة ✨</h2>
-        <div id="stories-container" style="display: grid; gap: 25px;">
-            <p style="color: #94a3b8; text-align: center;">جاري تحميل القصص المنشورة...</p>
-        </div>
-    </main>
-
-    <!-- نافذة تسجيل الدخول -->
-    <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;">
-        <div style="background-color: #1e2638; padding: 30px; border-radius: 12px; border: 1px solid #2e3a52; width: 90%; max-width: 400px; text-align: center; position: relative;">
-            <span onclick="closeAuthModal()" style="position: absolute; top: 10px; left: 15px; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✖</span>
-            <h3 style="color: #fff; margin-bottom: 15px;">انضم إلى منصة حكاية</h3>
-            
-            <input type="email" id="auth-email" placeholder="البريد الإلكتروني" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
-            <input type="password" id="auth-password" placeholder="كلمة المرور" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <button onclick="handleLogin()" style="flex: 1; background: #e2b714; color: #121824; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">تسجيل الدخول</button>
-                <button onclick="handleSignUp()" style="flex: 1; background: #2e3a52; color: #fff; font-weight: bold; padding: 10px; border: 1px solid #3e4c67; border-radius: 6px; cursor: pointer;">حساب جديد</button>
-            </div>
-
-            <div style="border-top: 1px solid #2e3a52; padding-top: 15px;">
-                <button onclick="handleGoogleLogin()" style="width: 100%; background: #ffffff; color: #333; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    تسجيل باستخدام Google 🚀
-                </button>
-            </div>
+        <div style="text-align: left; margin-top: 10px;">
+            <button class="btn btn-close" onclick="closeEditModal()">إلغاء</button>
+            <button class="btn btn-add" style="width:auto;" onclick="saveStoryEdit()">حفظ التغييرات</button>
         </div>
     </div>
+</div>
 
-    <!-- نافذة تعديل البروفايل -->
-    <div id="profile-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000;">
-        <div style="background-color: #1e2638; padding: 30px; border-radius: 12px; border: 1px solid #2e3a52; width: 90%; max-width: 400px; text-align: center; position: relative;">
-            <span onclick="closeProfileModal()" style="position: absolute; top: 10px; left: 15px; color: #94a3b8; font-size: 1.2rem; cursor: pointer;">✖</span>
-            <h3 style="color: #fff; margin-bottom: 15px;">تعديل الملف الشخصي 👤</h3>
-            
-            <input type="text" id="profile-name" placeholder="الاسم الظاهر" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
-            <input type="url" id="profile-photo" placeholder="رابط صورة البروفايل (URL)" style="width: 100%; padding: 10px; margin-bottom: 15px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; box-sizing: border-box;">
-            
-            <button onclick="saveProfile()" style="width: 100%; background: #e2b714; color: #121824; font-weight: bold; padding: 10px; border: none; border-radius: 6px; cursor: pointer;">حفظ التغييرات</button>
-        </div>
-    </div>
+<script>
+    // 1. إعدادات Firebase (ضع مفاتيحك الخاصة هنا)
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+    
+    // تهيئة Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
 
-    <!-- Firebase JavaScript Module -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, deleteDoc, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    // 2. جلب وتحديث القصص تلقائياً من Firestore
+    db.collection("stories").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+        const listDiv = document.getElementById("stories-list");
+        listDiv.innerHTML = "";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
-            authDomain: "hikaya-5ff25.firebaseapp.com",
-            projectId: "hikaya-5ff25",
-            storageBucket: "hikaya-5ff25.firebasestorage.app",
-            messagingSenderId: "1031922678593",
-            appId: "1:1031922678593:web:c242a9e36ad40becc9bfc0"
-        };
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const id = doc.id;
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
-
-        let currentUser = null;
-
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            const userSection = document.getElementById('user-section');
-            if (user) {
-                const photo = user.photoURL || 'https://via.placeholder.com/40';
-                const name = user.displayName || user.email.split('@')[0];
-                userSection.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="${photo}" alt="profile" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid #e2b714;">
-                        <span style="color: #e2b714; font-size: 0.85rem;">${name}</span>
-                        <button onclick="openProfileModal()" style="background: transparent; color: #94a3b8; border: none; cursor: pointer; font-size: 0.8rem;">⚙️</button>
-                        <button onclick="window.logoutUser()" style="background-color: #ef4444; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">خروج</button>
-                    </div>
-                `;
-                closeAuthModal();
-            } else {
-                userSection.innerHTML = `
-                    <button onclick="openAuthModal()" style="background-color: #2e3a52; color: #fff; border: 1px solid #3e4c67; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                        تسجيل الدخول / حساب جديد 👤
-                    </button>
-                `;
-            }
-        });
-
-        window.handleSignUp = () => {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            if(!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور!");
-            createUserWithEmailAndPassword(auth, email, password).catch((err) => alert("خطأ: " + err.message));
-        };
-
-        window.handleLogin = () => {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            if(!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور!");
-            signInWithEmailAndPassword(auth, email, password).catch(() => alert("بيانات الدخول غير صحيحة!"));
-        };
-
-        window.handleGoogleLogin = () => { signInWithPopup(auth, provider); };
-        window.logoutUser = () => { signOut(auth); };
-
-        window.saveProfile = () => {
-            const newName = document.getElementById('profile-name').value;
-            const newPhoto = document.getElementById('profile-photo').value;
-            if (!currentUser) return;
-
-            updateProfile(currentUser, {
-                displayName: newName || currentUser.displayName,
-                photoURL: newPhoto || currentUser.photoURL
-            }).then(() => {
-                alert("تم تحديث الملف الشخصي بنجاح!");
-                location.reload();
-            }).catch(err => alert("حدث خطأ: " + err.message));
-        };
-
-        // إضافة التعليقات
-        window.addComment = (storyId) => {
-            if (!currentUser) return alert("يرجى تسجيل الدخول للتعليق!");
-            const input = document.getElementById(`comment-input-${storyId}`);
-            const text = input.value.trim();
-            if (!text) return;
-
-            addDoc(collection(db, "comments"), {
-                storyId: String(storyId),
-                text: text,
-                userName: currentUser.displayName || currentUser.email.split('@')[0],
-                userPhoto: currentUser.photoURL || 'https://via.placeholder.com/40',
-                createdAt: new Date()
-            }).then(() => {
-                input.value = "";
-            });
-        };
-
-        // تحميل التعليقات
-        window.loadComments = (storyId) => {
-            const commentsDiv = document.getElementById(`comments-list-${storyId}`);
-            const q = query(collection(db, "comments"), where("storyId", "==", String(storyId)));
-            onSnapshot(q, (snapshot) => {
-                commentsDiv.innerHTML = "";
-                snapshot.forEach(doc => {
-                    const c = doc.data();
-                    commentsDiv.innerHTML += `
-                        <div style="display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; background: #121824; padding: 10px; border-radius: 8px;">
-                            <img src="${c.userPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
-                            <div>
-                                <strong style="color: #e2b714; font-size: 0.8rem; display: block;">${c.userName}</strong>
-                                <span style="color: #cbd5e1; font-size: 0.85rem;">${c.text}</span>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-        };
-
-        // إضافة وإلغاء الإعجاب
-        window.toggleLike = async (storyId) => {
-            if (!currentUser) return alert("يرجى تسجيل الدخول أولاً للإعجاب بالقصة!");
-            
-            const likeRef = doc(db, "likes", String(storyId), "userLikes", currentUser.uid);
-            const btn = document.getElementById(`like-btn-${storyId}`);
-
-            try {
-                if (btn && btn.classList.contains('liked')) {
-                    await deleteDoc(likeRef);
-                } else {
-                    await setDoc(likeRef, {
-                        likedAt: new Date(),
-                        userName: currentUser.displayName || currentUser.email
-                    });
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        // الاستماع لعدد الإعجابات
-        window.listenToLikes = (storyId) => {
-            const likesCollection = collection(db, "likes", String(storyId), "userLikes");
-            
-            onSnapshot(likesCollection, (snapshot) => {
-                const count = snapshot.size;
-                const countSpan = document.getElementById(`like-count-${storyId}`);
-                const btn = document.getElementById(`like-btn-${storyId}`);
+            const card = document.createElement("div");
+            card.className = "story-card";
+            card.innerHTML = `
+                ${data.imageUrl ? `<img src="${data.imageUrl}" class="story-img" alt="صورة القصة" onerror="this.style.display='none'">` : ''}
+                <h2 class="story-title">${escapeHtml(data.title)}</h2>
+                <div class="story-content" id="content-${id}">${escapeHtml(data.content)}</div>
                 
-                if (countSpan) countSpan.innerText = count;
+                <div class="actions">
+                    <button class="btn btn-audio" id="audio-btn-${id}" onclick="toggleAudio('${id}')">🔊 استمع للقصة</button>
+                    <button class="btn btn-edit" onclick="openEditModal('${id}', \`${escapeHtml(data.title)}\`, \`${escapeHtml(data.content)}\`, '${data.imageUrl || ''}')">✏️ تعديل</button>
+                    <button class="btn btn-delete" onclick="deleteStory('${id}')">🗑️ حذف</button>
+                </div>
+            `;
+            listDiv.appendChild(card);
+        });
+    });
 
-                if (currentUser && btn) {
-                    const userHasLiked = snapshot.docs.some(doc => doc.id === currentUser.uid);
-                    if (userHasLiked) {
-                        btn.classList.add('liked');
-                    } else {
-                        btn.classList.remove('liked');
-                    }
+    // 3. إضافة قصة جديدة
+    async function addStory() {
+        const title = document.getElementById("new-title").value.trim();
+        const imageUrl = document.getElementById("new-image").value.trim();
+        const content = document.getElementById("new-content").value.trim();
+
+        if (!title || !content) {
+            alert("يرجى إدخال العنوان والمحتوى.");
+            return;
+        }
+
+        try {
+            await db.collection("stories").add({
+                title: title,
+                imageUrl: imageUrl,
+                content: content,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            document.getElementById("new-title").value = "";
+            document.getElementById("new-image").value = "";
+            document.getElementById("new-content").value = "";
+            alert("تم نشر القصة بنجاح!");
+        } catch (error) {
+            alert("حدث خطأ أثناء إضافة القصة: " + error.message);
+        }
+    }
+
+    // 4. فتح واغلاق نافذة التعديل
+    function openEditModal(id, title, content, imageUrl) {
+        document.getElementById("edit-id").value = id;
+        document.getElementById("edit-title").value = title;
+        document.getElementById("edit-content").value = content;
+        document.getElementById("edit-image").value = imageUrl;
+        document.getElementById("edit-modal").style.display = "flex";
+    }
+
+    function closeEditModal() {
+        document.getElementById("edit-modal").style.display = "none";
+    }
+
+    // 5. حفظ تعديل القصة
+    async function saveStoryEdit() {
+        const id = document.getElementById("edit-id").value;
+        const newTitle = document.getElementById("edit-title").value.trim();
+        const newImage = document.getElementById("edit-image").value.trim();
+        const newContent = document.getElementById("edit-content").value.trim();
+
+        if (!newTitle || !newContent) {
+            alert("لا يمكن ترك العنوان أو المحتوى فارغاً.");
+            return;
+        }
+
+        try {
+            await db.collection("stories").doc(id).update({
+                title: newTitle,
+                imageUrl: newImage,
+                content: newContent,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            closeEditModal();
+            alert("تم حفظ التعديلات بنجاح!");
+        } catch (error) {
+            alert("حدث خطأ أثناء التعديل: " + error.message);
+        }
+    }
+
+    // 6. حذف القصة
+    async function deleteStory(id) {
+        if (confirm("هل أنت تأكد من رغبتك في حذف هذه القصة؟")) {
+            await db.collection("stories").doc(id).delete();
+        }
+    }
+
+    // 7. القراءة الصوتية (ResponsiveVoice)
+    let currentSpeakingId = null;
+
+    function toggleAudio(id) {
+        const btn = document.getElementById(`audio-btn-${id}`);
+        const contentText = document.getElementById(`content-${id}`).innerText;
+
+        if (typeof responsiveVoice === 'undefined') {
+            alert("محرك الصوت جاري تحضيره، يرجى الانتظار ثوانٍ ثم المحاولة.");
+            return;
+        }
+
+        if (currentSpeakingId === id) {
+            responsiveVoice.cancel();
+            btn.innerText = "🔊 استمع للقصة";
+            currentSpeakingId = null;
+        } else {
+            responsiveVoice.cancel();
+            if (currentSpeakingId) {
+                const prevBtn = document.getElementById(`audio-btn-${currentSpeakingId}`);
+                if (prevBtn) prevBtn.innerText = "🔊 استمع للقصة";
+            }
+
+            responsiveVoice.speak(contentText, "Arabic Male", {
+                pitch: 1,
+                rate: 0.85,
+                onstart: () => {
+                    currentSpeakingId = id;
+                    btn.innerText = "⏹️ إيقاف الصوت";
+                },
+                onend: () => {
+                    btn.innerText = "🔊 استمع للقصة";
+                    currentSpeakingId = null;
                 }
             });
-        };
-    </script>
-
-    <!-- الأكواد الوظيفية وإصلاح الصوت الشامل -->
-    <script>
-        // تخزين كافة نصوص القصص برمجياً لتفادي مشاكل الرموز وعلامات التنصيص
-        const storiesMap = new Map();
-
-        // 1. حساب وقت القراءة
-        function calculateReadingTime(text) {
-            const words = text.trim().split(/\s+/).length;
-            const minutes = Math.ceil(words / 150);
-            return `${minutes} دقيقة قراءة`;
         }
+    }
 
-        // 2. محرك القراءة الصوتية المصحح بالكامل
-        let currentSpeakingId = null;
-
-        function toggleSpeech(storyId) {
-            if (!('speechSynthesis' in window)) {
-                alert("متصفحك لا يدعم خاصية القراءة الصوتية.");
-                return;
-            }
-
-            const synth = window.speechSynthesis;
-            const btn = document.getElementById(`speak-btn-${storyId}`);
-
-            // إذا كان الصوت يعمل على نفس القصة، قم ببيان الإيقاف
-            if (synth.speaking && currentSpeakingId === storyId) {
-                synth.cancel();
-                currentSpeakingId = null;
-                btn.innerText = "🔊 استمع للقصة";
-                return;
-            }
-
-            // إيقاف أي قراءة قديمة لقصة أخرى
-            synth.cancel();
-            if (currentSpeakingId && document.getElementById(`speak-btn-${currentSpeakingId}`)) {
-                document.getElementById(`speak-btn-${currentSpeakingId}`).innerText = "🔊 استمع للقصة";
-            }
-
-            const textToRead = storiesMap.get(storyId);
-            if (!textToRead) return;
-
-            const utterance = new SpeechSynthesisUtterance(textToRead);
-            utterance.lang = 'ar-SA';
-            utterance.rate = 0.9;
-            utterance.pitch = 1.0;
-
-            // اختيار حزمة اللغة العربية المتاحة بالجهاز
-            const voices = synth.getVoices();
-            const arabicVoice = voices.find(voice => voice.lang.includes('ar'));
-            if (arabicVoice) utterance.voice = arabicVoice;
-
-            utterance.onstart = () => {
-                currentSpeakingId = storyId;
-                btn.innerText = "⏹️ إيقاف الصوت";
-            };
-
-            utterance.onend = () => {
-                currentSpeakingId = null;
-                btn.innerText = "🔊 استمع للقصة";
-            };
-
-            utterance.onerror = (e) => {
-                console.error("خطأ الصوت:", e);
-                currentSpeakingId = null;
-                btn.innerText = "🔊 استمع للقصة";
-            };
-
-            synth.speak(utterance);
-        }
-
-        // تحميل حزمة الأصوات بشكل مسبق للتأكد من جاهزية المحرك الصوتي
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = () => {
-                window.speechSynthesis.getVoices();
-            };
-        }
-
-        // 3. مشاركة القصة
-        function shareStory(title) {
-            const shareText = `إليك قصة رائعة بعنوان "${title}" على موقع حكاية:\n${window.location.href}`;
-            if (navigator.share) {
-                navigator.share({ title: title, text: shareText, url: window.location.href });
-            } else {
-                navigator.clipboard.writeText(shareText);
-                alert("تم نسخ رابط القصة بنجاح!");
-            }
-        }
-
-        // 4. وضع القراءة المريح
-        function toggleReaderMode(storyId) {
-            const content = document.getElementById(`story-text-${storyId}`);
-            if (content.style.fontSize === "1.2rem") {
-                content.style.fontSize = "0.95rem";
-                content.style.lineHeight = "1.8";
-            } else {
-                content.style.fontSize = "1.2rem";
-                content.style.lineHeight = "2.2";
-            }
-        }
-
-        // 5. شريط تقدم القراءة
-        window.onscroll = function() {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById("progress-bar").style.width = scrolled + "%";
-        };
-
-        // جلب القصص من Google Sheets
-        const sheetID = "1372MSEs4QJJH4LCo1FDw1gxd5SAOA854YRK0prIs7t0";
-        const fetchURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
-
-        fetch(fetchURL)
-            .then(res => res.text())
-            .then(data => {
-                const json = JSON.parse(data.substring(47, data.length - 2));
-                const rows = json.table.rows;
-                const container = document.getElementById("stories-container");
-                container.innerHTML = "";
-
-                let index = 0;
-
-                rows.forEach(row => {
-                    const author = (row.c[1] && row.c[1].v) ? row.c[1].v : "مجهول";
-                    const title = (row.c[2] && row.c[2].v) ? row.c[2].v : "بدون عنوان";
-                    const category = (row.c[3] && row.c[3].v) ? row.c[3].v : "عام";
-                    const content = (row.c[4] && row.c[4].v) ? row.c[4].v : "";
-                    const status = (row.c[5] && row.c[5].v) ? row.c[5].v : "";
-
-                    if (status.trim() === "مقبول") {
-                        const storyId = `story_${index}`;
-                        
-                        // حفظ النص كاملاً في الـ Map لتشغيل القراءة الصوتية بأمان
-                        storiesMap.set(storyId, content);
-
-                        const readingTime = calculateReadingTime(content);
-
-                        container.innerHTML += `
-                            <div class="story-card">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="color: #e2b714; font-size: 0.85rem; font-weight: bold; background-color: #121824; padding: 4px 10px; border-radius: 6px; border: 1px solid #2e3a52;">${category}</span>
-                                    <span style="color: #64748b; font-size: 0.8rem;">⏱️ ${readingTime}</span>
-                                </div>
-
-                                <h3 class="story-title" style="color: #ffffff; font-size: 1.4rem; margin: 15px 0 10px 0;">${title}</h3>
-                                <p id="story-text-${storyId}" style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.8; white-space: pre-line; transition: font-size 0.3s;">${content}</p>
-                                
-                                <div style="display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 0.85rem; margin-top: 15px; border-top: 1px solid #2e3a52; padding-top: 10px; flex-wrap: wrap; gap: 10px;">
-                                    <span>بقلم: <strong class="story-author" style="color: #94a3b8;">${author}</strong></span>
-                                    
-                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                        <!-- زر القراءة الصوتية -->
-                                        <button id="speak-btn-${storyId}" onclick="toggleSpeech('${storyId}')" class="btn-action">🔊 استمع للقصة</button>
-                                        
-                                        <!-- زر وضع القراءة -->
-                                        <button onclick="toggleReaderMode('${storyId}')" class="btn-action" title="تكبير الخط">👁️ وضع القراءة</button>
-                                        
-                                        <!-- زر المشاركة -->
-                                        <button onclick="shareStory('${title}')" class="btn-action">🔗 مشاركة</button>
-
-                                        <!-- زر الإعجاب -->
-                                        <button id="like-btn-${storyId}" onclick="toggleLike('${storyId}')" class="btn-action">
-                                            ❤️ <span id="like-count-${storyId}">0</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- قسم التعليقات -->
-                                <div style="margin-top: 20px; border-top: 1px solid #2e3a52; padding-top: 15px;">
-                                    <h4 style="color: #fff; font-size: 0.95rem; margin-bottom: 10px;">💬 التعليقات:</h4>
-                                    <div id="comments-list-${storyId}" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;"></div>
-                                    <div style="display: flex; gap: 8px;">
-                                        <input type="text" id="comment-input-${storyId}" placeholder="اكتب تعليقك هنا..." style="flex: 1; padding: 8px; background: #121824; border: 1px solid #2e3a52; color: #fff; border-radius: 6px; outline: none; font-size: 0.85rem;">
-                                        <button onclick="addComment('${storyId}')" style="background: #e2b714; color: #121824; border: none; font-weight: bold; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">إرسال</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        
-                        setTimeout(() => {
-                            if(window.loadComments) window.loadComments(storyId);
-                            if(window.listenToLikes) window.listenToLikes(storyId);
-                        }, 300);
-
-                        index++;
-                    }
-                });
-            });
-
-        // 6. تصفية القصص بالبحث
-        function filterStories() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            document.querySelectorAll('.story-card').forEach(card => {
-                const title = card.querySelector('.story-title').innerText.toLowerCase();
-                const author = card.querySelector('.story-author').innerText.toLowerCase();
-                card.style.display = (title.includes(query) || author.includes(query)) ? 'block' : 'none';
-            });
-        }
-
-        // 7. البحث الصوتي
-        function startVoiceSearch() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) return alert("المتصفح لا يدعم البحث الصوتي.");
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'ar-SA';
-            recognition.onresult = (e) => {
-                document.getElementById('search-input').value = e.results[0][0].transcript;
-                filterStories();
-            };
-            recognition.start();
-        }
-
-        function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
-        function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
-        function openProfileModal() { document.getElementById('profile-modal').style.display = 'flex'; }
-        function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
-    </script>
+    // دالة حماية لحجب الأكواد الضارة
+    function escapeHtml(text) {
+        return text ? text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+    }
+</script>
 </body>
 </html>
