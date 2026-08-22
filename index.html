@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
     
-    <!-- الخطوط والأيقونات -->
+    <!-- الخطوط والأيقونات الخارجية -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- مكتبات Firebase (تتضمن مكتبة Analytics لتتبع الزوار) -->
+    <!-- مكتبات Firebase الأساسية وحزمة Analytics -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
@@ -131,7 +131,7 @@
         }
 
         /* ==========================================================================
-           3. منطقة المحتوى والبطاقات (Main Content Layout)
+           3. منطقة المحتوى والتصفية (Main Content Layout)
            ========================================================================== */
         .container {
             max-width: 1080px;
@@ -178,7 +178,6 @@
             margin: 0 auto;
         }
 
-        /* أدوات التصفية والبحث */
         .controls-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -254,7 +253,9 @@
             font-weight: 700;
         }
 
-        /* بطاقة القصة */
+        /* ==========================================================================
+           4. شبكة القصص وبطاقات العرض (Stories Grid)
+           ========================================================================== */
         .stories-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -407,7 +408,7 @@
         }
 
         /* ==========================================================================
-           4. النوافذ المنبثقة والنافذة المخصصة للقراءة (Modals)
+           5. النوافذ المنبثقة (Modal System)
            ========================================================================== */
         .modal-overlay {
             position: fixed;
@@ -508,7 +509,7 @@
         .share-btn-modal.tg { background-color: var(--tg-color); }
 
         /* ==========================================================================
-           5. حالة التحميل والشاشة الخالية (Empty/Loading States)
+           6. حالات التحميل والرسائل الحرة (States & UI Feedbacks)
            ========================================================================== */
         .empty-state, .loading-state {
             text-align: center;
@@ -532,7 +533,7 @@
         }
 
         /* ==========================================================================
-           6. التذييل (Footer)
+           7. التذييل (Footer)
            ========================================================================== */
         footer {
             background: var(--bg-card);
@@ -624,7 +625,7 @@
 
     <script>
         // ==========================================================================
-        // 1. تهيئة Firebase و Analytics
+        // 1. تهيئة Firebase والإحصائيات
         // ==========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
@@ -634,221 +635,4 @@
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const analytics = firebase.analytics(); // تفعيل تسجيل التحليلات فور تصفح المستخدم
-
-        let allStories = [];
-        let currentCategory = 'الكل';
-
-        // ==========================================================================
-        // 2. مزامنة البيانات وجلب القصص
-        // ==========================================================================
-        db.collection("stories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-            allStories = [];
-            snapshot.forEach(doc => {
-                allStories.push({ id: doc.id, ...doc.data() });
-            });
-            renderStories();
-        }, error => {
-            console.error("Firebase Error: ", error);
-            document.getElementById("storiesGrid").innerHTML = `
-                <div class="empty-state">
-                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: var(--danger-color); margin-bottom: 15px;"></i>
-                    <p>تعذر جلب البيانات. يرجى التحقق من الاتصال بالإنترنت.</p>
-                </div>
-            `;
-        });
-
-        // ==========================================================================
-        // 3. التحقق من التفاعل مع القصص
-        // ==========================================================================
-        function isLiked(id) {
-            const likedStories = JSON.parse(localStorage.getItem('hikaya_liked_stories') || '[]');
-            return likedStories.includes(id);
-        }
-
-        // ==========================================================================
-        // 4. عرض وتصفية القصص
-        // ==========================================================================
-        function renderStories() {
-            const grid = document.getElementById("storiesGrid");
-            const query = document.getElementById("searchInput").value.toLowerCase().trim();
-            grid.innerHTML = "";
-
-            const filtered = allStories.filter(story => {
-                const matchCat = (currentCategory === 'الكل') || (story.category === currentCategory);
-                const titleMatch = story.title ? story.title.toLowerCase().includes(query) : false;
-                const contentMatch = story.content ? story.content.toLowerCase().includes(query) : false;
-                const authorMatch = story.author ? story.author.toLowerCase().includes(query) : false;
-                
-                return matchCat && (titleMatch || contentMatch || authorMatch);
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fa-solid fa-folder-open" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                        <p>لا توجد قصص مطابقة للبحث أو التصنيف المختار حالياً.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach(story => {
-                const hasLiked = isLiked(story.id);
-                const card = document.createElement("div");
-                card.className = "story-card";
-                
-                card.innerHTML = `
-                    <div class="story-header">
-                        <h2 class="story-title" onclick="openStoryModal('${story.id}')">${escapeHTML(story.title)}</h2>
-                        <span class="category-badge">${escapeHTML(story.category || 'عام')}</span>
-                    </div>
-                    <div class="story-meta">
-                        <span><i class="fa-solid fa-user-pen"></i> ${escapeHTML(story.author || 'كاتب مجهول')}</span>
-                        <span><i class="fa-solid fa-link"></i> ${escapeHTML(story.relation || 'غير محدد')}</span>
-                    </div>
-                    <div class="story-content">${escapeHTML(story.content)}</div>
-                    <div class="story-footer">
-                        <div class="action-btns">
-                            <button id="like-btn-${story.id}" class="action-btn ${hasLiked ? 'liked' : ''}" onclick="likeStory('${story.id}', ${story.likes || 0})">
-                                <i class="fa-solid fa-heart"></i> <span id="like-count-${story.id}">${story.likes || 0}</span>
-                            </button>
-                            <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(window.location.origin + '/story.html?id=' + story.id)}" target="_blank" class="action-btn">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </a>
-                            <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.origin + '/story.html?id=' + story.id)}" target="_blank" class="action-btn">
-                                <i class="fa-brands fa-telegram"></i>
-                            </a>
-                            <button class="action-btn" onclick="reportStory('${story.id}')" style="color: var(--danger-color);">
-                                <i class="fa-solid fa-flag"></i> إبلاغ
-                            </button>
-                        </div>
-                        <div class="read-more-btn" onclick="openStoryModal('${story.id}')">
-                            قراءة كاملة <i class="fa-solid fa-arrow-left"></i>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // ==========================================================================
-        // 5. زر الإعجاب المنفرد
-        // ==========================================================================
-        async function likeStory(id, currentLikes) {
-            if (isLiked(id)) {
-                alert("لقد قمت بالإعجاب بهذه القصة سابقاً! ❤️");
-                return;
-            }
-
-            try {
-                await db.collection("stories").doc(id).update({
-                    likes: currentLikes + 1
-                });
-
-                const likedStories = JSON.parse(localStorage.getItem('hikaya_liked_stories') || '[]');
-                likedStories.push(id);
-                localStorage.setItem('hikaya_liked_stories', JSON.stringify(likedStories));
-
-                const btn = document.getElementById(`like-btn-${id}`);
-                const countSpan = document.getElementById(`like-count-${id}`);
-                if (btn) {
-                    btn.classList.add('liked');
-                    if (countSpan) countSpan.innerText = currentLikes + 1;
-                }
-            } catch (error) {
-                console.error("Error updating likes: ", error);
-            }
-        }
-
-        // ==========================================================================
-        // 6. فلترة التصنيفات
-        // ==========================================================================
-        function filterCategory(cat, btn) {
-            currentCategory = cat;
-            document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderStories();
-        }
-
-        // ==========================================================================
-        // 7. النافذة المنبثقة للقصة الكاملة
-        // ==========================================================================
-        function openStoryModal(id) {
-            const story = allStories.find(s => s.id === id);
-            if (!story) return;
-
-            const modal = document.getElementById('storyModal');
-            const content = document.getElementById('modalContent');
-            const shareUrl = encodeURIComponent(window.location.origin + '/story.html?id=' + story.id);
-
-            content.innerHTML = `
-                <span class="category-badge" style="margin-bottom: 10px; display: inline-block;">${escapeHTML(story.category || 'عام')}</span>
-                <h1 style="font-size: 2rem; color: var(--text-white); margin-bottom: 10px;">${escapeHTML(story.title)}</h1>
-                <div class="story-meta">
-                    <span>✍️ الكاتب: ${escapeHTML(story.author || 'غير معروف')}</span>
-                    <span>🔗 المصدر: ${escapeHTML(story.relation || 'غير محدد')}</span>
-                </div>
-                <div class="modal-body">${escapeHTML(story.content)}</div>
-                <div class="share-box-modal">
-                    <span style="font-size: 0.9rem; font-weight: bold; color: var(--text-muted);">مشاركة القصة عبر:</span>
-                    <a href="https://api.whatsapp.com/send?text=${shareUrl}" target="_blank" class="share-btn-modal wa"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
-                    <a href="https://t.me/share/url?url=${shareUrl}" target="_blank" class="share-btn-modal tg"><i class="fa-brands fa-telegram"></i> تليجرام</a>
-                </div>
-            `;
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeStoryModal() {
-            const modal = document.getElementById('storyModal');
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('storyModal');
-            if (event.target === modal) {
-                closeStoryModal();
-            }
-        }
-
-        // ==========================================================================
-        // 8. نظام الإبلاغ
-        // ==========================================================================
-        async function reportStory(id) {
-            const reason = prompt("يرجى تدوين سبب الإبلاغ عن هذه القصة لتتم مراجعتها من قبل الإدارة:");
-            if (reason && reason.trim() !== "") {
-                try {
-                    await db.collection("reports").add({
-                        storyId: id,
-                        reason: reason.trim(),
-                        createdAt: new Date()
-                    });
-                    alert("شكراً لك! تم إرسال البلاغ بنجاح وسيقوم فريق الإدارة بمراجعته.");
-                } catch (e) {
-                    console.error("Report send failed: ", e);
-                    alert("تعذر إرسال البلاغ حالياً، يرجى المحاولة لاحقاً.");
-                }
-            }
-        }
-
-        // ==========================================================================
-        // 9. تنقية النصوص Sanitization
-        // ==========================================================================
-        function escapeHTML(str) {
-            if (!str) return '';
-            return str.replace(/[&<>'"]/g, 
-                tag => ({
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    "'": '&#39;',
-                    '"': '&quot;'
-                }[tag] || tag)
-            );
-        }
-    </script>
-</body>
-</html>
+        const analytics = firebase.analytics();
