@@ -32,12 +32,12 @@
         
         .story-meta { display: flex; gap: 15px; font-size: 0.85rem; color: #94a3b8; margin-bottom: 15px; }
         .story-content { color: #cbd5e1; line-height: 1.7; margin-bottom: 20px; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .story-content.expanded { -webkit-line-clamp: unset; }
 
         .story-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 15px; flex-wrap: wrap; gap: 10px; }
         .action-btns { display: flex; gap: 15px; }
         .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 5px; text-decoration: none; font-size: 0.9rem; }
         .action-btn:hover { color: #e2b714; }
+        .action-btn.liked { color: #ef4444; cursor: not-allowed; }
         
         footer { background: #1e293b; border-top: 1px solid #334155; text-align: center; padding: 20px; color: #94a3b8; font-size: 0.85rem; margin-top: 40px; }
         footer a { color: #e2b714; text-decoration: none; margin: 0 10px; }
@@ -68,7 +68,6 @@
 
     <footer>
         <p>© 2026 منصة حكاية - جميع الحقوق محفوظة</p>
-
         <p><a href="privacy.html">سياسة الخصوصية والاستخدام</a></p>
     </footer>
 
@@ -90,6 +89,11 @@
         renderStories();
     });
 
+    function isLiked(id) {
+        const likedStories = JSON.parse(localStorage.getItem('likedStories') || '[]');
+        return likedStories.includes(id);
+    }
+
     function renderStories() {
         const grid = document.getElementById("storiesGrid");
         const query = document.getElementById("searchInput").value.toLowerCase();
@@ -103,6 +107,7 @@
 
         filtered.forEach(story => {
             const pageLink = encodeURIComponent(`${window.location.origin}/story.html?id=${story.id}`);
+            const hasLiked = isLiked(story.id);
             const card = document.createElement("div");
             card.className = "story-card";
             card.innerHTML = `
@@ -118,7 +123,9 @@
                 
                 <div class="story-footer">
                     <div class="action-btns">
-                        <button class="action-btn" onclick="likeStory('${story.id}', ${story.likes || 0})"><i class="fa-solid fa-heart"></i> ${story.likes || 0}</button>
+                        <button id="like-btn-${story.id}" class="action-btn ${hasLiked ? 'liked' : ''}" onclick="likeStory('${story.id}', ${story.likes || 0})" ${hasLiked ? 'disabled' : ''}>
+                            <i class="fa-solid fa-heart"></i> ${story.likes || 0}
+                        </button>
                         <a href="https://api.whatsapp.com/send?text=${pageLink}" target="_blank" class="action-btn"><i class="fa-brands fa-whatsapp"></i></a>
                         <a href="https://t.me/share/url?url=${pageLink}" target="_blank" class="action-btn"><i class="fa-brands fa-telegram"></i></a>
                         <button class="action-btn" onclick="reportStory('${story.id}')" style="color:#ef4444;"><i class="fa-solid fa-flag"></i> إبلاغ</button>
@@ -137,8 +144,29 @@
         renderStories();
     }
 
-    async function likeStory(id, current) {
-        await db.collection("stories").doc(id).update({ likes: current + 1 });
+    async function likeStory(id, currentLikes) {
+        if (isLiked(id)) {
+            alert("لقد قمت بالإعجاب بهذه القصة من قبل! ❤️");
+            return;
+        }
+
+        try {
+            await db.collection("stories").doc(id).update({
+                likes: currentLikes + 1
+            });
+
+            const likedStories = JSON.parse(localStorage.getItem('likedStories') || '[]');
+            likedStories.push(id);
+            localStorage.setItem('likedStories', JSON.stringify(likedStories));
+
+            const btn = document.getElementById(`like-btn-${id}`);
+            if (btn) {
+                btn.classList.add('liked');
+                btn.disabled = true;
+            }
+        } catch (error) {
+            console.error("حدث خطأ أثناء إضافة الإعجاب:", error);
+        }
     }
 
     async function reportStory(id) {
