@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
     
-    <!-- الخطوط والأيقونات الخارجية -->
+    <!-- الخطوط والأيقونات -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -16,7 +16,6 @@
             --bg-main: #0f172a;
             --bg-card: #1e293b;
             --accent-gold: #e2b714;
-            --accent-gold-hover: #d1a500;
             --text-white: #f8fafc;
             --text-muted: #94a3b8;
             --text-body: #cbd5e1;
@@ -26,382 +25,88 @@
             --radius-md: 14px;
             --radius-lg: 20px;
             --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.25);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.3s ease;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-white);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-white); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.6; }
 
         header {
             background-color: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             padding: 16px 8%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            background: var(--accent-gold);
-            color: var(--bg-main);
-            width: 42px;
-            height: 42px;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            box-shadow: 0 0 15px rgba(226, 183, 20, 0.4);
-        }
-
-        .logo-text {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--accent-gold);
-        }
+        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-icon { background: var(--accent-gold); color: var(--bg-main); width: 42px; height: 42px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--accent-gold); }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-gold), #b89200);
-            color: var(--bg-main);
-            padding: 10px 22px;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(226, 183, 20, 0.25);
+            color: var(--bg-main); padding: 10px 22px; border-radius: var(--radius-sm);
+            font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(226, 183, 20, 0.4);
-        }
-
-        .container {
-            max-width: 1080px;
-            margin: 40px auto;
-            padding: 0 20px;
-            flex: 1;
-            width: 100%;
-        }
-
-        .hero-banner {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 35px 30px;
-            text-align: center;
-            margin-bottom: 35px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .hero-title {
-            font-size: 2.2rem;
-            color: var(--text-white);
-            font-weight: 900;
-            margin-bottom: 10px;
-        }
-
-        .hero-subtitle {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            max-width: 650px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1080px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
 
         .controls-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow-md);
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); padding: 20px; margin-bottom: 30px;
+            display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center;
         }
 
-        .search-box {
-            flex: 1;
-            min-width: 280px;
-            position: relative;
-        }
-
+        .search-box { flex: 1; min-width: 280px; position: relative; }
         .search-box input {
-            width: 100%;
-            padding: 12px 45px 12px 15px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            background: var(--bg-main);
-            color: var(--text-white);
-            font-size: 0.95rem;
-            outline: none;
-            transition: var(--transition);
+            width: 100%; padding: 12px 45px 12px 15px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-white); outline: none;
         }
+        .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
-        .search-box input:focus {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 0 3px rgba(226, 183, 20, 0.15);
-        }
-
-        .search-box i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        .filter-tags {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
+        .filter-tags { display: flex; gap: 10px; flex-wrap: wrap; }
         .tag-btn {
-            background: var(--bg-main);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 8px 18px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: var(--transition);
+            background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-muted);
+            padding: 8px 18px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600;
         }
+        .tag-btn.active, .tag-btn:hover { background: var(--accent-gold); color: var(--bg-main); border-color: var(--accent-gold); font-weight: 700; }
 
-        .tag-btn.active, .tag-btn:hover {
-            background: var(--accent-gold);
-            color: var(--bg-main);
-            border-color: var(--accent-gold);
-            font-weight: 700;
-        }
-
-        .stories-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
+        .stories-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
 
         .story-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 28px;
-            transition: var(--transition);
-            box-shadow: var(--shadow-md);
-            display: flex;
-            flex-direction: column;
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); padding: 28px; transition: var(--transition);
         }
 
-        .story-card:hover {
-            border-color: rgba(226, 183, 20, 0.4);
-            transform: translateY(-3px);
-        }
+        .story-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .story-title { font-size: 1.5rem; color: var(--text-white); font-weight: 700; cursor: pointer; }
+        .story-title:hover { color: var(--accent-gold); }
+        .category-badge { background: rgba(226, 183, 20, 0.1); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+        .story-meta { display: flex; gap: 20px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px; }
+        .story-content { color: var(--text-body); line-height: 1.8; font-size: 1.05rem; margin-bottom: 22px; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .story-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            gap: 15px;
-        }
-
-        .story-title {
-            font-size: 1.5rem;
-            color: var(--text-white);
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .story-title:hover {
-            color: var(--accent-gold);
-        }
-
-        .category-badge {
-            background: rgba(226, 183, 20, 0.1);
-            border: 1px solid var(--accent-gold);
-            color: var(--accent-gold);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .story-meta {
-            display: flex;
-            gap: 20px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-        }
-
-        .story-content {
-            color: var(--text-body);
-            line-height: 1.8;
-            font-size: 1.05rem;
-            margin-bottom: 22px;
-            white-space: pre-wrap;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            word-break: break-word;
-        }
-
-        .story-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border-color);
-            padding-top: 18px;
-            margin-top: auto;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .action-btns {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .action-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            transition: var(--transition);
-            text-decoration: none;
-        }
-
-        .action-btn:hover {
-            color: var(--accent-gold);
-        }
-
-        .action-btn.liked {
-            color: var(--danger-color);
-        }
-
-        .read-more-btn {
-            color: var(--accent-gold);
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .story-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 18px; }
+        .action-btns { display: flex; gap: 15px; }
+        .action-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.95rem; text-decoration: none; }
+        .action-btn.liked { color: var(--danger-color); }
+        .read-more-btn { color: var(--accent-gold); font-weight: 700; cursor: pointer; }
 
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
-            padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center; z-index: 2000;
+            opacity: 0; pointer-events: none; transition: var(--transition); padding: 20px;
         }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); width: 100%; max-width: 750px; max-height: 90vh; overflow-y: auto; padding: 35px; position: relative; }
+        .close-modal { position: absolute; top: 20px; left: 20px; background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-muted); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
 
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 750px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 35px;
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px; left: 20px;
-            background: var(--bg-main);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .loading-state, .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            width: 45px; height: 45px;
-            border-radius: 50%;
-            border-left-color: var(--accent-gold);
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
+        .loading-state, .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .spinner { border: 4px solid rgba(255, 255, 255, 0.1); width: 45px; height: 45px; border-radius: 50%; border-left-color: var(--accent-gold); animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        footer {
-            background: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            padding: 25px 20px;
-            color: var(--text-muted);
-            margin-top: 60px;
-        }
+        footer { background: var(--bg-card); border-top: 1px solid var(--border-color); text-align: center; padding: 25px 20px; color: var(--text-muted); margin-top: 60px; }
     </style>
 </head>
 <body>
@@ -415,15 +120,10 @@
     </header>
 
     <div class="container">
-        <div class="hero-banner">
-            <h1 class="hero-title">عالم من القصص والروايات العربية</h1>
-            <p class="hero-subtitle">استمتع بقراءة أفضل القصص والروايات مباشرة من الكُتّاب والقرّاء.</p>
-        </div>
-
         <div class="controls-card">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" onkeyup="renderStories()" placeholder="ابحث في العنوان، المحتوى أو الكاتب...">
+                <input type="text" id="searchInput" onkeyup="renderStories()" placeholder="ابحث في القصص...">
             </div>
             <div class="filter-tags">
                 <button class="tag-btn active" onclick="filterCategory('الكل', this)">✨ الكل</button>
@@ -436,7 +136,7 @@
         <div id="storiesGrid" class="stories-grid">
             <div class="loading-state">
                 <div class="spinner"></div>
-                <p>جاري تحميل أحدث القصص...</p>
+                <p>جاري تحميل القصص...</p>
             </div>
         </div>
     </div>
@@ -453,38 +153,35 @@
     </footer>
 
     <script>
-        // رابط التطبيق المباشر المأخوذ من صورتك
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz7aibrX9HU7bPkGUYipqmcAVZqMQH2Um6qJP8KqWESaVqJYqlhJp9-MVqmcMi0ZKVo/exec';
 
         let allStories = [];
         let currentCategory = 'الكل';
 
-        // دالة جلب البيانات المباشرة
         function loadStories() {
             fetch(SCRIPT_URL)
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
                     if (Array.isArray(data)) {
                         allStories = data.map((item, index) => ({
                             id: 'story_' + index,
-                            title: item.title || item[1] || 'قصة بدون عنوان',
-                            author: item.author || item[2] || 'كاتب مجهول',
-                            relation: item.relation || item[3] || 'عام',
-                            content: item.content || item[4] || item[1] || '',
-                            category: item.category || item[5] || 'واقعية',
-                            likes: item.likes || Math.floor(Math.random() * 15) + 3
+                            title: item.title || 'قصة بدون عنوان',
+                            author: item.author || 'كاتب مجهول',
+                            relation: item.relation || 'عام',
+                            content: item.content || '',
+                            category: item.category || 'واقعية',
+                            likes: Math.floor(Math.random() * 10) + 2
                         })).reverse();
+                        renderStories();
                     } else {
-                        allStories = [];
+                        throw new Error('فشل جلب البيانات');
                     }
-                    renderStories();
                 })
-                .catch(error => {
-                    console.error("Error fetching data:", error);
+                .catch(err => {
+                    console.error("Error:", err);
                     document.getElementById("storiesGrid").innerHTML = `
                         <div class="empty-state">
-                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: var(--danger-color); margin-bottom: 15px;"></i>
-                            <p>تعذر جلب القصص. تأكد من أن صلاحية النشر في Apps Script هي "Anyone" (أي شخص).</p>
+                            <p>حدث خطأ في تحميل البيانات، تأكد من إعادة نشر الإصدار الجديد (New Deployment) في Apps Script.</p>
                         </div>
                     `;
                 });
@@ -497,20 +194,14 @@
 
             const filtered = allStories.filter(story => {
                 const matchCat = (currentCategory === 'الكل') || (story.category === currentCategory);
-                const titleMatch = story.title ? story.title.toLowerCase().includes(query) : false;
-                const contentMatch = story.content ? story.content.toLowerCase().includes(query) : false;
-                const authorMatch = story.author ? story.author.toLowerCase().includes(query) : false;
-                
-                return matchCat && (titleMatch || contentMatch || authorMatch);
+                const matchQuery = story.title.toLowerCase().includes(query) || 
+                                   story.content.toLowerCase().includes(query) || 
+                                   story.author.toLowerCase().includes(query);
+                return matchCat && matchQuery;
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
-                        <p>لا توجد قصص مطابقة للبحث حالياً.</p>
-                    </div>
-                `;
+                grid.innerHTML = `<div class="empty-state"><p>لا توجد قصص مطابقة.</p></div>`;
                 return;
             }
 
@@ -534,12 +225,6 @@
                             <button class="action-btn ${liked ? 'liked' : ''}" onclick="toggleLike('${story.id}', this)">
                                 <i class="fa-solid fa-heart"></i> <span>${story.likes + (liked ? 1 : 0)}</span>
                             </button>
-                            <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(story.title + ' - ' + story.content.substring(0, 100))}" target="_blank" class="action-btn">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </a>
-                            <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(story.title)}" target="_blank" class="action-btn">
-                                <i class="fa-brands fa-telegram"></i>
-                            </a>
                         </div>
                         <div class="read-more-btn" onclick="openStoryModal('${story.id}')">
                             قراءة كاملة <i class="fa-solid fa-arrow-left"></i>
@@ -558,8 +243,7 @@
         }
 
         function isLiked(id) {
-            const likedList = JSON.parse(localStorage.getItem('liked_stories') || '[]');
-            return likedList.includes(id);
+            return JSON.parse(localStorage.getItem('liked_stories') || '[]').includes(id);
         }
 
         function toggleLike(id, btn) {
@@ -568,7 +252,6 @@
 
             likedList.push(id);
             localStorage.setItem('liked_stories', JSON.stringify(likedList));
-            
             btn.classList.add('liked');
             const countSpan = btn.querySelector('span');
             countSpan.innerText = parseInt(countSpan.innerText) + 1;
@@ -579,18 +262,15 @@
             if (!story) return;
 
             const modal = document.getElementById('storyModal');
-            const content = document.getElementById('modalContent');
-
-            content.innerHTML = `
+            document.getElementById('modalContent').innerHTML = `
                 <span class="category-badge" style="margin-bottom: 12px; display: inline-block;">${escapeHTML(story.category)}</span>
-                <h1 style="font-size: 1.8rem; color: var(--text-white); margin-bottom: 12px;">${escapeHTML(story.title)}</h1>
+                <h1 style="font-size: 1.8rem; margin-bottom: 12px;">${escapeHTML(story.title)}</h1>
                 <div class="story-meta">
                     <span>✍️ الكاتب: ${escapeHTML(story.author)}</span>
                     <span>🔗 المصدر: ${escapeHTML(story.relation)}</span>
                 </div>
                 <div style="line-height: 1.9; font-size: 1.1rem; color: var(--text-body); white-space: pre-wrap; margin: 20px 0;">${escapeHTML(story.content)}</div>
             `;
-
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -600,12 +280,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        window.onclick = function(e) {
-            if (e.target === document.getElementById('storyModal')) {
-                closeStoryModal();
-            }
-        };
-
         function escapeHTML(str) {
             if (!str) return '';
             return String(str).replace(/[&<>'"]/g, tag => ({
@@ -613,7 +287,6 @@
             }[tag] || tag));
         }
 
-        // البدء بجلب القصص فوراً
         loadStories();
     </script>
 </body>
