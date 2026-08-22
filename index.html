@@ -11,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- مكتبات Firebase -->
+    <!-- مكتبات Firebase (تتضمن مكتبة Analytics لتتبع الزوار) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
 
     <style>
         /* ==========================================================================
@@ -375,7 +376,6 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        /* زر الإعجاب عند تفعيله (إصلاح عدم تعطيل الزر ومنع ظهور دائرة الممنوع) */
         .action-btn.liked {
             color: var(--danger-color);
         }
@@ -555,7 +555,6 @@
             text-decoration: underline;
         }
 
-        /* التجاوب مع مختلف الشاشات */
         @media (max-width: 768px) {
             header { padding: 12px 5%; }
             .container { margin: 20px auto; }
@@ -569,7 +568,6 @@
 </head>
 <body>
 
-    <!-- الرأس والتنقل الرئيسي -->
     <header>
         <a href="index.html" class="logo-container">
             <div class="logo-icon"><i class="fa-solid fa-book-open"></i></div>
@@ -580,16 +578,13 @@
         </div>
     </header>
 
-    <!-- منطقة المحتوى الرئيسي -->
     <div class="container">
         
-        <!-- البانر الترحيبي -->
         <div class="hero-banner">
             <h1 class="hero-title">عالم من القصص والروايات العربية</h1>
             <p class="hero-subtitle">استمتع بقراءة أفضل القصص الواقعية، الخيالية، والغامضة، أو شارك تجربتك الخاصة مع آلاف القراء.</p>
         </div>
 
-        <!-- شريط التحكم، البحث، والتصفية -->
         <div class="controls-card">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -603,7 +598,6 @@
             </div>
         </div>
 
-        <!-- شبكة عرض القصص -->
         <div id="storiesGrid" class="stories-grid">
             <div class="loading-state">
                 <div class="spinner"></div>
@@ -613,17 +607,13 @@
 
     </div>
 
-    <!-- مودال العرض المخصص للقصة الكاملة -->
     <div class="modal-overlay" id="storyModal">
         <div class="modal-card">
             <button class="close-modal" onclick="closeStoryModal()"><i class="fa-solid fa-xmark"></i></button>
-            <div id="modalContent">
-                <!-- المحتوى الديناميكي للقصة المفتوحة -->
-            </div>
+            <div id="modalContent"></div>
         </div>
     </div>
 
-    <!-- التذييل القانوني -->
     <footer>
         <p>© 2026 منصة حكاية - جميع الحقوق محفوظة</p>
         <p style="margin-top: 10px;">
@@ -632,10 +622,9 @@
         </p>
     </footer>
 
-    <!-- النص المضمّن والتفاعل مع Firebase -->
     <script>
         // ==========================================================================
-        // 1. تهيئة Firebase والإعدادات الأساسية
+        // 1. تهيئة Firebase و Analytics
         // ==========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
@@ -645,12 +634,13 @@
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const analytics = firebase.analytics(); // تفعيل تسجيل التحليلات فور تصفح المستخدم
 
         let allStories = [];
         let currentCategory = 'الكل';
 
         // ==========================================================================
-        // 2. مزامنة البيانات وجلب القصص تلقائياً
+        // 2. مزامنة البيانات وجلب القصص
         // ==========================================================================
         db.collection("stories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
             allStories = [];
@@ -669,7 +659,7 @@
         });
 
         // ==========================================================================
-        // 3. التحقق من التفاعل مع القصص (Local Storage Helper)
+        // 3. التحقق من التفاعل مع القصص
         // ==========================================================================
         function isLiked(id) {
             const likedStories = JSON.parse(localStorage.getItem('hikaya_liked_stories') || '[]');
@@ -677,7 +667,7 @@
         }
 
         // ==========================================================================
-        // 4. عرض وتصفية القصص (Render Stories)
+        // 4. عرض وتصفية القصص
         // ==========================================================================
         function renderStories() {
             const grid = document.getElementById("storiesGrid");
@@ -743,7 +733,7 @@
         }
 
         // ==========================================================================
-        // 5. وظيفة زر الإعجاب المنفرد الخالي من أخطاء العرض
+        // 5. زر الإعجاب المنفرد
         // ==========================================================================
         async function likeStory(id, currentLikes) {
             if (isLiked(id)) {
@@ -752,17 +742,14 @@
             }
 
             try {
-                // تحديث العداد في قاعدة البيانات
                 await db.collection("stories").doc(id).update({
                     likes: currentLikes + 1
                 });
 
-                // تسليط حالة الإعجاب محلياً
                 const likedStories = JSON.parse(localStorage.getItem('hikaya_liked_stories') || '[]');
                 likedStories.push(id);
                 localStorage.setItem('hikaya_liked_stories', JSON.stringify(likedStories));
 
-                // تحديث واجهة المستخدم دون الحاجة للتحديث كاملاً
                 const btn = document.getElementById(`like-btn-${id}`);
                 const countSpan = document.getElementById(`like-count-${id}`);
                 if (btn) {
@@ -775,7 +762,7 @@
         }
 
         // ==========================================================================
-        // 6. فلترة التصنيفات وتنقيتها
+        // 6. فلترة التصنيفات
         // ==========================================================================
         function filterCategory(cat, btn) {
             currentCategory = cat;
@@ -785,7 +772,7 @@
         }
 
         // ==========================================================================
-        // 7. فتح وإغلاق النافذة المنبثقة لقراءة القصة (Modal Window)
+        // 7. النافذة المنبثقة للقصة الكاملة
         // ==========================================================================
         function openStoryModal(id) {
             const story = allStories.find(s => s.id === id);
@@ -820,7 +807,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        // إغلاق المودال عند النقر خارج محتواه
         window.onclick = function(event) {
             const modal = document.getElementById('storyModal');
             if (event.target === modal) {
@@ -829,7 +815,7 @@
         }
 
         // ==========================================================================
-        // 8. إرسال البلاغات وتخزينها في كولكشن Reports
+        // 8. نظام الإبلاغ
         // ==========================================================================
         async function reportStory(id) {
             const reason = prompt("يرجى تدوين سبب الإبلاغ عن هذه القصة لتتم مراجعتها من قبل الإدارة:");
@@ -849,7 +835,7 @@
         }
 
         // ==========================================================================
-        // 9. حماية المدخلات لمنع الثغرات Security & Sanitization
+        // 9. تنقية النصوص Sanitization
         // ==========================================================================
         function escapeHTML(str) {
             if (!str) return '';
