@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StoryCraft - منصة القصص</title>
+    <title>StoryCraft - منصة القصص والتفاعل</title>
     
     <!-- ResponsiveVoice لقراءة النصوص صوتياً -->
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE_KEY"></script>
@@ -13,84 +13,394 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; margin: 0; padding: 20px; direction: rtl; }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1 { text-align: center; color: #333; margin-bottom: 25px; }
-        
-        /* نموذج الإضافة وبطاقات القصص */
-        .story-form, .story-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
-        .story-form h3 { margin-top: 0; color: #222; }
-        
-        label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 10px; }
-        input[type="text"], input[type="file"], textarea { width: 100%; padding: 12px; margin: 6px 0 12px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; }
-        input[type="text"]:focus, textarea:focus { border-color: #007bff; }
-        
-        /* الأزرار */
-        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; margin-left: 5px; margin-top: 5px; }
-        .btn-add { background-color: #28a745; color: white; width: 100%; font-size: 16px; padding: 12px; }
-        .btn-edit { background-color: #ffc107; color: #000; }
-        .btn-audio { background-color: #007bff; color: white; }
-        .btn-delete { background-color: #dc3545; color: white; }
+        /* =========================================================
+           1. المتغيرات والتصميم العام (CSS Variables & Global Styles)
+           ========================================================= */
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #2b2b2b;
+            --text-secondary: #666666;
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --font-size-base: 17px;
+        }
+
+        /* Dark Mode Theme */
+        body.dark-theme {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-secondary: #aaaaaa;
+            --border-color: #333333;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px 10px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* =========================================================
+           2. الرأس والقائمة العلوية (Header & Navigation)
+           ========================================================= */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .brand-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .nav-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* =========================================================
+           3. أدوات التحكم بالبحث والخط والوضع الليلي (Utility Bar)
+           ========================================================= */
+        .utility-bar {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .controls-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle, .font-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .theme-toggle:hover, .font-btn:hover {
+            background: var(--border-color);
+        }
+
+        /* =========================================================
+           4. نموذج إضافة وتعديل القصة (Story Forms & Cards)
+           ========================================================= */
+        .story-form, .story-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-header {
+            margin-top: 0;
+            color: var(--text-color);
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-right: 4px solid var(--primary-color);
+            padding-right: 10px;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: block;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="file"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0 10px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        .word-counter {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        /* =========================================================
+           5. الأزرار وأنماط التفاعل (Buttons & Badges)
+           ========================================================= */
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.1s, opacity 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-add { background-color: var(--success-color); color: white; width: 100%; justify-content: center; font-size: 16px; padding: 12px; }
+        .btn-edit { background-color: var(--warning-color); color: #000; }
+        .btn-audio { background-color: var(--primary-color); color: white; }
+        .btn-delete { background-color: var(--danger-color); color: white; }
+        .btn-like { background-color: #e91e63; color: white; }
+        .btn-share { background-color: #673ab7; color: white; }
         .btn-close { background-color: #6c757d; color: white; }
-        .btn:hover { opacity: 0.88; }
-
-        /* عرض عناصر القصة */
-        .story-img { width: 100%; max-height: 380px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
-        .story-title { font-size: 22px; color: #111; margin-top: 0; margin-bottom: 10px; }
-        .story-content { font-size: 17px; line-height: 1.8; color: #333; white-space: pre-line; word-wrap: break-word; }
-        .actions { margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap; }
-
-        /* النافذة المنبثقة للتعديل Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-body { background: #fff; width: 90%; max-width: 550px; padding: 25px; border-radius: 12px; max-height: 90vh; overflow-y: auto; }
-        .image-preview { width: 100%; max-height: 180px; object-fit: cover; border-radius: 6px; margin-top: 5px; margin-bottom: 10px; display: none; }
         
-        .loading-text { text-align: center; color: #888; font-size: 16px; margin: 20px 0; }
+        .btn:hover { opacity: 0.9; }
+
+        /* =========================================================
+           6. عناصر بطاقة القصة (Story Card Details)
+           ========================================================= */
+        .story-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .meta-badge {
+            background: var(--bg-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .story-title {
+            font-size: 24px;
+            color: var(--text-color);
+            margin: 5px 0 12px 0;
+        }
+
+        .story-content {
+            font-size: var(--font-size-base);
+            line-height: 1.85;
+            color: var(--text-color);
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+
+        .actions {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* =========================================================
+           7. النافذة المنبثقة للتعديل (Modal Popup)
+           ========================================================= */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-body {
+            background: var(--card-bg);
+            color: var(--text-color);
+            width: 90%;
+            max-width: 600px;
+            padding: 25px;
+            border-radius: 12px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .image-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📚 StoryCraft</h1>
+    <!-- Header -->
+    <header>
+        <div class="brand-title">📚 StoryCraft</div>
+        <nav>
+            <a href="#home" class="nav-btn">الرئيسية</a>
+            <a href="#add-story-section" class="nav-btn">إضافة قصة</a>
+        </nav>
+    </header>
 
-    <!-- نموذج إضافة قصة جديدة -->
-    <div class="story-form">
-        <h3>✍️ نشر قصة جديدة</h3>
-        
-        <label>عنوان القصة:</label>
-        <input type="text" id="new-title" placeholder="أدخل عنوان القصة...">
-        
-        <label>اختر صورة من جهازك (اختياري):</label>
-        <input type="file" id="new-image-file" accept="image/*">
-        
-        <label>محتوى القصة (مع التشكيل للحصول على قراءة صوتية أفضل):</label>
-        <textarea id="new-content" rows="5" placeholder="اكتب القصة هنا..."></textarea>
-        
-        <button class="btn btn-add" id="submit-btn" onclick="addStory()">نشر القصة</button>
+    <!-- Utility Controls -->
+    <div class="utility-bar">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="🔍 ابحث في القصص..." oninput="filterStories()">
+        </div>
+        <div class="controls-group">
+            <button class="font-btn" onclick="adjustFontSize(1)">A+</button>
+            <button class="font-btn" onclick="adjustFontSize(-1)">A-</button>
+            <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙 الوضع الليلي</button>
+        </div>
     </div>
 
-    <!-- قائمة عرض القصص -->
-    <div id="stories-list">
-        <p class="loading-text">جاري تحميل القصص...</p>
+    <!-- Home Display Section -->
+    <div id="home">
+        <div id="stories-list">
+            <div class="empty-state">جاري تحميل القصص...</div>
+        </div>
+    </div>
+
+    <!-- Add Story Section -->
+    <div id="add-story-section" class="story-form">
+        <h3 class="form-header">✍️ نشر قصة جديدة</h3>
+        
+        <label for="new-title">عنوان القصة:</label>
+        <input type="text" id="new-title" placeholder="أدخل عنواناً جذاباً...">
+        
+        <label for="new-image-file">صورة غلاف القصة (اختياري من جهازك):</label>
+        <input type="file" id="new-image-file" accept="image/*">
+        
+        <label for="new-content">محتوى القصة (شامل التشكيل لنطق صحيح):</label>
+        <textarea id="new-content" rows="6" placeholder="اكتب القصة هنا..." oninput="updateWordCount()"></textarea>
+        <div class="word-counter" id="word-count-display">عدد الكلمات: 0 | الحروف: 0</div>
+        
+        <button class="btn btn-add" id="submit-btn" onclick="addStory()">🚀 نشر القصة الآن</button>
     </div>
 </div>
 
-<!-- نافذة تعديل القصة (Modal) -->
+<!-- Edit Modal Window -->
 <div class="modal-overlay" id="edit-modal">
     <div class="modal-body">
-        <h3>✏️ تعديل القصة</h3>
+        <h3 class="form-header">✏️ تعديل بيانات القصة</h3>
         <input type="hidden" id="edit-id">
         
-        <label>عنوان القصة:</label>
+        <label for="edit-title">عنوان القصة:</label>
         <input type="text" id="edit-title">
         
-        <label>الصورة الحالية / تغيير الصورة من الجهاز:</label>
-        <img id="edit-preview" class="image-preview" alt="معاينة الصورة">
+        <label>الصورة الحالية / تغيير الصورة:</label>
+        <img id="edit-preview" class="image-preview" alt="معاينة الغلاف">
         <input type="file" id="edit-image-file" accept="image/*">
         
-        <label>محتوى القصة:</label>
-        <textarea id="edit-content" rows="6"></textarea>
+        <label for="edit-content">محتوى القصة:</label>
+        <textarea id="edit-content" rows="7"></textarea>
         
         <div style="text-align: left; margin-top: 15px;">
             <button class="btn btn-close" onclick="closeEditModal()">إلغاء</button>
@@ -99,8 +409,11 @@
     </div>
 </div>
 
+<!-- JavaScript Functionalities -->
 <script>
-    // 1. إعدادات Firebase الخاصة بمشروعك
+    // =========================================================
+    // 1. Firebase Configuration & Initialization
+    // =========================================================
     const firebaseConfig = {
         apiKey: "YOUR_API_KEY",
         authDomain: "YOUR_AUTH_DOMAIN",
@@ -109,85 +422,68 @@
         messagingSenderId: "YOUR_SENDER_ID",
         appId: "YOUR_APP_ID"
     };
-    
-    // تهيئة Firebase
+
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
     const db = firebase.firestore();
 
-    // 2. دالة لضغط الصورة وتقليل حجمها تلقائياً وتفادي مشكلة Firestore
-    function compressAndConvertImage(file) {
-        return new Promise((resolve, reject) => {
-            if (!file) {
-                resolve('');
-                return;
-            }
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (event) => {
-                const img = new Image();
-                img.src = event.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const maxWidth = 700; // أقصى عرض مسموح به
-                    let width = img.width;
-                    let height = img.height;
+    let allStoriesCache = []; // لتخزين القصص برمجياً وتأمين البحث الفوري
 
-                    if (width > maxWidth) {
-                        height = (maxWidth / width) * height;
-                        width = maxWidth;
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    // ضغط الجودة لـ 70% للحفاظ على جودة ممتازة وحجم صغير جداً
-                    resolve(canvas.toDataURL('image/jpeg', 0.7));
-                };
-                img.onerror = error => reject(error);
-            };
-            reader.onerror = error => reject(error);
-        });
-    }
-
-    // 3. التنسق التلقائي وجلب القصص من Firestore فور حدوث أي تغيير
+    // =========================================================
+    // 2. Core Story Operations (Fetch, Render, Add, Edit, Delete)
+    // =========================================================
+    
+    // جلب القوائم لحظياً
     db.collection("stories").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+        allStoriesCache = [];
+        snapshot.forEach((doc) => {
+            allStoriesCache.push({ id: doc.id, ...doc.data() });
+        });
+        renderStories(allStoriesCache);
+    }, (error) => {
+        console.error("Firebase Error:", error);
+        document.getElementById("stories-list").innerHTML = `<div class="empty-state" style="color:red;">حدث خطأ أثناء تحميل القصص. تحقّق من إعدادات المفاتيح والقواعد.</div>`;
+    });
+
+    // رسم واجهة القصص
+    function renderStories(stories) {
         const listDiv = document.getElementById("stories-list");
         listDiv.innerHTML = "";
 
-        if (snapshot.empty) {
-            listDiv.innerHTML = "<p class='loading-text'>لا توجد قصص حالياً. كن أول من ينشر قصة!</p>";
+        if (stories.length === 0) {
+            listDiv.innerHTML = `<div class="empty-state">لا توجد قصص مطابقة للبحث حالياً.</div>`;
             return;
         }
 
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const id = doc.id;
+        stories.forEach((story) => {
+            const readTime = calculateReadingTime(story.content);
+            const likesCount = story.likes || 0;
 
             const card = document.createElement("div");
             card.className = "story-card";
             card.innerHTML = `
-                ${data.imageUrl ? `<img src="${data.imageUrl}" class="story-img" alt="صورة القصة" onerror="this.style.display='none'">` : ''}
-                <h2 class="story-title">${escapeHtml(data.title)}</h2>
-                <div class="story-content" id="content-${id}">${escapeHtml(data.content)}</div>
+                ${story.imageUrl ? `<img src="${story.imageUrl}" class="story-img" alt="غلاف القصة" onerror="this.style.display='none'">` : ''}
+                <div class="story-meta">
+                    <span class="meta-badge">⏱️ قراءة: ${readTime} دقيقة</span>
+                    <span class="meta-badge">❤️ التفاعلات: <span id="like-count-${story.id}">${likesCount}</span></span>
+                </div>
+                <h2 class="story-title">${escapeHtml(story.title)}</h2>
+                <div class="story-content" id="content-${story.id}">${escapeHtml(story.content)}</div>
                 
                 <div class="actions">
-                    <button class="btn btn-audio" id="audio-btn-${id}" onclick="toggleAudio('${id}')">🔊 استمع للقصة</button>
-                    <button class="btn btn-edit" onclick="openEditModal('${id}', \`${escapeHtml(data.title)}\`, \`${escapeHtml(data.content)}\`, '${data.imageUrl || ''}')">✏️ تعديل</button>
-                    <button class="btn btn-delete" onclick="deleteStory('${id}')">🗑️ حذف</button>
+                    <button class="btn btn-audio" id="audio-btn-${story.id}" onclick="toggleAudio('${story.id}')">🔊 استمع</button>
+                    <button class="btn btn-like" onclick="likeStory('${story.id}', ${likesCount})">❤️ إعجاب</button>
+                    <button class="btn btn-share" onclick="shareStory('${story.id}', \`${escapeHtml(story.title)}\`)">🔗 مشاركة</button>
+                    <button class="btn btn-edit" onclick="openEditModal('${story.id}', \`${escapeHtml(story.title)}\`, \`${escapeHtml(story.content)}\`, '${story.imageUrl || ''}')">✏️ تعديل</button>
+                    <button class="btn btn-delete" onclick="deleteStory('${story.id}')">🗑️ حذف</button>
                 </div>
             `;
             listDiv.appendChild(card);
         });
-    }, (error) => {
-        console.error("خطأ في جلب البيانات:", error);
-        document.getElementById("stories-list").innerHTML = "<p class='loading-text' style='color:red;'>حدث خطأ أثناء تحميل القصص. تأكد من إعدادات Firebase.</p>";
-    });
+    }
 
-    // 4. إضافة قصة جديدة
+    // إضافة قصة جديدة مع الضغط الأوتوماتيكي للصور
     async function addStory() {
         const titleInput = document.getElementById("new-title");
         const contentInput = document.getElementById("new-content");
@@ -199,52 +495,50 @@
         const file = fileInput.files[0];
 
         if (!title || !content) {
-            alert("يرجى كتابة عنوان ومحتوى القصة.");
+            alert("يرجى إدخال عنوان ومحتوى القصة أولاً.");
             return;
         }
 
         try {
-            submitBtn.innerText = "جاري رفع القصة...";
+            submitBtn.innerText = "جاري المعالجة والرفع...";
             submitBtn.disabled = true;
 
-            // ضغط وتحويل الصورة إن وجدت
             let imageUrl = '';
             if (file) {
                 imageUrl = await compressAndConvertImage(file);
             }
 
-            // الحفظ في قاعدة البيانات
             await db.collection("stories").add({
                 title: title,
-                imageUrl: imageUrl,
                 content: content,
+                imageUrl: imageUrl,
+                likes: 0,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            // تفريغ المدخلات بعد النجاح
             titleInput.value = "";
             contentInput.value = "";
             fileInput.value = "";
-            alert("تم نشر القصة بنجاح!");
+            updateWordCount();
+            alert("تم نشر قصتك بنجاح!");
+            window.location.hash = "#home";
         } catch (error) {
-            console.error("خطأ عند إضافة القصة:", error);
+            console.error(error);
             alert("حدث خطأ أثناء النشر: " + error.message);
         } finally {
-            submitBtn.innerText = "نشر القصة";
+            submitBtn.innerText = "🚀 نشر القصة الآن";
             submitBtn.disabled = false;
         }
     }
 
-    // 5. التحكم بفتحات وإغلاق نافذة التعديل
-    let currentStoryImage = '';
-
+    // تعديل البيانات
+    let currentEditImageUrl = '';
     function openEditModal(id, title, content, imageUrl) {
         document.getElementById("edit-id").value = id;
         document.getElementById("edit-title").value = title;
         document.getElementById("edit-content").value = content;
-        document.getElementById("edit-image-file").value = "";
         
-        currentStoryImage = imageUrl;
+        currentEditImageUrl = imageUrl;
         const preview = document.getElementById("edit-preview");
         if (imageUrl) {
             preview.src = imageUrl;
@@ -260,14 +554,12 @@
         document.getElementById("edit-modal").style.display = "none";
     }
 
-    // 6. حفظ التعديل على القصة
     async function saveStoryEdit() {
         const id = document.getElementById("edit-id").value;
         const newTitle = document.getElementById("edit-title").value.trim();
         const newContent = document.getElementById("edit-content").value.trim();
         const fileInput = document.getElementById("edit-image-file");
         const saveBtn = document.getElementById("save-edit-btn");
-        const file = fileInput.files[0];
 
         if (!newTitle || !newContent) {
             alert("لا يمكن ترك العنوان أو المحتوى فارغاً.");
@@ -275,82 +567,174 @@
         }
 
         try {
-            saveBtn.innerText = "جاري الحفظ...";
+            saveBtn.innerText = "جاري التحديث...";
             saveBtn.disabled = true;
 
-            let finalImage = currentStoryImage;
-            if (file) {
-                finalImage = await compressAndConvertImage(file);
+            let finalImage = currentEditImageUrl;
+            if (fileInput.files[0]) {
+                finalImage = await compressAndConvertImage(fileInput.files[0]);
             }
 
             await db.collection("stories").doc(id).update({
                 title: newTitle,
-                imageUrl: finalImage,
                 content: newContent,
+                imageUrl: finalImage,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
             closeEditModal();
-            alert("تم حفظ التغييرات بنجاح!");
+            alert("تم التعديل بنجاح!");
         } catch (error) {
-            console.error("خطأ في التعديل:", error);
-            alert("حدث خطأ أثناء حفظ التغييرات: " + error.message);
+            alert("حدث خطأ أثناء حفظ التعديل: " + error.message);
         } finally {
-            saveBtn.innerText = "حفظ التغييرات";
+            saveBtn.innerText = "حفظ التعديلات";
             saveBtn.disabled = false;
         }
     }
 
-    // 7. حذف قصة
+    // حذف القصة
     async function deleteStory(id) {
-        if (confirm("هل أنت متأكد من رغبتك في حذف هذه القصة؟")) {
-            try {
-                await db.collection("stories").doc(id).delete();
-            } catch (error) {
-                alert("حدث خطأ أثناء الحذف: " + error.message);
-            }
+        if (confirm("هل أنت تأكد تماماً من رغبتك في حذف هذه القصة؟")) {
+            await db.collection("stories").doc(id).delete();
         }
     }
 
-    // 8. القراءة الصوتية (ResponsiveVoice)
-    let currentSpeakingId = null;
+    // =========================================================
+    // 3. Helper Functions & Utilities (Image Compressor, Audio, Search, Theme)
+    // =========================================================
 
+    // ضغط الصور لتجنب حدود Firestore
+    function compressAndConvertImage(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const maxWidth = 650;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth) {
+                        height = (maxWidth / width) * height;
+                        width = maxWidth;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.65));
+                };
+            };
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // الإعجاب بالقصة
+    async function likeStory(id, currentLikes) {
+        try {
+            await db.collection("stories").doc(id).update({
+                likes: currentLikes + 1
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    // مشاركة القصة
+    function shareStory(id, title) {
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                url: window.location.href
+            }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("تم نسخ رابط المنصة إلى الحافظة!");
+        }
+    }
+
+    // القراءة الصوتية
+    let currentAudioId = null;
     function toggleAudio(id) {
+        const text = document.getElementById(`content-${id}`).innerText;
         const btn = document.getElementById(`audio-btn-${id}`);
-        const contentText = document.getElementById(`content-${id}`).innerText;
 
         if (typeof responsiveVoice === 'undefined') {
-            alert("جاري تحضير محرك الصوت، يُرجى الانتظار ثوانٍ ثم إعادة المحاولة.");
+            alert("جاري تجهيز محرك الصوت، يرجى المحاولة بعد قليل.");
             return;
         }
 
-        if (currentSpeakingId === id) {
+        if (currentAudioId === id) {
             responsiveVoice.cancel();
-            btn.innerText = "🔊 استمع للقصة";
-            currentSpeakingId = null;
+            btn.innerText = "🔊 استمع";
+            currentAudioId = null;
         } else {
             responsiveVoice.cancel();
-            if (currentSpeakingId) {
-                const prevBtn = document.getElementById(`audio-btn-${currentSpeakingId}`);
-                if (prevBtn) prevBtn.innerText = "🔊 استمع للقصة";
+            if (currentAudioId) {
+                const oldBtn = document.getElementById(`audio-btn-${currentAudioId}`);
+                if (oldBtn) oldBtn.innerText = "🔊 استمع";
             }
 
-            responsiveVoice.speak(contentText, "Arabic Male", {
-                pitch: 1,
+            responsiveVoice.speak(text, "Arabic Male", {
                 rate: 0.85,
                 onstart: () => {
-                    currentSpeakingId = id;
-                    btn.innerText = "⏹️ إيقاف الصوت";
+                    currentAudioId = id;
+                    btn.innerText = "⏹️ إيقاف";
                 },
                 onend: () => {
-                    btn.innerText = "🔊 استمع للقصة";
-                    currentSpeakingId = null;
+                    btn.innerText = "🔊 استمع";
+                    currentAudioId = null;
                 }
             });
         }
     }
 
-    // دالة حماية
+    // فلترة البحث
+    function filterStories() {
+        const query = document.getElementById("search-input").value.toLowerCase();
+        const filtered = allStoriesCache.filter(story => 
+            story.title.toLowerCase().includes(query) || 
+            story.content.toLowerCase().includes(query)
+        );
+        renderStories(filtered);
+    }
+
+    // حساب زمن القراءة
+    function calculateReadingTime(text) {
+        const words = text.trim().split(/\s+/).length;
+        const minutes = Math.ceil(words / 150); // المعدل 150 كلمة/دقيقة
+        return minutes;
+    }
+
+    // عداد الكلمات
+    function updateWordCount() {
+        const text = document.getElementById("new-content").value;
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        const chars = text.length;
+        document.getElementById("word-count-display").innerText = `عدد الكلمات: ${words} | الحروف: ${chars}`;
+    }
+
+    // الوضع الليلي
+    function toggleTheme() {
+        document.body.classList.toggle("dark-theme");
+        const isDark = document.body.classList.contains("dark-theme");
+        document.getElementById("theme-btn").innerText = isDark ? "☀️ الوضع النهاري" : "🌙 الوضع الليلي";
+    }
+
+    // التحكم بحجم الخط
+    let currentFontSize = 17;
+    function adjustFontSize(delta) {
+        currentFontSize += delta;
+        if (currentFontSize < 13) currentFontSize = 13;
+        if (currentFontSize > 25) currentFontSize = 25;
+        document.documentElement.style.setProperty('--font-size-base', currentFontSize + 'px');
+    }
+
+    // منع حقن الأكواد الخبيثة HTML Escape
     function escapeHtml(text) {
         return text ? text.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
     }
