@@ -3,105 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة حكاية - إضافة قصة</title>
+    <title>منصة حكاية | التجمع العربي للقصص والروايات</title>
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <!-- FontAwesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #121824; color: #ffffff; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 500px; }
+        body { background-color: #0f172a; color: #f8fafc; min-height: 100vh; padding-bottom: 50px; }
         
-        .modal-card {
-            background-color: #1e2638;
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid #2e3a52;
-            width: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
+        /* Header & Navbar */
+        header { background-color: #1e293b; border-bottom: 1px solid #334155; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: #e2b714; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-btns { display: flex; gap: 15px; }
+        .btn-primary { background-color: #e2b714; color: #0f172a; padding: 10px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { background-color: #f59e0b; }
 
-        .modal-card h2 { color: #ffffff; margin-top: 0; margin-bottom: 5px; font-size: 1.5rem; text-align: center; }
-        .modal-subtitle { color: #94a3b8; font-size: 0.85rem; margin-bottom: 25px; text-align: center; }
+        /* Main Layout */
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        
+        /* Hero Section / Controls */
+        .controls-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; }
+        .search-box { flex: 1; min-width: 250px; position: relative; }
+        .search-box input { width: 100%; padding: 12px 40px 12px 15px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
+        .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #64748b; }
+        
+        .filter-tags { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .tag-btn { background: #0f172a; border: 1px solid #334155; color: #94a3b8; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+        .tag-btn.active, .tag-btn:hover { background: #e2b714; color: #0f172a; font-weight: bold; }
 
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; color: #cbd5e1; font-size: 0.9rem; margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid #2e3a52;
-            background-color: #121824;
-            color: #ffffff;
-            font-size: 0.95rem;
-            outline: none;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #e2b714; }
-        .form-group textarea { height: 110px; resize: vertical; }
+        /* Story Cards */
+        .stories-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .story-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 25px; transition: 0.3s; position: relative; }
+        .story-card:hover { border-color: #e2b714; transform: translateY(-3px); }
+        
+        .story-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .story-title { font-size: 1.4rem; color: #f8fafc; font-weight: bold; }
+        .category-badge { background: #0f172a; border: 1px solid #e2b714; color: #e2b714; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+        
+        .story-meta { display: flex; gap: 15px; font-size: 0.85rem; color: #94a3b8; margin-bottom: 15px; flex-wrap: wrap; }
+        .story-content { color: #cbd5e1; line-height: 1.7; font-size: 1rem; margin-bottom: 20px; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+        .story-content.expanded { -webkit-line-clamp: unset; }
 
-        .btn-submit {
-            width: 100%;
-            background-color: #e2b714;
-            color: #121824;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-        .btn-submit:hover { background-color: #c9a20d; }
-        .btn-submit:disabled { background-color: #555; cursor: not-allowed; }
+        .story-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 15px; }
+        .action-btns { display: flex; gap: 20px; }
+        .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.95rem; transition: 0.3s; }
+        .action-btn:hover, .action-btn.liked { color: #ef4444; }
+        .read-more-btn { color: #e2b714; cursor: pointer; font-weight: bold; background: none; border: none; }
+
+        /* Comments Box */
+        .comments-section { margin-top: 15px; background: #0f172a; padding: 15px; border-radius: 8px; display: none; }
+        .comment-input-box { display: flex; gap: 10px; margin-bottom: 10px; }
+        .comment-input-box input { flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: white; }
+        .comment-item { font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="modal-card">
-        <h2>إضافة قصة جديدة ✍️</h2>
-        <p class="modal-subtitle">شارِك قصتك لتُحفظ في منصة حكاية وجدول البيانات</p>
+    <header>
+        <a href="index.html" class="logo"><i class="fa-solid =>-book-open"></i> حكاية</a>
+        <div class="nav-btns">
+            <a href="submit.html" class="btn-primary"><i class="fa-solid fa-pen-nib"></i> شارك قصتك</a>
+        </div>
+    </header>
 
-        <div class="form-group">
-            <label for="author">اسم الكاتب</label>
-            <input type="text" id="author" placeholder="أدخل اسمك هنا...">
+    <div class="container">
+        <!-- شريط البحث والتصفية -->
+        <div class="controls-card">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" onkeyup="filterStories()" placeholder="ابحث عن عنوان، كاتب، أو كلمة...">
+            </div>
+            <div class="filter-tags">
+                <button class="tag-btn active" onclick="filterCategory('الكل')">الكل</button>
+                <button class="tag-btn" onclick="filterCategory('واقعية')">واقعية</button>
+                <button class="tag-btn" onclick="filterCategory('خيالية')">خيالية</button>
+                <button class="tag-btn" onclick="filterCategory('تاريخية')">تاريخية</button>
+                <button class="tag-btn" onclick="filterCategory('رعب')">رعب</button>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="title">عنوان القصة</label>
-            <input type="text" id="title" placeholder="أدخل عنوان القصة...">
+        <!-- قائمة القصص -->
+        <div class="stories-grid" id="storiesGrid">
+            <p style="text-align: center; color: #94a3b8;">جاري تحميل الحكايات...</p>
         </div>
-
-        <div class="form-group">
-            <label for="category">تصنيف القصة</label>
-            <select id="category">
-                <option value="واقعية">واقعية</option>
-                <option value="خيالية">خيالية</option>
-                <option value="تاريخية">تاريخية</option>
-                <option value="رعب">رعب</option>
-                <option value="أخرى">أخرى</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="content">نص القصة الكامل</label>
-            <textarea id="content" placeholder="اكتب قصتك هنا..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="relation">الصلة (صلتك بالقصة)</label>
-            <input type="text" id="relation" placeholder="مثال: حدثت معي، سمعتها من صديق...">
-        </div>
-
-        <button id="submit-btn" class="btn-submit" onclick="addStory()">🚀 نشر القصة الآن</button>
     </div>
-</div>
 
 <script>
-    // تهيئة Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
         authDomain: "hikaya-5ff25.firebaseapp.com",
@@ -109,77 +100,156 @@
         projectId: "hikaya-5ff25",
         storageBucket: "hikaya-5ff25.firebasestorage.app",
         messagingSenderId: "1031922678593",
-        appId: "1:1031922678593:web:c242a9e36ad40becc9bfc0",
-        measurementId: "G-KR76L2WSZ7"
+        appId: "1:1031922678593:web:c242a9e36ad40becc9bfc0"
     };
     
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzWwfbplJcDgArVhtKLcQZ3u_TLbKcsbUBQmW9jmnjPhEqy7vzxYGFf4aBlu63rPFWl/exec";
+    let allStories = [];
+    let currentCategory = 'الكل';
 
-    async function addStory() {
-        const authorInput = document.getElementById("author");
-        const titleInput = document.getElementById("title");
-        const categoryInput = document.getElementById("category");
-        const contentInput = document.getElementById("content");
-        const relationInput = document.getElementById("relation");
-        const submitBtn = document.getElementById("submit-btn");
+    // جلب القصص من Firestore
+    db.collection("stories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+        allStories = [];
+        snapshot.forEach(doc => {
+            allStories.push({ id: doc.id, ...doc.data() });
+        });
+        renderStories();
+    });
 
-        const author = authorInput.value.trim() || "زائر";
-        const title = titleInput.value.trim();
-        const category = categoryInput.value;
-        const content = contentInput.value.trim();
-        const relation = relationInput.value.trim() || "غير محدد";
+    function estimateReadTime(text) {
+        const words = text.trim().split(/\s+/).length;
+        const minutes = Math.ceil(words / 150);
+        return `${minutes} دقيقة قراءة`;
+    }
 
-        if (!title || !content) {
-            alert("يرجى كتابة عنوان القصة ونصها الكامل أولاً.");
+    function renderStories() {
+        const grid = document.getElementById("storiesGrid");
+        const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+        
+        grid.innerHTML = "";
+
+        const filtered = allStories.filter(story => {
+            const matchCategory = currentCategory === 'الكل' || story.category === currentCategory;
+            const matchSearch = story.title.toLowerCase().includes(searchQuery) || 
+                                story.author.toLowerCase().includes(searchQuery) ||
+                                story.content.toLowerCase().includes(searchQuery);
+            return matchCategory && matchSearch;
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<p style="text-align:center; color:#94a3b8; padding: 40px;">لا توجد قصص مطابقة حتى الآن.</p>`;
             return;
         }
 
-        try {
-            submitBtn.innerText = "جاري النشر...";
-            submitBtn.disabled = true;
+        filtered.forEach(story => {
+            const likes = story.likes || 0;
+            const dateStr = story.createdAt ? new Date(story.createdAt.toDate()).toLocaleDateString("ar-EG") : "الآن";
 
-            // حفظ في Firebase
-            await db.collection("stories").add({
-                author: author,
-                title: title,
-                category: category,
-                content: content,
-                relation: relation,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
+            const card = document.createElement("div");
+            card.className = "story-card";
+            card.innerHTML = `
+                <div class="story-header">
+                    <div class="story-title">${story.title}</div>
+                    <span class="category-badge">${story.category}</span>
+                </div>
+                <div class="story-meta">
+                    <span><i class="fa-regular fa-user"></i> ${story.author}</span>
+                    <span><i class="fa-regular fa-calendar"></i> ${dateStr}</span>
+                    <span><i class="fa-regular fa-clock"></i> ${estimateReadTime(story.content)}</span>
+                    <span><i class="fa-solid fa-link"></i> ${story.relation || 'غير محدد'}</span>
+                </div>
+                <div class="story-content" id="content-${story.id}">${story.content}</div>
+                <button class="read-more-btn" onclick="toggleReadMore('${story.id}', this)">قراءة المزيد...</button>
+                
+                <div class="story-footer">
+                    <div class="action-btns">
+                        <button class="action-btn" onclick="likeStory('${story.id}', ${likes})">
+                            <i class="fa-solid fa-heart"></i> <span id="like-count-${story.id}">${likes}</span>
+                        </button>
+                        <button class="action-btn" onclick="toggleComments('${story.id}')">
+                            <i class="fa-solid fa-comment"></i> تعليق
+                        </button>
+                        <button class="action-btn" onclick="shareStory('${story.title}')">
+                            <i class="fa-solid fa-share-nodes"></i> مشاركة
+                        </button>
+                    </div>
+                </div>
 
-            // إرسال لـ Google Sheets
-            fetch(GOOGLE_SHEET_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    author: author,
-                    title: title,
-                    category: category,
-                    content: content,
-                    relation: relation
-                })
-            });
+                <div class="comments-section" id="comments-${story.id}">
+                    <div class="comment-input-box">
+                        <input type="text" id="input-comm-${story.id}" placeholder="اكتب تعليقك...">
+                        <button class="btn-primary" style="padding: 6px 12px;" onclick="addComment('${story.id}')">نشر</button>
+                    </div>
+                    <div id="list-comm-${story.id}"></div>
+                </div>
+            `;
+            grid.appendChild(card);
+            loadComments(story.id);
+        });
+    }
 
-            authorInput.value = "";
-            titleInput.value = "";
-            contentInput.value = "";
-            relationInput.value = "";
+    function toggleReadMore(id, btn) {
+        const content = document.getElementById(`content-${id}`);
+        content.classList.toggle("expanded");
+        btn.innerText = content.classList.contains("expanded") ? "عرض أقل" : "قراءة المزيد...";
+    }
 
-            alert("تم نشر القصة وإضافتها لـ Google Sheets بنجاح!");
-        } catch (error) {
-            console.error(error);
-            alert("حدث خطأ أثناء حفظ القصة: " + error.message);
-        } finally {
-            submitBtn.innerText = "🚀 نشر القصة الآن";
-            submitBtn.disabled = false;
+    async function likeStory(id, currentLikes) {
+        await db.collection("stories").doc(id).update({
+            likes: currentLikes + 1
+        });
+    }
+
+    function filterCategory(cat) {
+        currentCategory = cat;
+        document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        renderStories();
+    }
+
+    function filterStories() {
+        renderStories();
+    }
+
+    function shareStory(title) {
+        if (navigator.share) {
+            navigator.share({ title: title, url: window.location.href });
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("تم نسخ رابط الموقع لمشاركته!");
         }
     }
-</script>
 
+    function toggleComments(id) {
+        const commSection = document.getElementById(`comments-${id}`);
+        commSection.style.display = commSection.style.display === "block" ? "none" : "block";
+    }
+
+    async function addComment(storyId) {
+        const input = document.getElementById(`input-comm-${storyId}`);
+        const text = input.value.trim();
+        if (!text) return;
+
+        await db.collection("stories").doc(storyId).collection("comments").add({
+            text: text,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        input.value = "";
+    }
+
+    function loadComments(storyId) {
+        db.collection("stories").doc(storyId).collection("comments").orderBy("createdAt", "asc").onSnapshot(snapshot => {
+            const list = document.getElementById(`list-comm-${storyId}`);
+            if(!list) return;
+            list.innerHTML = "";
+            snapshot.forEach(doc => {
+                const c = doc.data();
+                list.innerHTML += `<div class="comment-item">💬 ${c.text}</div>`;
+            });
+        });
+    }
+</script>
 </body>
 </html>
