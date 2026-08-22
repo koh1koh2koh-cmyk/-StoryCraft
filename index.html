@@ -4,251 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة حكاية | التجمع العربي للقصص والروايات</title>
-    
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; min-height: 100vh; padding-bottom: 50px; }
+        body { background-color: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Header & Navbar */
         header { background-color: #1e293b; border-bottom: 1px solid #334155; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.8rem; font-weight: bold; color: #e2b714; display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .nav-btns { display: flex; gap: 15px; }
-        .btn-primary { background-color: #e2b714; color: #0f172a; padding: 10px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .btn-primary:hover { background-color: #f59e0b; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: #e2b714; text-decoration: none; }
+        .btn-primary { background-color: #e2b714; color: #0f172a; padding: 10px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; border: none; cursor: pointer; }
 
-        /* Main Layout */
-        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; flex: 1; }
         
-        /* Hero Section / Controls */
-        .controls-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; }
-        .search-box { flex: 1; min-width: 250px; position: relative; }
-        .search-box input { width: 100%; padding: 12px 40px 12px 15px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
-        .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #64748b; }
+        .controls-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; }
+        .search-box { flex: 1; min-width: 250px; }
+        .search-box input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; outline: none; }
         
-        .filter-tags { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
-        .tag-btn { background: #0f172a; border: 1px solid #334155; color: #94a3b8; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
-        .tag-btn.active, .tag-btn:hover { background: #e2b714; color: #0f172a; font-weight: bold; }
+        .filter-tags { display: flex; gap: 10px; }
+        .tag-btn { background: #0f172a; border: 1px solid #334155; color: #94a3b8; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
+        .tag-btn.active { background: #e2b714; color: #0f172a; font-weight: bold; }
 
-        /* Story Cards */
-        .stories-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .story-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 25px; transition: 0.3s; position: relative; }
-        .story-card:hover { border-color: #e2b714; transform: translateY(-3px); }
-        
-        .story-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .story-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
+        .story-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .story-title { font-size: 1.4rem; color: #f8fafc; font-weight: bold; }
-        .category-badge { background: #0f172a; border: 1px solid #e2b714; color: #e2b714; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+        .category-badge { background: #0f172a; border: 1px solid #e2b714; color: #e2b714; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; }
         
-        .story-meta { display: flex; gap: 15px; font-size: 0.85rem; color: #94a3b8; margin-bottom: 15px; flex-wrap: wrap; }
-        .story-content { color: #cbd5e1; line-height: 1.7; font-size: 1rem; margin-bottom: 20px; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+        .story-meta { display: flex; gap: 15px; font-size: 0.85rem; color: #94a3b8; margin-bottom: 15px; }
+        .story-content { color: #cbd5e1; line-height: 1.7; margin-bottom: 20px; white-space: pre-wrap; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .story-content.expanded { -webkit-line-clamp: unset; }
 
-        .story-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 15px; }
-        .action-btns { display: flex; gap: 20px; }
-        .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.95rem; transition: 0.3s; }
-        .action-btn:hover, .action-btn.liked { color: #ef4444; }
-        .read-more-btn { color: #e2b714; cursor: pointer; font-weight: bold; background: none; border: none; }
-
-        /* Comments Box */
-        .comments-section { margin-top: 15px; background: #0f172a; padding: 15px; border-radius: 8px; display: none; }
-        .comment-input-box { display: flex; gap: 10px; margin-bottom: 10px; }
-        .comment-input-box input { flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: white; }
-        .comment-item { font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+        .story-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; padding-top: 15px; flex-wrap: wrap; gap: 10px; }
+        .action-btns { display: flex; gap: 15px; }
+        .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; gap: 5px; text-decoration: none; font-size: 0.9rem; }
+        .action-btn:hover { color: #e2b714; }
+        
+        footer { background: #1e293b; border-top: 1px solid #334155; text-align: center; padding: 20px; color: #94a3b8; font-size: 0.85rem; margin-top: 40px; }
+        footer a { color: #e2b714; text-decoration: none; margin: 0 10px; }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="index.html" class="logo"><i class="fa-solid =>-book-open"></i> حكاية</a>
-        <div class="nav-btns">
-            <a href="submit.html" class="btn-primary"><i class="fa-solid fa-pen-nib"></i> شارك قصتك</a>
-        </div>
+        <a href="index.html" class="logo"><i class="fa-solid fa-book-open"></i> حكاية</a>
+        <a href="submit.html" class="btn-primary"><i class="fa-solid fa-pen-nib"></i> شارك قصتك</a>
     </header>
 
     <div class="container">
-        <!-- شريط البحث والتصفية -->
         <div class="controls-card">
             <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" onkeyup="filterStories()" placeholder="ابحث عن عنوان، كاتب، أو كلمة...">
+                <input type="text" id="searchInput" onkeyup="renderStories()" placeholder="ابحث عن قصة...">
             </div>
             <div class="filter-tags">
-                <button class="tag-btn active" onclick="filterCategory('الكل')">الكل</button>
-                <button class="tag-btn" onclick="filterCategory('واقعية')">واقعية</button>
-                <button class="tag-btn" onclick="filterCategory('خيالية')">خيالية</button>
-                <button class="tag-btn" onclick="filterCategory('تاريخية')">تاريخية</button>
-                <button class="tag-btn" onclick="filterCategory('رعب')">رعب</button>
+                <button class="tag-btn active" onclick="filterCategory('الكل', this)">الكل</button>
+                <button class="tag-btn" onclick="filterCategory('واقعية', this)">واقعية</button>
+                <button class="tag-btn" onclick="filterCategory('خيالية', this)">خيالية</button>
+                <button class="tag-btn" onclick="filterCategory('رعب', this)">رعب</button>
             </div>
         </div>
 
-        <!-- قائمة القصص -->
-        <div class="stories-grid" id="storiesGrid">
-            <p style="text-align: center; color: #94a3b8;">جاري تحميل الحكايات...</p>
-        </div>
+        <div id="storiesGrid">جاري التحميل...</div>
     </div>
+
+    <footer>
+        <p>© 2026 منصة حكاية - جميع الحقوق محفوظة</p>
+
+        <p><a href="privacy.html">سياسة الخصوصية والاستخدام</a></p>
+    </footer>
 
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
         authDomain: "hikaya-5ff25.firebaseapp.com",
-        databaseURL: "https://hikaya-5ff25-default-rtdb.firebaseio.com",
-        projectId: "hikaya-5ff25",
-        storageBucket: "hikaya-5ff25.firebasestorage.app",
-        messagingSenderId: "1031922678593",
-        appId: "1:1031922678593:web:c242a9e36ad40becc9bfc0"
+        projectId: "hikaya-5ff25"
     };
-    
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     let allStories = [];
     let currentCategory = 'الكل';
 
-    // جلب القصص من Firestore
     db.collection("stories").orderBy("createdAt", "desc").onSnapshot(snapshot => {
         allStories = [];
-        snapshot.forEach(doc => {
-            allStories.push({ id: doc.id, ...doc.data() });
-        });
+        snapshot.forEach(doc => allStories.push({ id: doc.id, ...doc.data() }));
         renderStories();
     });
 
-    function estimateReadTime(text) {
-        const words = text.trim().split(/\s+/).length;
-        const minutes = Math.ceil(words / 150);
-        return `${minutes} دقيقة قراءة`;
-    }
-
     function renderStories() {
         const grid = document.getElementById("storiesGrid");
-        const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-        
+        const query = document.getElementById("searchInput").value.toLowerCase();
         grid.innerHTML = "";
 
-        const filtered = allStories.filter(story => {
-            const matchCategory = currentCategory === 'الكل' || story.category === currentCategory;
-            const matchSearch = story.title.toLowerCase().includes(searchQuery) || 
-                                story.author.toLowerCase().includes(searchQuery) ||
-                                story.content.toLowerCase().includes(searchQuery);
-            return matchCategory && matchSearch;
+        const filtered = allStories.filter(s => {
+            const matchCat = currentCategory === 'الكل' || s.category === currentCategory;
+            const matchSearch = s.title.toLowerCase().includes(query) || s.content.toLowerCase().includes(query);
+            return matchCat && matchSearch;
         });
 
-        if (filtered.length === 0) {
-            grid.innerHTML = `<p style="text-align:center; color:#94a3b8; padding: 40px;">لا توجد قصص مطابقة حتى الآن.</p>`;
-            return;
-        }
-
         filtered.forEach(story => {
-            const likes = story.likes || 0;
-            const dateStr = story.createdAt ? new Date(story.createdAt.toDate()).toLocaleDateString("ar-EG") : "الآن";
-
+            const pageLink = encodeURIComponent(`${window.location.origin}/story.html?id=${story.id}`);
             const card = document.createElement("div");
             card.className = "story-card";
             card.innerHTML = `
                 <div class="story-header">
-                    <div class="story-title">${story.title}</div>
+                    <a href="story.html?id=${story.id}" class="story-title" style="text-decoration:none;">${story.title}</a>
                     <span class="category-badge">${story.category}</span>
                 </div>
                 <div class="story-meta">
-                    <span><i class="fa-regular fa-user"></i> ${story.author}</span>
-                    <span><i class="fa-regular fa-calendar"></i> ${dateStr}</span>
-                    <span><i class="fa-regular fa-clock"></i> ${estimateReadTime(story.content)}</span>
-                    <span><i class="fa-solid fa-link"></i> ${story.relation || 'غير محدد'}</span>
+                    <span>✍️ ${story.author}</span>
+                    <span>🔗 ${story.relation || 'غير محدد'}</span>
                 </div>
-                <div class="story-content" id="content-${story.id}">${story.content}</div>
-                <button class="read-more-btn" onclick="toggleReadMore('${story.id}', this)">قراءة المزيد...</button>
+                <div class="story-content" id="c-${story.id}">${story.content}</div>
                 
                 <div class="story-footer">
                     <div class="action-btns">
-                        <button class="action-btn" onclick="likeStory('${story.id}', ${likes})">
-                            <i class="fa-solid fa-heart"></i> <span id="like-count-${story.id}">${likes}</span>
-                        </button>
-                        <button class="action-btn" onclick="toggleComments('${story.id}')">
-                            <i class="fa-solid fa-comment"></i> تعليق
-                        </button>
-                        <button class="action-btn" onclick="shareStory('${story.title}')">
-                            <i class="fa-solid fa-share-nodes"></i> مشاركة
-                        </button>
+                        <button class="action-btn" onclick="likeStory('${story.id}', ${story.likes || 0})"><i class="fa-solid fa-heart"></i> ${story.likes || 0}</button>
+                        <a href="https://api.whatsapp.com/send?text=${pageLink}" target="_blank" class="action-btn"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://t.me/share/url?url=${pageLink}" target="_blank" class="action-btn"><i class="fa-brands fa-telegram"></i></a>
+                        <button class="action-btn" onclick="reportStory('${story.id}')" style="color:#ef4444;"><i class="fa-solid fa-flag"></i> إبلاغ</button>
                     </div>
-                </div>
-
-                <div class="comments-section" id="comments-${story.id}">
-                    <div class="comment-input-box">
-                        <input type="text" id="input-comm-${story.id}" placeholder="اكتب تعليقك...">
-                        <button class="btn-primary" style="padding: 6px 12px;" onclick="addComment('${story.id}')">نشر</button>
-                    </div>
-                    <div id="list-comm-${story.id}"></div>
+                    <a href="story.html?id=${story.id}" style="color:#e2b714; font-weight:bold; text-decoration:none;">قراءة كاملة ⬅️</a>
                 </div>
             `;
             grid.appendChild(card);
-            loadComments(story.id);
         });
     }
 
-    function toggleReadMore(id, btn) {
-        const content = document.getElementById(`content-${id}`);
-        content.classList.toggle("expanded");
-        btn.innerText = content.classList.contains("expanded") ? "عرض أقل" : "قراءة المزيد...";
-    }
-
-    async function likeStory(id, currentLikes) {
-        await db.collection("stories").doc(id).update({
-            likes: currentLikes + 1
-        });
-    }
-
-    function filterCategory(cat) {
+    function filterCategory(cat, btn) {
         currentCategory = cat;
-        document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         renderStories();
     }
 
-    function filterStories() {
-        renderStories();
+    async function likeStory(id, current) {
+        await db.collection("stories").doc(id).update({ likes: current + 1 });
     }
 
-    function shareStory(title) {
-        if (navigator.share) {
-            navigator.share({ title: title, url: window.location.href });
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert("تم نسخ رابط الموقع لمشاركته!");
+    async function reportStory(id) {
+        const reason = prompt("يرجى كتابة سبب الإبلاغ عن هذه القصة:");
+        if (reason) {
+            await db.collection("reports").add({ storyId: id, reason: reason, createdAt: new Date() });
+            alert("تم إرسال بلاغك للإدارة للمراجعة.");
         }
-    }
-
-    function toggleComments(id) {
-        const commSection = document.getElementById(`comments-${id}`);
-        commSection.style.display = commSection.style.display === "block" ? "none" : "block";
-    }
-
-    async function addComment(storyId) {
-        const input = document.getElementById(`input-comm-${storyId}`);
-        const text = input.value.trim();
-        if (!text) return;
-
-        await db.collection("stories").doc(storyId).collection("comments").add({
-            text: text,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        input.value = "";
-    }
-
-    function loadComments(storyId) {
-        db.collection("stories").doc(storyId).collection("comments").orderBy("createdAt", "asc").onSnapshot(snapshot => {
-            const list = document.getElementById(`list-comm-${storyId}`);
-            if(!list) return;
-            list.innerHTML = "";
-            snapshot.forEach(doc => {
-                const c = doc.data();
-                list.innerHTML += `<div class="comment-item">💬 ${c.text}</div>`;
-            });
-        });
     }
 </script>
 </body>
