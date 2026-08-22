@@ -3,36 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حكاية - شارك قصتك</title>
+    <title>إضافة قصة - منصة حكاية</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
-<body style="background-color: #121824; color: #e2e8f0; font-family: sans-serif; margin: 0; padding: 0 0 50px 0; direction: rtl;">
+<body style="background-color: #121824; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
 
-    <!-- الهيدر الشامل -->
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; background-color: #1e2638; border-bottom: 1px solid #2e3a52;">
-        <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
-            <img src="logo.png" alt="حكاية HIKAYA" style="height: 55px; border-radius: 8px; background: #fff; padding: 2px;">
-        </a>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <a href="index.html" style="color: #cbd5e1; text-decoration: none; font-size: 0.9rem;">الرئيسية</a>
-            <a href="submit.html" style="color: #e2b714; text-decoration: none; font-weight: bold; font-size: 0.9rem;">شارك قصتك ✍️</a>
+    <div class="modal-card">
+        <a href="index.html" class="close-btn" style="text-decoration: none;">&times;</a>
+        <h2>إضافة قصة جديدة ✍️</h2>
+        <p class="modal-subtitle">شارِك قصتك لتُحفظ في منصة حكاية وجدول البيانات</p>
+
+        <div class="form-group">
+            <label for="author">اسم الكاتب</label>
+            <input type="text" id="author" placeholder="أدخل اسمك هنا...">
         </div>
-    </header>
 
-    <!-- محتوى الصفحة -->
-    <main style="max-width: 750px; margin: 30px auto; padding: 0 10px; text-align: center;">
-        <h1 style="color: #ffffff; font-size: 1.8rem; margin-bottom: 8px;">شارك قصتك مع العالم ✍️</h1>
-        <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 25px;">أدخل تفاصيل قصتك ليتم إرسالها لمراجعته ونشرها على المنصة!</p>
+        <div class="form-group">
+            <label for="title">عنوان القصة</label>
+            <input type="text" id="title" placeholder="أدخل عنوان القصة...">
+        </div>
 
-        <!-- زيادة الارتفاع لـ 1200 لعرض كافة الأسئلة وزر الإرسال -->
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc0SuW9ERZm2mcNDOIdWEUtlLo-uWwxMbaKrrGt7M07t7NY1g/viewform?embedded=true" 
-                width="100%" 
-                height="1200" 
-                frameborder="0" 
-                marginheight="0" 
-                marginwidth="0" 
-                style="border-radius: 12px; border: 1px solid #2e3a52; background: #fff;">
-            جاري التحميل…
-        </iframe>
-    </main>
+        <div class="form-group">
+            <label for="category">تصنيف القصة</label>
+            <select id="category" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #2e3a52; background-color: #121824; color: #ffffff; outline: none;">
+                <option value="واقعية">واقعية</option>
+                <option value="خيالية">خيالية</option>
+                <option value="تاريخية">تاريخية</option>
+                <option value="رعب">رعب</option>
+                <option value="أخرى">أخرى</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="content">نص القصة الكامل</label>
+            <textarea id="content" style="width: 100%; height: 110px; padding: 10px 12px; border-radius: 8px; border: 1px solid #2e3a52; background-color: #121824; color: #ffffff; resize: vertical; outline: none;" placeholder="اكتب قصتك هنا..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="relation">الصلة (صلتك بالقصة)</label>
+            <input type="text" id="relation" placeholder="مثال: حدثت معي، سمعتها من صديق...">
+        </div>
+
+        <button id="submit-btn" class="btn-submit" onclick="addStory()">🚀 نشر القصة الآن</button>
+    </div>
+
+<script>
+    // تهيئة Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
+        authDomain: "hikaya-5ff25.firebaseapp.com",
+        databaseURL: "https://hikaya-5ff25-default-rtdb.firebaseio.com",
+        projectId: "hikaya-5ff25",
+        storageBucket: "hikaya-5ff25.firebasestorage.app",
+        messagingSenderId: "1031922678593",
+        appId: "1:1031922678593:web:c242a9e36ad40becc9bfc0",
+        measurementId: "G-KR76L2WSZ7"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzWwfbplJcDgArVhtKLcQZ3u_TLbKcsbUBQmW9jmnjPhEqy7vzxYGFf4aBlu63rPFWl/exec";
+
+    async function addStory() {
+        const authorInput = document.getElementById("author");
+        const titleInput = document.getElementById("title");
+        const categoryInput = document.getElementById("category");
+        const contentInput = document.getElementById("content");
+        const relationInput = document.getElementById("relation");
+        const submitBtn = document.getElementById("submit-btn");
+
+        const author = authorInput.value.trim() || "زائر";
+        const title = titleInput.value.trim();
+        const category = categoryInput.value;
+        const content = contentInput.value.trim();
+        const relation = relationInput.value.trim() || "غير محدد";
+
+        if (!title || !content) {
+            alert("يرجى كتابة عنوان القصة ونصها الكامل أولاً.");
+            return;
+        }
+
+        try {
+            submitBtn.innerText = "جاري النشر...";
+            submitBtn.disabled = true;
+
+            // حفظ في Firebase
+            await db.collection("stories").add({
+                author: author,
+                title: title,
+                category: category,
+                content: content,
+                relation: relation,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            // إرسال لـ Google Sheets
+            fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    author: author,
+                    title: title,
+                    category: category,
+                    content: content,
+                    relation: relation
+                })
+            });
+
+            alert("تم نشر القصة وإضافتها لـ Google Sheets بنجاح!");
+            window.location.href = "index.html"; // العودة للرئيسية تلقائياً
+        } catch (error) {
+            console.error(error);
+            alert("حدث خطأ أثناء حفظ القصة: " + error.message);
+        } finally {
+            submitBtn.innerText = "🚀 نشر القصة الآن";
+            submitBtn.disabled = false;
+        }
+    }
+</script>
+
 </body>
 </html>
