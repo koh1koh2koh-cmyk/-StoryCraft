@@ -12,13 +12,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ==========================================================================
-           1. المتغيرات والأنماط الأساسية (Variables & Reset)
-           ========================================================================== */
         :root {
             --bg-main: #0f172a;
             --bg-card: #1e293b;
-            --bg-card-hover: #334155;
             --accent-gold: #e2b714;
             --accent-gold-hover: #d1a500;
             --text-white: #f8fafc;
@@ -26,9 +22,6 @@
             --text-body: #cbd5e1;
             --border-color: #334155;
             --danger-color: #ef4444;
-            --success-color: #22c55e;
-            --wa-color: #25d366;
-            --tg-color: #0088cc;
             --radius-sm: 8px;
             --radius-md: 14px;
             --radius-lg: 20px;
@@ -54,9 +47,6 @@
             overflow-x: hidden;
         }
 
-        /* ==========================================================================
-           2. الرأس والتنقل (Header & Navigation)
-           ========================================================================== */
         header {
             background-color: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
@@ -95,7 +85,6 @@
             font-size: 1.8rem;
             font-weight: 900;
             color: var(--accent-gold);
-            letter-spacing: -0.5px;
         }
 
         .btn-primary {
@@ -119,9 +108,6 @@
             box-shadow: 0 6px 18px rgba(226, 183, 20, 0.4);
         }
 
-        /* ==========================================================================
-           3. التنسيق العام والتحكم (Main Container & Controls)
-           ========================================================================== */
         .container {
             max-width: 1080px;
             margin: 40px auto;
@@ -138,8 +124,6 @@
             text-align: center;
             margin-bottom: 35px;
             box-shadow: var(--shadow-md);
-            position: relative;
-            overflow: hidden;
         }
 
         .hero-title {
@@ -226,9 +210,6 @@
             font-weight: 700;
         }
 
-        /* ==========================================================================
-           4. عرض بطاقات القصص (Stories Grid & Card UI)
-           ========================================================================== */
         .stories-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -352,9 +333,6 @@
             gap: 6px;
         }
 
-        /* ==========================================================================
-           5. النوافذ المنبثقة وحالات التحميل (Modal & States)
-           ========================================================================== */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -437,7 +415,6 @@
     </header>
 
     <div class="container">
-        
         <div class="hero-banner">
             <h1 class="hero-title">عالم من القصص والروايات العربية</h1>
             <p class="hero-subtitle">استمتع بقراءة أفضل القصص والروايات مباشرة من الكُتّاب والقرّاء.</p>
@@ -459,10 +436,9 @@
         <div id="storiesGrid" class="stories-grid">
             <div class="loading-state">
                 <div class="spinner"></div>
-                <p>جاري تحميل أحدث القصص من جدول البيانات...</p>
+                <p>جاري تحميل أحدث القصص...</p>
             </div>
         </div>
-
     </div>
 
     <div class="modal-overlay" id="storyModal">
@@ -477,52 +453,43 @@
     </footer>
 
     <script>
-        // ==========================================================================
-        // الربط المباشر بجدول بيانات Google Sheets
-        // ==========================================================================
-        const SHEET_ID = '1372MSEs4QJJH4LQO1FDw1gxd5SAOA854YRK0prls7t0';
-        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+        // رابط التطبيق المباشر المأخوذ من صورتك
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz7aibrX9HU7bPkGUYipqmcAVZqMQH2Um6qJP8KqWESaVqJYqlhJp9-MVqmcMi0ZKVo/exec';
 
         let allStories = [];
         let currentCategory = 'الكل';
 
-        // جلب البيانات معالجة بنية Google Sheets JSON
-        fetch(SHEET_URL)
-            .then(res => res.text())
-            .then(data => {
-                // اقتطاع الغلاف الخارجي لرد Google GViz
-                const json = JSON.parse(data.substring(47, data.length - 2));
-                const rows = json.table.rows;
+        // دالة جلب البيانات المباشرة
+        function loadStories() {
+            fetch(SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        allStories = data.map((item, index) => ({
+                            id: 'story_' + index,
+                            title: item.title || item[1] || 'قصة بدون عنوان',
+                            author: item.author || item[2] || 'كاتب مجهول',
+                            relation: item.relation || item[3] || 'عام',
+                            content: item.content || item[4] || item[1] || '',
+                            category: item.category || item[5] || 'واقعية',
+                            likes: item.likes || Math.floor(Math.random() * 15) + 3
+                        })).reverse();
+                    } else {
+                        allStories = [];
+                    }
+                    renderStories();
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    document.getElementById("storiesGrid").innerHTML = `
+                        <div class="empty-state">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: var(--danger-color); margin-bottom: 15px;"></i>
+                            <p>تعذر جلب القصص. تأكد من أن صلاحية النشر في Apps Script هي "Anyone" (أي شخص).</p>
+                        </div>
+                    `;
+                });
+        }
 
-                allStories = rows.map((row, index) => {
-                    const cells = row.c || [];
-                    return {
-                        id: 'story_' + index,
-                        time: cells[0] ? cells[0].v : '',
-                        title: cells[1] ? cells[1].v : 'قصة بدون عنوان',
-                        author: cells[2] ? cells[2].v : 'كاتب مجهول',
-                        relation: cells[3] ? cells[3].v : 'عام',
-                        content: cells[4] ? cells[4].v : (cells[1] ? cells[1].v : 'لا يوجد محتوى'),
-                        category: cells[5] ? cells[5].v : 'واقعية',
-                        likes: Math.floor(Math.random() * 15) + 3
-                    };
-                }).reverse(); // ترتيب من الأحدث للأقدم
-
-                renderStories();
-            })
-            .catch(err => {
-                console.error("Error loading spreadsheet data:", err);
-                document.getElementById("storiesGrid").innerHTML = `
-                    <div class="empty-state">
-                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: var(--danger-color); margin-bottom: 15px;"></i>
-                        <p>تعذر جلب البيانات. يرجى التأكد من ضبط إعدادات المشاركة في شيت جوجل على (Anyone with link).</p>
-                    </div>
-                `;
-            });
-
-        // ==========================================================================
-        // العرض والفلترة والبحث
-        // ==========================================================================
         function renderStories() {
             const grid = document.getElementById("storiesGrid");
             const query = document.getElementById("searchInput").value.toLowerCase().trim();
@@ -583,9 +550,6 @@
             });
         }
 
-        // ==========================================================================
-        // وظائف التفاعل وإدارة النافذة المنبثقة
-        // ==========================================================================
         function filterCategory(cat, btn) {
             currentCategory = cat;
             document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
@@ -648,6 +612,9 @@
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
             }[tag] || tag));
         }
+
+        // البدء بجلب القصص فوراً
+        loadStories();
     </script>
 </body>
 </html>
