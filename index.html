@@ -10,6 +10,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Firebase SDKs لتتبع الزوار -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+
+    <script>
+      // بيانات مشروعك الخاصة بـ Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyDcoMH8sFZmb8hJUGBzVzMzFasya2JQsk",
+        authDomain: "hikaya-5ff25.firebaseapp.com",
+        databaseURL: "https://hikaya-5ff25-default-rtdb.firebaseio.com",
+        projectId: "hikaya-5ff25",
+        storageBucket: "hikaya-5ff25.firebasestorage.app",
+        messagingSenderId: "1031922678593",
+        appId: "1:1031922678593:web:c242a9e3ead46becc9bfs0",
+        measurementId: "G-KR76L2WSZ7"
+      };
+
+      // تهيئة Firebase و Analytics
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
+
     <style>
         :root {
             --bg-main: #0f172a;
@@ -151,7 +173,6 @@
     </footer>
 
     <script>
-        // الرابط الجديد الخاص بك
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzytiqTfBAaAMqGefmPn6z_yxbJj-Kliw3pSAtB6U7IRoCVzl1xxfm6Hyfhx-Q1UCuv/exec';
 
         let allStories = [];
