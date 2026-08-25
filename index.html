@@ -21,9 +21,11 @@
             --accent-color: #f59e0b;
             --border-color: #334155;
             --font-main: 'Cairo', sans-serif;
-            --chat-bg: #0b141a;
-            --msg-me: #005c4b;
-            --msg-them: #202c33;
+            --wa-bg: #111b21;
+            --wa-card: #202c33;
+            --wa-green: #00a884;
+            --wa-bubble-me: #005c4b;
+            --wa-bubble-them: #202c33;
         }
 
         [data-theme="light"] {
@@ -34,9 +36,10 @@
             --text-muted: #64748b;
             --accent-color: #d97706;
             --border-color: #e2e8f0;
-            --chat-bg: #efeae2;
-            --msg-me: #d9fdd3;
-            --msg-them: #ffffff;
+            --wa-bg: #efeae2;
+            --wa-card: #ffffff;
+            --wa-bubble-me: #d9fdd3;
+            --wa-bubble-them: #ffffff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
@@ -49,135 +52,152 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
-            position: sticky; top: 0; z-index: 1000;
+            position: sticky; top: 0; z-index: 999;
         }
         header h1 { color: var(--accent-color); font-size: 1.8rem; font-weight: 800; }
         .header-actions { display: flex; align-items: center; gap: 15px; }
-        .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-color); }
+        .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer; }
         .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 700; cursor: pointer; }
 
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
-
-        .main-layout { display: grid; grid-template-columns: 2fr 1.2fr; gap: 2rem; }
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
+        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
         @media (max-width: 850px) { .main-layout { grid-template-columns: 1fr; } }
 
         .section-title { font-size: 1.4rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1.2rem; }
 
-        /* تصميم محادثات الواتساب */
-        .whatsapp-container {
-            background-color: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            height: 480px;
-            display: flex;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .users-list {
-            width: 35%;
-            border-left: 1px solid var(--border-color);
-            overflow-y: auto;
-            background-color: var(--bg-card);
-        }
-
-        .user-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .user-item:hover, .user-item.active { background-color: var(--bg-input); }
-        .user-item img { width: 35px; height: 35px; border-radius: 50%; }
-        .user-item span { font-size: 0.9rem; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .chat-area {
-            width: 65%;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--chat-bg);
-        }
-
-        .chat-header {
-            padding: 10px 15px;
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--accent-color);
-        }
-
-        .messages-box {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .bubble {
-            max-width: 75%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.88rem;
-            line-height: 1.4;
-            position: relative;
-            word-break: break-word;
-        }
-
-        .bubble.me {
-            align-self: flex-start;
-            background-color: var(--msg-me);
-            color: #fff;
-            border-top-right-radius: 0;
-        }
-
-        .bubble.them {
-            align-self: flex-end;
-            background-color: var(--msg-them);
-            color: var(--text-main);
-            border-top-left-radius: 0;
-        }
-
-        .chat-input-bar {
-            display: flex;
-            padding: 10px;
-            background-color: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            gap: 8px;
-        }
-
-        .chat-input-bar input {
-            flex: 1;
-            padding: 8px 12px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            color: var(--text-main);
-        }
-
-        .chat-input-bar button {
-            background-color: var(--accent-color);
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* كروت القصص والنشر */
+        /* القصص والنشر */
         .story-card { background-color: var(--bg-card); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid var(--border-color); }
         .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; }
-        .publish-box { background-color: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); }
+        .publish-box { background-color: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); position: sticky; top: 90px; }
         .form-group { margin-bottom: 0.8rem; }
         .form-group input, .form-group textarea { width: 100%; padding: 0.6rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); }
         .btn-primary { width: 100%; padding: 0.7rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; }
+
+        /* زر الواتساب العائم */
+        .chat-float-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--wa-green);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        .chat-float-btn:hover { transform: scale(1.08); }
+
+        /* نافذة محادثات الواتساب المنبثقة */
+        .chat-modal {
+            position: fixed;
+            bottom: 95px;
+            left: 25px;
+            width: 360px;
+            height: 520px;
+            background-color: var(--wa-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .chat-modal.open { display: flex; }
+
+        .modal-header {
+            background-color: var(--wa-card);
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-header h3 { font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+
+        .modal-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        .users-list { flex: 1; overflow-y: auto; }
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+        }
+        .user-item:hover { background-color: var(--wa-card); }
+        .user-item img { width: 42px; height: 42px; border-radius: 50%; }
+        .user-item .details { flex: 1; overflow: hidden; }
+        .user-item .name { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
+        .user-item .sub { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .active-chat { flex: 1; display: none; flex-direction: column; }
+        .active-chat.open { display: flex; }
+
+        .chat-sub-header {
+            padding: 8px 12px;
+            background-color: var(--wa-card);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .back-btn { background: none; border: none; color: var(--accent-color); font-size: 1.2rem; cursor: pointer; }
+
+        .messages-area {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .msg-bubble {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .msg-bubble.me { align-self: flex-start; background-color: var(--wa-bubble-me); color: #fff; border-top-right-radius: 0; }
+        .msg-bubble.them { align-self: flex-end; background-color: var(--wa-bubble-them); color: var(--text-main); border-top-left-radius: 0; }
+
+        .chat-input-row {
+            padding: 8px;
+            background-color: var(--wa-card);
+            display: flex;
+            gap: 6px;
+        }
+        .chat-input-row input {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+        }
+        .chat-input-row button {
+            background: var(--wa-green);
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -187,7 +207,7 @@
         <div class="header-actions">
             <button class="btn-auth" id="themeToggle">🌙 المظهر</button>
             <div id="authBox">
-                <button class="btn-auth" id="loginBtn">تسجيل الدخول بـ Google</button>
+                <button class="btn-auth" onclick="handleLogin()">تسجيل الدخول بـ Google</button>
             </div>
         </div>
     </header>
@@ -200,33 +220,44 @@
             </main>
 
             <aside>
-                <!-- نظام محادثة واتساب الفردي -->
-                <h2 class="section-title">الدردشة والتعارف (مثل واتساب) 💬</h2>
-                <div class="whatsapp-container">
-                    <div class="users-list" id="usersList">
-                        <!-- قائمة المستخدمين ستظهر هنا -->
-                    </div>
-                    <div class="chat-area">
-                        <div class="chat-header" id="chatHeader">اختر مستخدماً للبدء في المحادثة</div>
-                        <div class="messages-box" id="messagesBox"></div>
-                        <form class="chat-input-bar" id="chatForm">
-                            <input type="text" id="msgInput" placeholder="اكتب رسالة..." disabled required>
-                            <button type="submit" id="sendBtn" disabled>إرسال</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- نموذج نشر القصص -->
                 <div class="publish-box">
                     <h2 class="section-title">انشر قصتك</h2>
                     <form id="storyForm">
                         <div class="form-group"><input type="text" id="storyTitle" placeholder="عنوان القصة" required></div>
                         <div class="form-group"><input type="text" id="authorName" placeholder="اسم الكاتب" required></div>
-                        <div class="form-group"><textarea id="storyContent" rows="4" placeholder="نص القصة..." required></textarea></div>
+                        <div class="form-group"><textarea id="storyContent" rows="5" placeholder="نص القصة..." required></textarea></div>
                         <button type="submit" class="btn-primary">نشر القصة</button>
                     </form>
                 </div>
             </aside>
+        </div>
+    </div>
+
+    <!-- زر المحادثات العائم على غرار واتساب -->
+    <div class="chat-float-btn" id="chatFloatBtn">💬</div>
+
+    <!-- النافذة المنبثقة للشات -->
+    <div class="chat-modal" id="chatModal">
+        <div class="modal-header">
+            <h3>💬 المحادثات والأصدقاء</h3>
+            <button class="back-btn" onclick="toggleChatModal()">✖</button>
+        </div>
+        <div class="modal-body">
+            <!-- قائمة أصدقاء واتساب -->
+            <div class="users-list" id="usersList"></div>
+
+            <!-- غرفة الدردشة النشطة -->
+            <div class="active-chat" id="activeChat">
+                <div class="chat-sub-header">
+                    <button class="back-btn" onclick="closeActiveChat()">➡️</button>
+                    <span id="targetUserName">المحادثة</span>
+                </div>
+                <div class="messages-area" id="messagesArea"></div>
+                <form class="chat-input-row" id="chatForm">
+                    <input type="text" id="msgInput" placeholder="اكتب رسالة..." required>
+                    <button type="submit">إرسال</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -257,23 +288,30 @@
 
         const authBox = document.getElementById('authBox');
         const usersList = document.getElementById('usersList');
-        const messagesBox = document.getElementById('messagesBox');
-        const chatHeader = document.getElementById('chatHeader');
+        const activeChat = document.getElementById('activeChat');
+        const messagesArea = document.getElementById('messagesArea');
+        const targetUserName = document.getElementById('targetUserName');
         const msgInput = document.getElementById('msgInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const chatForm = document.getElementById('chatForm');
 
-        // تسجيل الدخول والخروج
+        // تسجيل الدخول والخروج بشكل آمن
+        function handleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(err => alert("خطأ في التسجيل: " + err.message));
+        }
+
+        function handleLogout() {
+            auth.signOut();
+        }
+
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
                 authBox.innerHTML = `
-                    <img src="${user.photoURL}" class="user-avatar">
-                    <button class="btn-auth" style="background:#ef4444" onclick="auth.signOut()">خروج</button>
+                    <img src="${user.photoURL}" class="user-avatar" title="${user.displayName}">
+                    <button class="btn-auth" style="background:#ef4444" onclick="handleLogout()">خروج</button>
                 `;
                 document.getElementById('authorName').value = user.displayName;
                 
-                // حفظ المستخدم في قاعدة البيانات
                 database.ref('users/' + user.uid).set({
                     uid: user.uid,
                     name: user.displayName,
@@ -283,42 +321,56 @@
                 loadUsers();
             } else {
                 currentUser = null;
-                authBox.innerHTML = `<button class="btn-auth" id="loginBtn">تسجيل الدخول بـ Google</button>`;
-                document.getElementById('loginBtn').addEventListener('click', () => {
-                    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                });
-                usersList.innerHTML = '<div style="padding:10px; font-size:0.8rem; text-align:center;">سجل دخول لرؤية الأصدقاء</div>';
+                authBox.innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول بـ Google</button>`;
+                usersList.innerHTML = '<div style="padding:20px; font-size:0.85rem; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل مع القرّاء وتكوين صداقات 💬</div>';
+                closeActiveChat();
             }
         });
 
-        // تحميل قائمة الأصدقاء/المستخدمين
+        // فتح وإغلاق قائمة الشات
+        const chatModal = document.getElementById('chatModal');
+        document.getElementById('chatFloatBtn').addEventListener('click', toggleChatModal);
+
+        function toggleChatModal() {
+            chatModal.classList.toggle('open');
+        }
+
+        function closeActiveChat() {
+            activeChat.classList.remove('open');
+            usersList.style.display = 'block';
+        }
+
+        // تحميل أصدقاء واتساب
         function loadUsers() {
             database.ref('users').on('value', snapshot => {
                 usersList.innerHTML = '';
                 snapshot.forEach(child => {
                     const u = child.val();
-                    if (u.uid !== currentUser.uid) {
+                    if (currentUser && u.uid !== currentUser.uid) {
                         const div = document.createElement('div');
                         div.className = 'user-item';
-                        div.innerHTML = `<img src="${u.photo}"><span>${u.name}</span>`;
-                        div.onclick = () => startChat(u, div);
+                        div.innerHTML = `
+                            <img src="${u.photo}">
+                            <div class="details">
+                                <div class="name">${u.name}</div>
+                                <div class="sub">انقر لبدء المحادثة الشخصية</div>
+                            </div>
+                        `;
+                        div.onclick = () => openChatWith(u);
                         usersList.appendChild(div);
                     }
                 });
             });
         }
 
-        // بدء محادثة خاصة عند اختيار صديق
-        function startChat(targetUser, element) {
-            document.querySelectorAll('.user-item').forEach(e => e.classList.remove('active'));
-            element.classList.add('active');
+        // فتح محادثة فردية مع صديق
+        function openChatWith(user) {
+            if (!currentUser) return alert("سجل الدخول أولاً للمحادثة!");
+            selectedUser = user;
+            targetUserName.textContent = user.name;
+            usersList.style.display = 'none';
+            activeChat.classList.add('open');
 
-            selectedUser = targetUser;
-            chatHeader.textContent = "محادثة مع: " + selectedUser.name;
-            msgInput.disabled = false;
-            sendBtn.disabled = false;
-
-            // توليد معرف معرف المحادثة الفريد بين الشخصين
             currentChatId = currentUser.uid < selectedUser.uid 
                 ? `${currentUser.uid}_${selectedUser.uid}` 
                 : `${selectedUser.uid}_${currentUser.uid}`;
@@ -326,23 +378,23 @@
             loadMessages();
         }
 
-        // تحميل الرسائل الخاصة بالطرفين
+        // تحميل الرسائل الفردية
         function loadMessages() {
             database.ref('private_chats/' + currentChatId).on('value', snapshot => {
-                messagesBox.innerHTML = '';
+                messagesArea.innerHTML = '';
                 snapshot.forEach(child => {
                     const msg = child.val();
                     const b = document.createElement('div');
-                    b.className = `bubble ${msg.senderId === currentUser.uid ? 'me' : 'them'}`;
+                    b.className = `msg-bubble ${msg.senderId === currentUser.uid ? 'me' : 'them'}`;
                     b.textContent = msg.text;
-                    messagesBox.appendChild(b);
+                    messagesArea.appendChild(b);
                 });
-                messagesBox.scrollTop = messagesBox.scrollHeight;
+                messagesArea.scrollTop = messagesArea.scrollHeight;
             });
         }
 
-        // إرسال رسالة خاصة
-        chatForm.addEventListener('submit', e => {
+        // إرسال الرسالة
+        document.getElementById('chatForm').addEventListener('submit', e => {
             e.preventDefault();
             if (!currentChatId || !msgInput.value.trim()) return;
 
@@ -355,13 +407,13 @@
             msgInput.value = '';
         });
 
-        // تغيير المظهر
+        // تغيير المظهر (Dark / Light)
         document.getElementById("themeToggle").addEventListener("click", () => {
             const isLight = document.documentElement.getAttribute("data-theme") === "light";
             document.documentElement.setAttribute("data-theme", isLight ? "" : "light");
         });
 
-        // حفظ وقراءة القصص محلياً
+        // إدارة القصص والنشر
         const storiesContainer = document.getElementById("stories-container");
         let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
             { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال..." }
