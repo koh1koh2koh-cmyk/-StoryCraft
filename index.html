@@ -123,6 +123,23 @@
         }
         .modal-header h3 { font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
 
+        /* شريط البحث المخصص لأسماء المستخدمين */
+        .chat-search-box {
+            padding: 10px 12px;
+            background-color: var(--wa-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .chat-search-box input {
+            width: 100%;
+            padding: 7px 12px;
+            background: var(--wa-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
         .modal-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
         .users-list { flex: 1; overflow-y: auto; }
@@ -242,6 +259,12 @@
             <h3>💬 المحادثات والأصدقاء</h3>
             <button class="back-btn" onclick="toggleChatModal()">✖</button>
         </div>
+        
+        <!-- شريط البحث المخصص لأسماء المستخدمين -->
+        <div class="chat-search-box" id="searchContainer">
+            <input type="text" id="userSearchInput" placeholder="🔍 ابحث عن اسم مستخدم...">
+        </div>
+
         <div class="modal-body">
             <!-- قائمة أصدقاء واتساب -->
             <div class="users-list" id="usersList"></div>
@@ -285,6 +308,7 @@
         let currentUser = null;
         let selectedUser = null;
         let currentChatId = null;
+        let allUsersData = []; // تخزين بيانات المستخدمين للبحث
 
         const authBox = document.getElementById('authBox');
         const usersList = document.getElementById('usersList');
@@ -292,8 +316,9 @@
         const messagesArea = document.getElementById('messagesArea');
         const targetUserName = document.getElementById('targetUserName');
         const msgInput = document.getElementById('msgInput');
+        const userSearchInput = document.getElementById('userSearchInput');
+        const searchContainer = document.getElementById('searchContainer');
 
-        // تسجيل الدخول والخروج بشكل آمن
         function handleLogin() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).catch(err => alert("خطأ في التسجيل: " + err.message));
@@ -327,7 +352,6 @@
             }
         });
 
-        // فتح وإغلاق قائمة الشات
         const chatModal = document.getElementById('chatModal');
         document.getElementById('chatFloatBtn').addEventListener('click', toggleChatModal);
 
@@ -338,37 +362,58 @@
         function closeActiveChat() {
             activeChat.classList.remove('open');
             usersList.style.display = 'block';
+            searchContainer.style.display = 'block'; // إعادة إظهار شريط البحث عند العودة للقائمة
         }
 
-        // تحميل أصدقاء واتساب
+        // تحميل أصدقاء واتساب وتخزينهم للبحث
         function loadUsers() {
             database.ref('users').on('value', snapshot => {
-                usersList.innerHTML = '';
+                allUsersData = [];
                 snapshot.forEach(child => {
                     const u = child.val();
                     if (currentUser && u.uid !== currentUser.uid) {
-                        const div = document.createElement('div');
-                        div.className = 'user-item';
-                        div.innerHTML = `
-                            <img src="${u.photo}">
-                            <div class="details">
-                                <div class="name">${u.name}</div>
-                                <div class="sub">انقر لبدء المحادثة الشخصية</div>
-                            </div>
-                        `;
-                        div.onclick = () => openChatWith(u);
-                        usersList.appendChild(div);
+                        allUsersData.push(u);
                     }
                 });
+                renderUsersList(allUsersData);
             });
         }
 
-        // فتح محادثة فردية مع صديق
+        // دالة لعرض المستخدمين في القائمة
+        function renderUsersList(users) {
+            usersList.innerHTML = '';
+            if (users.length === 0) {
+                usersList.innerHTML = '<div style="padding:20px; font-size:0.85rem; text-align:center; color:var(--text-muted);">لا يوجد مستخدمون مطابقة للبحث</div>';
+                return;
+            }
+            users.forEach(u => {
+                const div = document.createElement('div');
+                div.className = 'user-item';
+                div.innerHTML = `
+                    <img src="${u.photo}">
+                    <div class="details">
+                        <div class="name">${u.name}</div>
+                        <div class="sub">انقر لبدء المحادثة الشخصية</div>
+                    </div>
+                `;
+                div.onclick = () => openChatWith(u);
+                usersList.appendChild(div);
+            });
+        }
+
+        // تفعيل البحث الفوري عن أسماء المستخدمين فقط
+        userSearchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            const filtered = allUsersData.filter(u => u.name.toLowerCase().includes(query));
+            renderUsersList(filtered);
+        });
+
         function openChatWith(user) {
             if (!currentUser) return alert("سجل الدخول أولاً للمحادثة!");
             selectedUser = user;
             targetUserName.textContent = user.name;
             usersList.style.display = 'none';
+            searchContainer.style.display = 'none'; // إخفاء شريط البحث داخل المحادثة الفردية
             activeChat.classList.add('open');
 
             currentChatId = currentUser.uid < selectedUser.uid 
@@ -378,7 +423,6 @@
             loadMessages();
         }
 
-        // تحميل الرسائل الفردية
         function loadMessages() {
             database.ref('private_chats/' + currentChatId).on('value', snapshot => {
                 messagesArea.innerHTML = '';
@@ -393,7 +437,6 @@
             });
         }
 
-        // إرسال الرسالة
         document.getElementById('chatForm').addEventListener('submit', e => {
             e.preventDefault();
             if (!currentChatId || !msgInput.value.trim()) return;
@@ -407,13 +450,11 @@
             msgInput.value = '';
         });
 
-        // تغيير المظهر (Dark / Light)
         document.getElementById("themeToggle").addEventListener("click", () => {
             const isLight = document.documentElement.getAttribute("data-theme") === "light";
             document.documentElement.setAttribute("data-theme", isLight ? "" : "light");
         });
 
-        // إدارة القصص والنشر
         const storiesContainer = document.getElementById("stories-container");
         let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
             { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال..." }
