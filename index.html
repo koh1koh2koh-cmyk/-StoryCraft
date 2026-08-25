@@ -65,7 +65,6 @@
 
         .section-title { font-size: 1.4rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1.2rem; }
 
-        /* القصص والنشر */
         .story-card { background-color: var(--bg-card); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid var(--border-color); }
         .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; }
         .publish-box { background-color: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); position: sticky; top: 90px; }
@@ -73,82 +72,39 @@
         .form-group input, .form-group textarea { width: 100%; padding: 0.6rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); }
         .btn-primary { width: 100%; padding: 0.7rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-        /* زر الواتساب العائم */
         .chat-float-btn {
-            position: fixed;
-            bottom: 25px;
-            left: 25px;
-            width: 60px;
-            height: 60px;
-            background-color: var(--wa-green);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            cursor: pointer;
-            z-index: 1000;
+            position: fixed; bottom: 25px; left: 25px; width: 60px; height: 60px;
+            background-color: var(--wa-green); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000;
             transition: transform 0.2s;
         }
         .chat-float-btn:hover { transform: scale(1.08); }
 
-        /* نافذة محادثات الواتساب المنبثقة */
         .chat-modal {
-            position: fixed;
-            bottom: 95px;
-            left: 25px;
-            width: 360px;
-            height: 520px;
-            background-color: var(--wa-bg);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 1000;
+            position: fixed; bottom: 95px; left: 25px; width: 360px; height: 520px;
+            background-color: var(--wa-bg); border-radius: 16px; border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1000;
         }
-
         .chat-modal.open { display: flex; }
 
         .modal-header {
-            background-color: var(--wa-card);
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
+            background-color: var(--wa-card); padding: 12px 15px; display: flex;
+            align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color);
         }
         .modal-header h3 { font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
 
-        .chat-search-box {
-            padding: 10px 12px;
-            background-color: var(--wa-bg);
-            border-bottom: 1px solid var(--border-color);
-        }
+        .chat-search-box { padding: 10px 12px; background-color: var(--wa-bg); border-bottom: 1px solid var(--border-color); }
         .chat-search-box input {
-            width: 100%;
-            padding: 7px 12px;
-            background: var(--wa-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            color: var(--text-main);
-            font-size: 0.85rem;
-            outline: none;
+            width: 100%; padding: 7px 12px; background: var(--wa-card); border: 1px solid var(--border-color);
+            border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none;
         }
 
         .modal-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
         .users-list { flex: 1; overflow-y: auto; }
         .user-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer;
+            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;
         }
         .user-item:hover { background-color: var(--wa-card); }
         .user-item img { width: 42px; height: 42px; border-radius: 50%; }
@@ -160,13 +116,8 @@
         .active-chat.open { display: flex; }
 
         .chat-sub-header {
-            padding: 8px 12px;
-            background-color: var(--wa-card);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-weight: 700;
-            font-size: 0.9rem;
+            padding: 8px 12px; background-color: var(--wa-card); display: flex;
+            align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.9rem;
         }
         .chat-header-info { display: flex; align-items: center; gap: 8px; }
         .chat-header-actions { display: flex; gap: 10px; align-items: center; }
@@ -174,60 +125,39 @@
         .back-btn { background: none; border: none; color: var(--accent-color); font-size: 1.2rem; cursor: pointer; }
 
         .messages-area {
-            flex: 1;
-            padding: 12px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
         }
-
         .msg-bubble {
-            max-width: 80%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            word-break: break-word;
+            max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.4; word-break: break-word;
         }
         .msg-bubble.me { align-self: flex-start; background-color: var(--wa-bubble-me); color: #fff; border-top-right-radius: 0; }
         .msg-bubble.them { align-self: flex-end; background-color: var(--wa-bubble-them); color: var(--text-main); border-top-left-radius: 0; }
         .msg-bubble img { max-width: 100%; border-radius: 6px; margin-top: 4px; display: block; }
 
         .chat-input-row {
-            padding: 8px;
-            background-color: var(--wa-card);
-            display: flex;
-            gap: 6px;
-            align-items: center;
+            padding: 8px; background-color: var(--wa-card); display: flex; gap: 6px; align-items: center;
         }
         .chat-input-row input[type="text"] {
-            flex: 1;
-            padding: 8px 12px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            color: var(--text-main);
-            font-size: 0.85rem;
+            flex: 1; padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border-color);
+            border-radius: 20px; color: var(--text-main); font-size: 0.85rem;
         }
-        .upload-img-label {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0 4px;
-        }
+        .upload-img-label { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
         .upload-img-label:hover { color: var(--wa-green); }
         .chat-input-row button[type="submit"] {
-            background: var(--wa-green);
-            color: #fff;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-weight: 700;
-            cursor: pointer;
+            background: var(--wa-green); color: #fff; border: none; padding: 8px 14px;
+            border-radius: 20px; font-weight: 700; cursor: pointer;
         }
+
+        /* نافذة المكالمة الحية المنبثقة */
+        #callModal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 2000; display: none;
+            flex-direction: column; align-items: center; justify-content: center; color: white;
+        }
+        #callModal.active { display: flex; }
+        .call-box { background: #1e293b; padding: 30px; border-radius: 16px; text-align: center; width: 320px; border: 1px solid #334155; }
+        .call-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--wa-green); margin-bottom: 15px; }
+        .end-call-btn { background: #ef4444; color: white; border: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -266,7 +196,7 @@
     <!-- زر المحادثات العائم -->
     <div class="chat-float-btn" id="chatFloatBtn">💬</div>
 
-    <!-- النافذة المنبثقة للشات -->
+    <!-- نافذة محادثات واتساب -->
     <div class="chat-modal" id="chatModal">
         <div class="modal-header">
             <h3>💬 المحادثات والأصدقاء</h3>
@@ -287,7 +217,7 @@
                         <span id="targetUserName">المحادثة</span>
                     </div>
                     <div class="chat-header-actions">
-                        <button class="call-btn" onclick="makeAudioCall()" title="اتصال هاتفي">📞</button>
+                        <button class="call-btn" onclick="startRealCall()" title="اتصال صوتي حقيقي">📞</button>
                     </div>
                 </div>
                 <div class="messages-area" id="messagesArea"></div>
@@ -303,10 +233,23 @@
         </div>
     </div>
 
+    <!-- نافذة الاتصال الصوتي الحية -->
+    <div id="callModal">
+        <div class="call-box">
+            <img id="callUserAvatar" src="" class="call-avatar">
+            <h3 id="callStatusText">جارٍ الاتصال...</h3>
+            <p id="callUserName" style="color: #94a3b8; margin-top: 5px; font-size: 0.9rem;"></p>
+            <audio id="remoteAudio" autoplay></audio>
+            <button class="end-call-btn" onclick="endCall()">إنهاء المكالمة</button>
+        </div>
+    </div>
+
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <!-- PeerJS لعمل المكالمات الصوتية الحقيقية عبر الويب -->
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -329,6 +272,11 @@
         let currentChatId = null;
         let allUsersData = [];
 
+        // متغيرات المكالمات الصوتية (PeerJS)
+        let peer = null;
+        let activeCall = null;
+        let localStream = null;
+
         const authBox = document.getElementById('authBox');
         const usersList = document.getElementById('usersList');
         const activeChat = document.getElementById('activeChat');
@@ -345,6 +293,7 @@
         }
 
         function handleLogout() {
+            if (peer) peer.destroy();
             auth.signOut();
         }
 
@@ -357,6 +306,30 @@
                 `;
                 document.getElementById('authorName').value = user.displayName;
                 
+                // تهيئة PeerJS باستخدام الـ UID الخاص بالمستخدم كمعرّف اتصال فريد
+                peer = new Peer(user.uid, {
+                    host: '0.peerjs.com',
+                    port: 443,
+                    secure: true
+                });
+
+                peer.on('call', incomingCall => {
+                    if (confirm("تلقيت مكالمة صوتية واردة. هل تريد الرد؟")) {
+                        navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(stream => {
+                            localStream = stream;
+                            incomingCall.answer(stream);
+                            activeCall = incomingCall;
+                            showCallUI(incomingCall.peer);
+                            
+                            incomingCall.on('stream', remoteStream => {
+                                document.getElementById('remoteAudio').srcObject = remoteStream;
+                            });
+                        }).catch(err => alert("الرجاء السماح بالوصول للميكروفون لإجراء المكالمة."));
+                    } else {
+                        incomingCall.close();
+                    }
+                });
+
                 database.ref('users/' + user.uid).set({
                     uid: user.uid,
                     name: user.displayName,
@@ -367,7 +340,7 @@
             } else {
                 currentUser = null;
                 authBox.innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول بـ Google</button>`;
-                usersList.innerHTML = '<div style="padding:20px; font-size:0.85rem; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل مع القرّاء 💬</div>';
+                usersList.innerHTML = '<div style="padding:20px; font-size:0.85rem; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل وإجراء المكالمات 📞</div>';
                 closeActiveChat();
             }
         });
@@ -411,7 +384,7 @@
                     <img src="${u.photo}">
                     <div class="details">
                         <div class="name">${u.name}</div>
-                        <div class="sub">انقر لبدء المحادثة الشخصية</div>
+                        <div class="sub">انقر لبدء المكالمة والمحادثة</div>
                     </div>
                 `;
                 div.onclick = () => openChatWith(u);
@@ -459,7 +432,6 @@
             });
         }
 
-        // إرسال النص العادي
         document.getElementById('chatForm').addEventListener('submit', e => {
             e.preventDefault();
             const text = msgInput.value.trim();
@@ -475,7 +447,6 @@
             msgInput.value = '';
         });
 
-        // إرسال الصور (تحويلها إلى Base64 لعرضها مباشرة)
         imageInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file || !currentChatId) return;
@@ -494,10 +465,42 @@
             imageInput.value = '';
         });
 
-        // خاصية الاتصال بصديق (محاكاة اتصال هاتفي صوتي)
-        function makeAudioCall() {
+        // تشغيل مكالمة صوتية حقيقية للطرف الآخر
+        function startRealCall() {
             if (!selectedUser) return;
-            alert(`جارٍ الاتصال بـ ${selectedUser.name} 📞... (ميزة محاكاة الاتصال الصوتي)`);
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(stream => {
+                localStream = stream;
+                const call = peer.call(selectedUser.uid, stream);
+                activeCall = call;
+                showCallUI(selectedUser.uid);
+
+                call.on('stream', remoteStream => {
+                    document.getElementById('remoteAudio').srcObject = remoteStream;
+                });
+
+                call.on('close', () => {
+                    endCall();
+                });
+            }).catch(err => {
+                alert("تعذر الوصول للميكروفون، يرجى التأكد من صلاحيات المتصفح.");
+            });
+        }
+
+        function showCallUI(targetUid) {
+            const modal = document.getElementById('callModal');
+            document.getElementById('callStatusText').textContent = "جارٍ الاتصال الصوتي الحقيقي...";
+            document.getElementById('callUserName').textContent = selectedUser ? selectedUser.name : "";
+            document.getElementById('callUserAvatar').src = selectedUser ? selectedUser.photo : "";
+            modal.classList.add('active');
+        }
+
+        function endCall() {
+            if (activeCall) activeCall.close();
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('callModal').classList.remove('active');
+            activeCall = null;
         }
 
         document.getElementById("themeToggle").addEventListener("click", () => {
