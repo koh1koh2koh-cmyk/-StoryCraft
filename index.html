@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- وسم إثبات الملكية لشبكة HilltopAds -->
+    <meta name="831eddb738b5b1ae28a10a41fe1da8ac2df6a058" content="831eddb738b5b1ae28a10a41fe1da8ac2df6a058" />
+    
     <!-- وسوم محركات البحث و SEO -->
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
     <meta name="description" content="اقرأ وانشر أحدث القصص والروايات العربية المشوقة على منصة حكاية. اكتشف روايات الأكشن، الخيال، المغامرات، والغموض، وشارك قصصك مع آلاف القرّاء.">
@@ -346,7 +349,6 @@
                 <div class="publish-box" id="publish">
                     <h2 class="section-title">انشر قصتك</h2>
                     
-                    <!-- زر جديد للصق المحتوى مباشرة من المحفظة -->
                     <button type="button" class="btn-secondary" id="pasteBtn">📋 لصق قصة نسختها</button>
 
                     <form id="storyForm">
@@ -454,7 +456,7 @@
                 });
             }
 
-            // 3. زر اللصق السريع تلقائياً
+            // 3. زر اللصق السريع
             pasteBtn.addEventListener("click", async () => {
                 try {
                     const text = await navigator.clipboard.readText();
@@ -486,7 +488,6 @@
                 }
             });
 
-            // تفاعلات الأزرار
             window.likeStory = (index) => {
                 stories[index].likes = (stories[index].likes || 0) + 1;
                 saveAndRender();
