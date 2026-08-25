@@ -43,73 +43,92 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
-        body { background-color: var(--bg-main); color: var(--text-main); direction: rtl; }
+        body { background-color: var(--bg-main); color: var(--text-main); direction: rtl; overflow-x: hidden; }
 
         header {
             background-color: var(--bg-card);
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             position: sticky; top: 0; z-index: 999;
         }
-        header h1 { color: var(--accent-color); font-size: 1.8rem; font-weight: 800; }
-        .header-actions { display: flex; align-items: center; gap: 15px; }
-        .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer; }
-        .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        header h1 { color: var(--accent-color); font-size: 1.5rem; font-weight: 800; }
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer; object-fit: cover; }
+        .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
 
-        .container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
-        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
-        @media (max-width: 850px) { .main-layout { grid-template-columns: 1fr; } }
+        .container { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
+        .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+        
+        /* ضبط التجاوب للشاشات المتوسطة والصغيرة */
+        @media (max-width: 850px) { 
+            .main-layout { grid-template-columns: 1fr; } 
+            header h1 { font-size: 1.2rem; }
+            .container { padding: 0 0.5rem; margin: 1rem auto; }
+        }
 
-        .section-title { font-size: 1.4rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1.2rem; }
+        .section-title { font-size: 1.25rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1rem; }
 
-        .story-card { background-color: var(--bg-card); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.2rem; border: 1px solid var(--border-color); }
-        .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; }
-        .publish-box { background-color: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); position: sticky; top: 90px; }
+        .story-card { background-color: var(--bg-card); border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem; border: 1px solid var(--border-color); }
+        .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; font-size: 1.1rem; }
+        .story-card p { font-size: 0.9rem; line-height: 1.5; color: var(--text-muted); }
+        
+        .publish-box { background-color: var(--bg-card); padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); position: sticky; top: 80px; }
         .form-group { margin-bottom: 0.8rem; }
-        .form-group input, .form-group textarea { width: 100%; padding: 0.6rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); }
-        .btn-primary { width: 100%; padding: 0.7rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.6rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); font-size: 0.9rem; }
+        .btn-primary { width: 100%; padding: 0.7rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
 
+        /* زر المحادثات العائم */
         .chat-float-btn {
-            position: fixed; bottom: 25px; left: 25px; width: 60px; height: 60px;
+            position: fixed; bottom: 20px; left: 20px; width: 55px; height: 55px;
             background-color: var(--wa-green); color: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 28px;
+            display: flex; align-items: center; justify-content: center; font-size: 26px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000;
             transition: transform 0.2s;
         }
         .chat-float-btn:hover { transform: scale(1.08); }
 
+        /* نافذة المحادثات - متجاوبة تماماً للهواتف والكمبيوتر */
         .chat-modal {
-            position: fixed; bottom: 95px; left: 25px; width: 360px; height: 520px;
+            position: fixed; bottom: 85px; left: 20px; width: 350px; height: 500px;
             background-color: var(--wa-bg); border-radius: 16px; border: 1px solid var(--border-color);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1000;
         }
         .chat-modal.open { display: flex; }
 
+        /* تجاوب نافذة المحادثة على شاشات الهواتف لتملأ الشاشة براحة */
+        @media (max-width: 480px) {
+            .chat-modal {
+                bottom: 0; left: 0; width: 100%; height: 100%;
+                border-radius: 0; border: none;
+            }
+            .chat-float-btn { bottom: 15px; left: 15px; width: 50px; height: 50px; font-size: 22px; }
+        }
+
         .modal-header {
-            background-color: var(--wa-card); padding: 12px 15px; display: flex;
+            background-color: var(--wa-card); padding: 10px 15px; display: flex;
             align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color);
         }
-        .modal-header h3 { font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .modal-header h3 { font-size: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
 
-        .chat-search-box { padding: 10px 12px; background-color: var(--wa-bg); border-bottom: 1px solid var(--border-color); }
+        .chat-search-box { padding: 8px 10px; background-color: var(--wa-bg); border-bottom: 1px solid var(--border-color); }
         .chat-search-box input {
-            width: 100%; padding: 7px 12px; background: var(--wa-card); border: 1px solid var(--border-color);
+            width: 100%; padding: 6px 10px; background: var(--wa-card); border: 1px solid var(--border-color);
             border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none;
         }
 
         .modal-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .users-list { flex: 1; overflow-y: auto; }
         .user-item {
-            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+            display: flex; align-items: center; gap: 10px; padding: 10px 15px;
             border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;
         }
         .user-item:hover { background-color: var(--wa-card); }
-        .user-item img { width: 42px; height: 42px; border-radius: 50%; }
+        .user-item img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         .user-item .details { flex: 1; overflow: hidden; }
-        .user-item .name { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
+        .user-item .name { font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
         .user-item .sub { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .active-chat { flex: 1; display: none; flex-direction: column; }
@@ -117,15 +136,15 @@
 
         .chat-sub-header {
             padding: 8px 12px; background-color: var(--wa-card); display: flex;
-            align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.9rem;
+            align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.85rem;
         }
         .chat-header-info { display: flex; align-items: center; gap: 8px; }
         .chat-header-actions { display: flex; gap: 10px; align-items: center; }
-        .call-btn { background: none; border: none; color: var(--wa-green); font-size: 1.1rem; cursor: pointer; }
-        .back-btn { background: none; border: none; color: var(--accent-color); font-size: 1.2rem; cursor: pointer; }
+        .call-btn { background: none; border: none; color: var(--wa-green); font-size: 1.2rem; cursor: pointer; }
+        .back-btn { background: none; border: none; color: var(--accent-color); font-size: 1.1rem; cursor: pointer; }
 
         .messages-area {
-            flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+            flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
         }
         .msg-bubble {
             max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.4; word-break: break-word;
@@ -139,24 +158,24 @@
         }
         .chat-input-row input[type="text"] {
             flex: 1; padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border-color);
-            border-radius: 20px; color: var(--text-main); font-size: 0.85rem;
+            border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none;
         }
         .upload-img-label { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
         .upload-img-label:hover { color: var(--wa-green); }
         .chat-input-row button[type="submit"] {
             background: var(--wa-green); color: #fff; border: none; padding: 8px 14px;
-            border-radius: 20px; font-weight: 700; cursor: pointer;
+            border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
         }
 
-        /* نافذة المكالمة الحية المنبثقة */
+        /* نافذة الاتصال الصوتي الحية المنبثقة */
         #callModal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); z-index: 2000; display: none;
-            flex-direction: column; align-items: center; justify-content: center; color: white;
+            flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px;
         }
         #callModal.active { display: flex; }
-        .call-box { background: #1e293b; padding: 30px; border-radius: 16px; text-align: center; width: 320px; border: 1px solid #334155; }
-        .call-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--wa-green); margin-bottom: 15px; }
+        .call-box { background: #1e293b; padding: 25px; border-radius: 16px; text-align: center; width: 100%; max-width: 320px; border: 1px solid #334155; }
+        .call-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--wa-green); margin-bottom: 15px; object-fit: cover; }
         .end-call-btn { background: #ef4444; color: white; border: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
@@ -167,7 +186,7 @@
         <div class="header-actions">
             <button class="btn-auth" id="themeToggle">🌙 المظهر</button>
             <div id="authBox">
-                <button class="btn-auth" onclick="handleLogin()">تسجيل الدخول بـ Google</button>
+                <button class="btn-auth" onclick="handleLogin()">تسجيل الدخول</button>
             </div>
         </div>
     </header>
@@ -185,7 +204,7 @@
                     <form id="storyForm">
                         <div class="form-group"><input type="text" id="storyTitle" placeholder="عنوان القصة" required></div>
                         <div class="form-group"><input type="text" id="authorName" placeholder="اسم الكاتب" required></div>
-                        <div class="form-group"><textarea id="storyContent" rows="5" placeholder="نص القصة..." required></textarea></div>
+                        <div class="form-group"><textarea id="storyContent" rows="4" placeholder="نص القصة..." required></textarea></div>
                         <button type="submit" class="btn-primary">نشر القصة</button>
                     </form>
                 </div>
@@ -272,7 +291,6 @@
         let currentChatId = null;
         let allUsersData = [];
 
-        // متغيرات المكالمات الصوتية (PeerJS)
         let peer = null;
         let activeCall = null;
         let localStream = null;
@@ -306,7 +324,6 @@
                 `;
                 document.getElementById('authorName').value = user.displayName;
                 
-                // تهيئة PeerJS باستخدام الـ UID الخاص بالمستخدم كمعرّف اتصال فريد
                 peer = new Peer(user.uid, {
                     host: '0.peerjs.com',
                     port: 443,
@@ -339,7 +356,7 @@
                 loadUsers();
             } else {
                 currentUser = null;
-                authBox.innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول بـ Google</button>`;
+                authBox.innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول</button>`;
                 usersList.innerHTML = '<div style="padding:20px; font-size:0.85rem; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل وإجراء المكالمات 📞</div>';
                 closeActiveChat();
             }
@@ -465,7 +482,6 @@
             imageInput.value = '';
         });
 
-        // تشغيل مكالمة صوتية حقيقية للطرف الآخر
         function startRealCall() {
             if (!selectedUser) return;
             navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(stream => {
@@ -505,6 +521,7 @@
 
         document.getElementById("themeToggle").addEventListener("click", () => {
             const isLight = document.documentElement.getAttribute("data-theme") === "light";
+            document.documentElement.getAttribute("data-theme", isLight ? "" : "light");
             document.documentElement.setAttribute("data-theme", isLight ? "" : "light");
         });
 
@@ -518,7 +535,7 @@
             stories.forEach(story => {
                 const article = document.createElement("article");
                 article.className = "story-card";
-                article.innerHTML = `<h3>${story.title}</h3><p><b>الكاتب:</b> ${story.author}</p><p>${story.content}</p>`;
+                article.innerHTML = `<h3>${story.title}</h3><p><b>الكاتب:</b> ${story.author}</p><p style="margin-top:6px;">${story.content}</p>`;
                 storiesContainer.appendChild(article);
             });
         }
