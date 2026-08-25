@@ -7,27 +7,15 @@
     <!-- وسم إثبات الملكية لشبكة HilltopAds -->
     <meta name="831eddb738b5b1ae28a10a41fe1da8ac2df6a058" content="831eddb738b5b1ae28a10a41fe1da8ac2df6a058" />
     
-    <!-- وسوم محركات البحث و SEO -->
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
-    <meta name="description" content="اقرأ وانشر أحدث القصص والروايات العربية المشوقة على منصة حكاية. اكتشف روايات الأكشن، الخيال، المغامرات، والغموض، وشارك قصصك مع آلاف القرّاء.">
-    <meta name="keywords" content="منصة قصص عربية, قراءة قصص وروايات, موقع نشر القصص, روايات عربية مشوقة, قصص خيالية وأكشن, كتابة ونشر الروايات, منصة حكاية, أفضل موقع عربي لقراءة القصص, روايات سيافين, قصص غموض">
-    <meta name="author" content="منصة حكاية">
-    <meta name="robots" content="index, follow">
-
-    <!-- Open Graph وسائل التواصل الاجتماعي -->
-    <meta property="og:title" content="منصة حكاية | التجمع العربي الأكبر للقصص والروايات">
-    <meta property="og:description" content="منصة عربية تجمع الكُتّاب والقرّاء في مكان واحد. اقرأ وانشر أحدث القصص وروايات الأكشن والغموض.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://hikaya-5ff25.web.app">
+    <meta name="description" content="اقرأ وانشر أحدث القصص والروايات العربية وتواصَل مع الكُتّاب والقرّاء في محادثات مباشرة.">
     
-    <!-- خطوط خارجية -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* الوضع الداكن (افتراضي مريح للعين) */
             --bg-main: #0f172a;
             --bg-card: #1e293b;
             --bg-input: #0f172a;
@@ -37,13 +25,11 @@
             --accent-hover: #d97706;
             --border-color: #334155;
             --danger-color: #ef4444;
-            --success-color: #10b981;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
             --font-main: 'Cairo', sans-serif;
         }
 
         [data-theme="light"] {
-            /* الوضع الفاتح المريح */
             --bg-main: #f8fafc;
             --bg-card: #ffffff;
             --bg-input: #f1f5f9;
@@ -95,15 +81,27 @@
             gap: 15px;
         }
 
-        nav a {
-            color: var(--text-main);
-            text-decoration: none;
-            margin-right: 15px;
-            font-weight: 600;
+        .auth-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        nav a:hover {
-            color: var(--accent-color);
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-auth {
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
         }
 
         .theme-toggle {
@@ -127,7 +125,7 @@
 
         .hero {
             text-align: center;
-            padding: 3rem 1.5rem;
+            padding: 2.5rem 1.5rem;
             background-color: var(--bg-card);
             border-radius: 16px;
             border: 1px solid var(--border-color);
@@ -140,13 +138,6 @@
             margin-bottom: 1rem;
             color: var(--accent-color);
             font-weight: 800;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto;
         }
 
         .main-layout {
@@ -175,7 +166,6 @@
             margin-bottom: 1.5rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
-            position: relative;
         }
 
         .story-card h3 {
@@ -190,92 +180,34 @@
             font-size: 0.85rem;
             color: var(--text-muted);
             margin-bottom: 1rem;
-            align-items: center;
         }
 
-        .story-card .meta-tag {
-            background-color: var(--bg-main);
-            padding: 2px 10px;
-            border-radius: 6px;
-            color: var(--accent-color);
-            border: 1px solid var(--border-color);
-        }
-
-        .story-card p {
-            color: var(--text-main);
-            margin-bottom: 1.5rem;
-            white-space: pre-line;
-            font-size: 1.05rem;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 1rem;
-        }
-
-        .btn-action {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-action:hover {
-            color: var(--accent-color);
-            border-color: var(--accent-color);
-        }
-
-        .btn-action.delete-btn:hover {
-            color: var(--danger-color);
-            border-color: var(--danger-color);
-        }
-
-        .publish-box {
+        .publish-box, .chat-box-container {
             background-color: var(--bg-card);
             border-radius: 12px;
-            padding: 1.8rem;
+            padding: 1.5rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
-            position: sticky;
-            top: 90px;
+            margin-bottom: 2rem;
         }
 
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.4rem;
-            color: var(--text-main);
+            margin-bottom: 0.3rem;
             font-weight: 600;
         }
 
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 0.75rem;
             background-color: var(--bg-input);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .form-group input:focus, 
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
         }
 
         .btn-primary {
@@ -287,23 +219,59 @@
             border: none;
             cursor: pointer;
             width: 100%;
-            transition: background 0.3s;
         }
 
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px dashed var(--accent-color);
-            color: var(--accent-color);
-            padding: 0.5rem;
+        /* تصميم غرفة المحادثة */
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-input);
             border-radius: 8px;
-            font-weight: 600;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-msg {
+            background: var(--bg-card);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-right: 3px solid var(--accent-color);
+            font-size: 0.9rem;
+        }
+
+        .chat-msg .sender {
+            font-weight: 700;
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            display: block;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 5px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 0.5rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+        }
+
+        .chat-input-area button {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
             cursor: pointer;
-            width: 100%;
-            margin-bottom: 1rem;
+            font-weight: 700;
         }
 
         footer {
@@ -321,62 +289,67 @@
     <header>
         <h1>منصة حكاية</h1>
         <div class="header-actions">
-            <nav>
-                <a href="#">الرئيسية</a>
-                <a href="#stories">القصص</a>
-            </nav>
             <button class="theme-toggle" id="themeToggle">
                 <span id="themeIcon">🌙</span> <span id="themeText">الوضع الداكن</span>
             </button>
+            <div class="auth-box" id="authBox">
+                <button class="btn-auth" id="loginBtn">تسجيل الدخول بـ Google</button>
+            </div>
         </div>
     </header>
 
     <div class="container">
         <section class="hero">
             <h2>التجمع العربي الأكبر للقصص والروايات</h2>
-            <p>اقرأ وانشر أحدث القصص والروايات العربية من خيال، أكشن، غموض، ومغامرات بيئة مريحة للعين ومجتمع إبداعي متكامل.</p>
+            <p>اقرأ، شارك، وتواصل مع الكُتّاب والقرّاء في بيئة تفاعلية ومميزة.</p>
         </section>
 
         <div class="main-layout">
             <main>
-                <h2 class="section-title" id="stories">أحدث القصص المنشورة</h2>
-                <div id="stories-container">
-                    <!-- يتم عرض القصص تلقائياً -->
-                </div>
+                <h2 class="section-title">أحدث القصص المنشورة</h2>
+                <div id="stories-container"></div>
             </main>
 
             <aside>
-                <div class="publish-box" id="publish">
-                    <h2 class="section-title">انشر قصتك</h2>
-                    
-                    <button type="button" class="btn-secondary" id="pasteBtn">📋 لصق قصة نسختها</button>
+                <!-- غرفة الدردشة الجماعية -->
+                <div class="chat-box-container">
+                    <h2 class="section-title">شات القرّاء 💬</h2>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-msg">
+                            <span class="sender">النظام</span>
+                            مرحباً بك! سجل دخولك وابدأ الدردشة مع القرّاء وتكوين صداقات جديدة.
+                        </div>
+                    </div>
+                    <form id="chatForm" class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="اكتب رسالة..." required disabled>
+                        <button type="submit" id="sendChatBtn" disabled>إرسال</button>
+                    </form>
+                </div>
 
+                <!-- صندوق نشر القصص -->
+                <div class="publish-box">
+                    <h2 class="section-title">انشر قصتك</h2>
                     <form id="storyForm">
                         <div class="form-group">
                             <label for="storyTitle">عنوان القصة</label>
-                            <input type="text" id="storyTitle" placeholder="أدخل العنوان..." required>
+                            <input type="text" id="storyTitle" required>
                         </div>
-                        
                         <div class="form-group">
                             <label for="authorName">اسم الكاتب</label>
-                            <input type="text" id="authorName" placeholder="اسمك..." required>
+                            <input type="text" id="authorName" required>
                         </div>
-
                         <div class="form-group">
                             <label for="storyCategory">التصنيف</label>
                             <select id="storyCategory">
                                 <option value="أكشن وغموض">أكشن وغموض</option>
                                 <option value="خيال وفنتازيا">خيال وفنتازيا</option>
                                 <option value="دراما ومغامرات">دراما ومغامرات</option>
-                                <option value="قصص قصيرة">قصص قصيرة</option>
                             </select>
                         </div>
-
                         <div class="form-group">
                             <label for="storyContent">نص القصة</label>
-                            <textarea id="storyContent" rows="6" placeholder="اكتب أو الصق قصتك هنا..." required></textarea>
+                            <textarea id="storyContent" rows="5" required></textarea>
                         </div>
-
                         <button type="submit" class="btn-primary">نشر الآن</button>
                     </form>
                 </div>
@@ -385,148 +358,149 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 منصة حكاية - جميع الحقوق محفوظة | أفضل موقع عربي لقراءة ونشر القصص والروايات</p>
+        <p>&copy; 2026 منصة حكاية - جميع الحقوق محفوظة</p>
     </footer>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const storyForm = document.getElementById("storyForm");
-            const storiesContainer = document.getElementById("stories-container");
-            const themeToggle = document.getElementById("themeToggle");
-            const themeIcon = document.getElementById("themeIcon");
-            const themeText = document.getElementById("themeText");
-            const pasteBtn = document.getElementById("pasteBtn");
+        // إعدادات Firebase الخاصة بمشروعك
+        const firebaseConfig = {
+          apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
+          authDomain: "hikaya-5ff25.firebaseapp.com",
+          databaseURL: "https://hikaya-5ff25-default-rtdb.firebaseio.com",
+          projectId: "hikaya-5ff25",
+          storageBucket: "hikaya-5ff25.firebasestorage.app",
+          messagingSenderId: "1031922678593",
+          appId: "1:1031922678593:web:c242a9e36ad40becc9bfc0",
+          measurementId: "G-KR76L2WSZ7"
+        };
 
-            // 1. إدارة المظهر (Dark / Light Mode)
-            const savedTheme = localStorage.getItem("hikaya_theme") || "dark";
-            setTheme(savedTheme);
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
 
-            themeToggle.addEventListener("click", () => {
-                const currentTheme = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
-                setTheme(currentTheme);
-            });
+        let currentUser = null;
 
-            function setTheme(theme) {
-                if (theme === "light") {
-                    document.documentElement.setAttribute("data-theme", "light");
-                    themeIcon.textContent = "☀️";
-                    themeText.textContent = "الوضع المضيء";
-                } else {
-                    document.documentElement.removeAttribute("data-theme");
-                    themeIcon.textContent = "🌙";
-                    themeText.textContent = "الوضع الداكن";
-                }
-                localStorage.setItem("hikaya_theme", theme);
-            }
+        // إدارة تسجيل الدخول
+        const loginBtn = document.getElementById('loginBtn');
+        const authBox = document.getElementById('authBox');
+        const chatInput = document.getElementById('chatInput');
+        const sendChatBtn = document.getElementById('sendChatBtn');
 
-            // 2. إدارة التخزين وعرض القصص
-            let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
-                {
-                    id: 1,
-                    title: "رحلة غارلون - الجزء الأول",
-                    author: "غارلون",
-                    category: "أكشن وغموض",
-                    likes: 12,
-                    content: "في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني جاء رجلان من قرية قريبة من تلك الغابة، وكانوا يريدون جمع فطر عش الغراب، فجاء رجل القرية ورأى منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: 'هذا رائع! يمكننا بيعه في القرية'. فاستغرب منه رجل القرية وقال: 'لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟'، فقال له زميله: 'إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها'. فقال رجل القرية: 'من قتل النمر؟'، فقال له زميله: 'إنه سياف مشهور يدعى غارلون'. انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما."
-                }
-            ];
+        loginBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).catch(error => alert(error.message));
+        });
 
-            function renderStories() {
-                storiesContainer.innerHTML = "";
-
-                stories.forEach((story, index) => {
-                    const article = document.createElement("article");
-                    article.className = "story-card";
-
-                    article.innerHTML = `
-                        <h3>${escapeHtml(story.title)}</h3>
-                        <div class="meta-info">
-                            <span class="meta-tag">${escapeHtml(story.category)}</span>
-                            <span>بواسطة: ${escapeHtml(story.author)}</span>
-                        </div>
-                        <p>${escapeHtml(story.content)}</p>
-                        <div class="card-actions">
-                            <button class="btn-action" onclick="likeStory(${index})">❤️ إعجاب (${story.likes || 0})</button>
-                            <button class="btn-action" onclick="shareStory('${escapeHtml(story.title)}')">🔗 مشاركة</button>
-                            <button class="btn-action delete-btn" onclick="deleteStory(${index})">🗑️ حذف</button>
-                        </div>
-                    `;
-
-                    storiesContainer.appendChild(article);
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUser = user;
+                authBox.innerHTML = `
+                    <img src="${user.photoURL}" class="user-avatar" title="${user.displayName}">
+                    <button class="btn-auth" style="background:#ef4444" id="logoutBtn">خروج</button>
+                `;
+                document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+                document.getElementById('authorName').value = user.displayName;
+                chatInput.disabled = false;
+                sendChatBtn.disabled = false;
+                chatInput.placeholder = "اكتب رسالة...";
+            } else {
+                currentUser = null;
+                authBox.innerHTML = `<button class="btn-auth" id="loginBtn">تسجيل الدخول بـ Google</button>`;
+                document.getElementById('loginBtn').addEventListener('click', () => {
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    auth.signInWithPopup(provider);
                 });
+                chatInput.disabled = true;
+                sendChatBtn.disabled = true;
+                chatInput.placeholder = "سجل الدخول للمشاركة في المحادثة...";
             }
+        });
 
-            // 3. زر اللصق السريع
-            pasteBtn.addEventListener("click", async () => {
-                try {
-                    const text = await navigator.clipboard.readText();
-                    if(text) {
-                        document.getElementById("storyContent").value = text;
-                        alert("تم لصق النص بنجاح!");
-                    } else {
-                        alert("المحفظة فارغة!");
-                    }
-                } catch (err) {
-                    alert("يرجى إعطاء الإذن للصق أو استخدام CTRL+V");
-                }
+        // إدارة الشات المباشر
+        const chatForm = document.getElementById('chatForm');
+        const chatMessages = document.getElementById('chatMessages');
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!currentUser || !chatInput.value.trim()) return;
+
+            database.ref('chats').push({
+                name: currentUser.displayName,
+                text: chatInput.value.trim(),
+                timestamp: Date.now()
             });
 
-            // 4. إضافة قصة جديدة
-            storyForm.addEventListener("submit", (e) => {
-                e.preventDefault();
+            chatInput.value = '';
+        });
 
-                const title = document.getElementById("storyTitle").value.trim();
-                const author = document.getElementById("authorName").value.trim();
-                const category = document.getElementById("storyCategory").value;
-                const content = document.getElementById("storyContent").value.trim();
+        database.ref('chats').limitToLast(20).on('child_added', (snapshot) => {
+            const msg = snapshot.val();
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-msg';
+            msgDiv.innerHTML = `<span class="sender">${escapeHtml(msg.name)}</span> ${escapeHtml(msg.text)}`;
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
 
-                if (title && author && content) {
-                    const newStory = { id: Date.now(), title, author, category, content, likes: 0 };
-                    stories.unshift(newStory);
-                    saveAndRender();
-                    storyForm.reset();
-                }
+        // إدارة المظهر والنصوص
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // إدارة المظهر (Dark / Light)
+        const themeToggle = document.getElementById("themeToggle");
+        const themeIcon = document.getElementById("themeIcon");
+        const themeText = document.getElementById("themeText");
+        
+        themeToggle.addEventListener("click", () => {
+            const isLight = document.documentElement.getAttribute("data-theme") === "light";
+            if (isLight) {
+                document.documentElement.removeAttribute("data-theme");
+                themeIcon.textContent = "🌙";
+                themeText.textContent = "الوضع الداكن";
+            } else {
+                document.documentElement.setAttribute("data-theme", "light");
+                themeIcon.textContent = "☀️";
+                themeText.textContent = "الوضع المضيء";
+            }
+        });
+
+        // إدارة نشر وسحب القصص محلياً
+        const storyForm = document.getElementById("storyForm");
+        const storiesContainer = document.getElementById("stories-container");
+        let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
+            { id: 1, title: "رحلة غارلون", author: "غارلون", category: "أكشن", content: "قصة مشوقة عن المغامرات والقتال..." }
+        ];
+
+        function renderStories() {
+            storiesContainer.innerHTML = "";
+            stories.forEach(story => {
+                const article = document.createElement("article");
+                article.className = "story-card";
+                article.innerHTML = `
+                    <h3>${escapeHtml(story.title)}</h3>
+                    <div class="meta-info"><span>بواسطة: ${escapeHtml(story.author)}</span></div>
+                    <p>${escapeHtml(story.content)}</p>
+                `;
+                storiesContainer.appendChild(article);
             });
+        }
+        renderStories();
 
-            window.likeStory = (index) => {
-                stories[index].likes = (stories[index].likes || 0) + 1;
-                saveAndRender();
-            };
-
-            window.deleteStory = (index) => {
-                if(confirm("هل أنت تأكد من رغبتك في حذف هذه القصة؟")) {
-                    stories.splice(index, 1);
-                    saveAndRender();
-                }
-            };
-
-            window.shareStory = (title) => {
-                if(navigator.share) {
-                    navigator.share({
-                        title: title,
-                        url: window.location.href
-                    });
-                } else {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert("تم نسخ رابط الموقع لمشاركته!");
-                }
-            };
-
-            function saveAndRender() {
-                localStorage.setItem("hikaya_stories", JSON.stringify(stories));
-                renderStories();
-            }
-
-            function escapeHtml(text) {
-                return text
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
-            }
-
+        storyForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const title = document.getElementById("storyTitle").value;
+            const author = document.getElementById("authorName").value;
+            const content = document.getElementById("storyContent").value;
+            stories.unshift({ id: Date.now(), title, author, content });
+            localStorage.setItem("hikaya_stories", JSON.stringify(stories));
             renderStories();
+            storyForm.reset();
         });
     </script>
 
