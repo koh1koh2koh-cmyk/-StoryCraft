@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="831eddb738b5b1ae28a10a41fe1da8ac2df6a058" content="831eddb738b5b1ae28a10a41fe1da8ac2df6a058" />
-    
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,35 +60,45 @@
         .container { max-width: 1100px; margin: 1.5rem auto; padding: 0 1rem; }
         .main-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
         
-        /* ضبط التجاوب للشاشات المتوسطة والصغيرة */
         @media (max-width: 850px) { 
             .main-layout { grid-template-columns: 1fr; } 
             header h1 { font-size: 1.2rem; }
-            .container { padding: 0 0.5rem; margin: 1rem auto; }
+            .container { padding: 0 0.8rem; margin: 1rem auto; }
         }
 
         .section-title { font-size: 1.25rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1rem; }
 
-        .story-card { background-color: var(--bg-card); border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem; border: 1px solid var(--border-color); }
+        /* تعديلات حاسمة لظهور النص بالكامل على الهاتف بدون اقتطاع */
+        .story-card { 
+            background-color: var(--bg-card); 
+            border-radius: 12px; 
+            padding: 1.2rem; 
+            margin-bottom: 1rem; 
+            border: 1px solid var(--border-color);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
         .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; font-size: 1.1rem; }
-        .story-card p { font-size: 0.9rem; line-height: 1.5; color: var(--text-muted); }
+        .story-card .story-author { font-size: 0.85rem; color: var(--accent-color); margin-bottom: 8px; display: block; font-weight: 600; }
+        .story-card p { 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            color: var(--text-muted); 
+            white-space: pre-line; /* يمنع دمج السطور ويحافظ على تنسيق الكاتب */
+        }
         
         .publish-box { background-color: var(--bg-card); padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); position: sticky; top: 80px; }
         .form-group { margin-bottom: 0.8rem; }
         .form-group input, .form-group textarea { width: 100%; padding: 0.6rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); font-size: 0.9rem; }
         .btn-primary { width: 100%; padding: 0.7rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
 
-        /* زر المحادثات العائم */
         .chat-float-btn {
             position: fixed; bottom: 20px; left: 20px; width: 55px; height: 55px;
             background-color: var(--wa-green); color: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-size: 26px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000;
-            transition: transform 0.2s;
         }
-        .chat-float-btn:hover { transform: scale(1.08); }
 
-        /* نافذة المحادثات - متجاوبة تماماً للهواتف والكمبيوتر */
         .chat-modal {
             position: fixed; bottom: 85px; left: 20px; width: 350px; height: 500px;
             background-color: var(--wa-bg); border-radius: 16px; border: 1px solid var(--border-color);
@@ -98,33 +106,18 @@
         }
         .chat-modal.open { display: flex; }
 
-        /* تجاوب نافذة المحادثة على شاشات الهواتف لتملأ الشاشة براحة */
         @media (max-width: 480px) {
-            .chat-modal {
-                bottom: 0; left: 0; width: 100%; height: 100%;
-                border-radius: 0; border: none;
-            }
+            .chat-modal { bottom: 0; left: 0; width: 100%; height: 100%; border-radius: 0; border: none; }
             .chat-float-btn { bottom: 15px; left: 15px; width: 50px; height: 50px; font-size: 22px; }
         }
 
-        .modal-header {
-            background-color: var(--wa-card); padding: 10px 15px; display: flex;
-            align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color);
-        }
+        .modal-header { background-color: var(--wa-card); padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
         .modal-header h3 { font-size: 1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-
         .chat-search-box { padding: 8px 10px; background-color: var(--wa-bg); border-bottom: 1px solid var(--border-color); }
-        .chat-search-box input {
-            width: 100%; padding: 6px 10px; background: var(--wa-card); border: 1px solid var(--border-color);
-            border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none;
-        }
-
+        .chat-search-box input { width: 100%; padding: 6px 10px; background: var(--wa-card); border: 1px solid var(--border-color); border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none; }
         .modal-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .users-list { flex: 1; overflow-y: auto; }
-        .user-item {
-            display: flex; align-items: center; gap: 10px; padding: 10px 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;
-        }
+        .user-item { display: flex; align-items: center; gap: 10px; padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
         .user-item:hover { background-color: var(--wa-card); }
         .user-item img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         .user-item .details { flex: 1; overflow: hidden; }
@@ -133,50 +126,21 @@
 
         .active-chat { flex: 1; display: none; flex-direction: column; }
         .active-chat.open { display: flex; }
-
-        .chat-sub-header {
-            padding: 8px 12px; background-color: var(--wa-card); display: flex;
-            align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.85rem;
-        }
+        .chat-sub-header { padding: 8px 12px; background-color: var(--wa-card); display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.85rem; }
         .chat-header-info { display: flex; align-items: center; gap: 8px; }
         .chat-header-actions { display: flex; gap: 10px; align-items: center; }
         .call-btn { background: none; border: none; color: var(--wa-green); font-size: 1.2rem; cursor: pointer; }
         .back-btn { background: none; border: none; color: var(--accent-color); font-size: 1.1rem; cursor: pointer; }
-
-        .messages-area {
-            flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
-        }
-        .msg-bubble {
-            max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.4; word-break: break-word;
-        }
+        .messages-area { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.4; word-break: break-word; }
         .msg-bubble.me { align-self: flex-start; background-color: var(--wa-bubble-me); color: #fff; border-top-right-radius: 0; }
         .msg-bubble.them { align-self: flex-end; background-color: var(--wa-bubble-them); color: var(--text-main); border-top-left-radius: 0; }
         .msg-bubble img { max-width: 100%; border-radius: 6px; margin-top: 4px; display: block; }
-
-        .chat-input-row {
-            padding: 8px; background-color: var(--wa-card); display: flex; gap: 6px; align-items: center;
-        }
-        .chat-input-row input[type="text"] {
-            flex: 1; padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border-color);
-            border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none;
-        }
+        .msg-bubble a { color: #38bdf8; text-decoration: underline; font-weight: bold; }
+        .chat-input-row { padding: 8px; background-color: var(--wa-card); display: flex; gap: 6px; align-items: center; }
+        .chat-input-row input[type="text"] { flex: 1; padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none; }
         .upload-img-label { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
-        .upload-img-label:hover { color: var(--wa-green); }
-        .chat-input-row button[type="submit"] {
-            background: var(--wa-green); color: #fff; border: none; padding: 8px 14px;
-            border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
-        }
-
-        /* نافذة الاتصال الصوتي الحية المنبثقة */
-        #callModal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 2000; display: none;
-            flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px;
-        }
-        #callModal.active { display: flex; }
-        .call-box { background: #1e293b; padding: 25px; border-radius: 16px; text-align: center; width: 100%; max-width: 320px; border: 1px solid #334155; }
-        .call-avatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--wa-green); margin-bottom: 15px; object-fit: cover; }
-        .end-call-btn { background: #ef4444; color: white; border: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .chat-input-row button[type="submit"] { background: var(--wa-green); color: #fff; border: none; padding: 8px 14px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -204,7 +168,7 @@
                     <form id="storyForm">
                         <div class="form-group"><input type="text" id="storyTitle" placeholder="عنوان القصة" required></div>
                         <div class="form-group"><input type="text" id="authorName" placeholder="اسم الكاتب" required></div>
-                        <div class="form-group"><textarea id="storyContent" rows="4" placeholder="نص القصة..." required></textarea></div>
+                        <div class="form-group"><textarea id="storyContent" rows="5" placeholder="نص القصة..." required></textarea></div>
                         <button type="submit" class="btn-primary">نشر القصة</button>
                     </form>
                 </div>
@@ -236,7 +200,7 @@
                         <span id="targetUserName">المحادثة</span>
                     </div>
                     <div class="chat-header-actions">
-                        <button class="call-btn" onclick="startRealCall()" title="اتصال صوتي حقيقي">📞</button>
+                        <button class="call-btn" onclick="startRealCallLink()" title="إنشاء مكالمة صوتية حقيقية">📞</button>
                     </div>
                 </div>
                 <div class="messages-area" id="messagesArea"></div>
@@ -252,23 +216,10 @@
         </div>
     </div>
 
-    <!-- نافذة الاتصال الصوتي الحية -->
-    <div id="callModal">
-        <div class="call-box">
-            <img id="callUserAvatar" src="" class="call-avatar">
-            <h3 id="callStatusText">جارٍ الاتصال...</h3>
-            <p id="callUserName" style="color: #94a3b8; margin-top: 5px; font-size: 0.9rem;"></p>
-            <audio id="remoteAudio" autoplay></audio>
-            <button class="end-call-btn" onclick="endCall()">إنهاء المكالمة</button>
-        </div>
-    </div>
-
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <!-- PeerJS لعمل المكالمات الصوتية الحقيقية عبر الويب -->
-    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -291,10 +242,6 @@
         let currentChatId = null;
         let allUsersData = [];
 
-        let peer = null;
-        let activeCall = null;
-        let localStream = null;
-
         const authBox = document.getElementById('authBox');
         const usersList = document.getElementById('usersList');
         const activeChat = document.getElementById('activeChat');
@@ -311,7 +258,6 @@
         }
 
         function handleLogout() {
-            if (peer) peer.destroy();
             auth.signOut();
         }
 
@@ -323,29 +269,6 @@
                     <button class="btn-auth" style="background:#ef4444" onclick="handleLogout()">خروج</button>
                 `;
                 document.getElementById('authorName').value = user.displayName;
-                
-                peer = new Peer(user.uid, {
-                    host: '0.peerjs.com',
-                    port: 443,
-                    secure: true
-                });
-
-                peer.on('call', incomingCall => {
-                    if (confirm("تلقيت مكالمة صوتية واردة. هل تريد الرد؟")) {
-                        navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(stream => {
-                            localStream = stream;
-                            incomingCall.answer(stream);
-                            activeCall = incomingCall;
-                            showCallUI(incomingCall.peer);
-                            
-                            incomingCall.on('stream', remoteStream => {
-                                document.getElementById('remoteAudio').srcObject = remoteStream;
-                            });
-                        }).catch(err => alert("الرجاء السماح بالوصول للميكروفون لإجراء المكالمة."));
-                    } else {
-                        incomingCall.close();
-                    }
-                });
 
                 database.ref('users/' + user.uid).set({
                     uid: user.uid,
@@ -401,7 +324,7 @@
                     <img src="${u.photo}">
                     <div class="details">
                         <div class="name">${u.name}</div>
-                        <div class="sub">انقر لبدء المكالمة والمحادثة</div>
+                        <div class="sub">انقر للمراسلة والمكالمة</div>
                     </div>
                 `;
                 div.onclick = () => openChatWith(u);
@@ -440,6 +363,8 @@
                     
                     if (msg.type === 'image') {
                         b.innerHTML = `<img src="${msg.text}">`;
+                    } else if (msg.type === 'call_link') {
+                        b.innerHTML = `🎥 رابط مكالمة صوتية/فيديو حقيقية:<br><a href="${msg.text}" target="_blank">انقر هنا للانضمام للمكالمة</a>`;
                     } else {
                         b.textContent = msg.text;
                     }
@@ -482,46 +407,23 @@
             imageInput.value = '';
         });
 
-        function startRealCall() {
-            if (!selectedUser) return;
-            navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(stream => {
-                localStream = stream;
-                const call = peer.call(selectedUser.uid, stream);
-                activeCall = call;
-                showCallUI(selectedUser.uid);
+        function startRealCallLink() {
+            if (!selectedUser || !currentChatId) return;
+            const roomCode = 'HikayaCall-' + Math.random().toString(36).substring(2, 9);
+            const callUrl = `https://meet.jit.si/${roomCode}`;
 
-                call.on('stream', remoteStream => {
-                    document.getElementById('remoteAudio').srcObject = remoteStream;
-                });
-
-                call.on('close', () => {
-                    endCall();
-                });
-            }).catch(err => {
-                alert("تعذر الوصول للميكروفون، يرجى التأكد من صلاحيات المتصفح.");
+            database.ref('private_chats/' + currentChatId).push({
+                senderId: currentUser.uid,
+                text: callUrl,
+                type: 'call_link',
+                timestamp: Date.now()
             });
-        }
 
-        function showCallUI(targetUid) {
-            const modal = document.getElementById('callModal');
-            document.getElementById('callStatusText').textContent = "جارٍ الاتصال الصوتي الحقيقي...";
-            document.getElementById('callUserName').textContent = selectedUser ? selectedUser.name : "";
-            document.getElementById('callUserAvatar').src = selectedUser ? selectedUser.photo : "";
-            modal.classList.add('active');
-        }
-
-        function endCall() {
-            if (activeCall) activeCall.close();
-            if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-            }
-            document.getElementById('callModal').classList.remove('active');
-            activeCall = null;
+            window.open(callUrl, '_blank');
         }
 
         document.getElementById("themeToggle").addEventListener("click", () => {
             const isLight = document.documentElement.getAttribute("data-theme") === "light";
-            document.documentElement.getAttribute("data-theme", isLight ? "" : "light");
             document.documentElement.setAttribute("data-theme", isLight ? "" : "light");
         });
 
@@ -535,7 +437,11 @@
             stories.forEach(story => {
                 const article = document.createElement("article");
                 article.className = "story-card";
-                article.innerHTML = `<h3>${story.title}</h3><p><b>الكاتب:</b> ${story.author}</p><p style="margin-top:6px;">${story.content}</p>`;
+                article.innerHTML = `
+                    <h3>${story.title}</h3>
+                    <span class="story-author">الكاتب: ${story.author}</span>
+                    <p>${story.content}</p>
+                `;
                 storiesContainer.appendChild(article);
             });
         }
@@ -550,17 +456,6 @@
             localStorage.setItem("hikaya_stories", JSON.stringify(stories));
             renderStories();
             document.getElementById("storyForm").reset();
-        });
-    </script>
-
-    <!-- Monetag Direct Link Script (1/7 Clicks) -->
-    <script>
-        let clickCount = 0;
-        document.addEventListener('click', function() {
-            clickCount++;
-            if (clickCount % 7 === 1) {
-                window.open('https://omg10.com/4/11651127', '_blank');
-            }
         });
     </script>
 </body>
