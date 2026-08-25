@@ -530,11 +530,15 @@
         });
     </script>
 
-    <!-- Monetag Direct Link Script -->
+    <!-- Monetag Direct Link Script (1/7 Clicks) -->
     <script>
+        let clickCount = 0;
         document.addEventListener('click', function() {
-            window.open('https://omg10.com/4/11651127', '_blank');
-        }, { once: true });
+            clickCount++;
+            if (clickCount % 7 === 1) {
+                window.open('https://omg10.com/4/11651127', '_blank');
+            }
+        });
     </script>
 </body>
 </html>
