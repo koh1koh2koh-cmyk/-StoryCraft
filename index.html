@@ -123,7 +123,6 @@
         }
         .modal-header h3 { font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
 
-        /* شريط البحث المخصص لأسماء المستخدمين */
         .chat-search-box {
             padding: 10px 12px;
             background-color: var(--wa-bg);
@@ -165,10 +164,13 @@
             background-color: var(--wa-card);
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
             font-weight: 700;
             font-size: 0.9rem;
         }
+        .chat-header-info { display: flex; align-items: center; gap: 8px; }
+        .chat-header-actions { display: flex; gap: 10px; align-items: center; }
+        .call-btn { background: none; border: none; color: var(--wa-green); font-size: 1.1rem; cursor: pointer; }
         .back-btn { background: none; border: none; color: var(--accent-color); font-size: 1.2rem; cursor: pointer; }
 
         .messages-area {
@@ -190,14 +192,16 @@
         }
         .msg-bubble.me { align-self: flex-start; background-color: var(--wa-bubble-me); color: #fff; border-top-right-radius: 0; }
         .msg-bubble.them { align-self: flex-end; background-color: var(--wa-bubble-them); color: var(--text-main); border-top-left-radius: 0; }
+        .msg-bubble img { max-width: 100%; border-radius: 6px; margin-top: 4px; display: block; }
 
         .chat-input-row {
             padding: 8px;
             background-color: var(--wa-card);
             display: flex;
             gap: 6px;
+            align-items: center;
         }
-        .chat-input-row input {
+        .chat-input-row input[type="text"] {
             flex: 1;
             padding: 8px 12px;
             background: var(--bg-input);
@@ -206,7 +210,16 @@
             color: var(--text-main);
             font-size: 0.85rem;
         }
-        .chat-input-row button {
+        .upload-img-label {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        .upload-img-label:hover { color: var(--wa-green); }
+        .chat-input-row button[type="submit"] {
             background: var(--wa-green);
             color: #fff;
             border: none;
@@ -250,7 +263,7 @@
         </div>
     </div>
 
-    <!-- زر المحادثات العائم على غرار واتساب -->
+    <!-- زر المحادثات العائم -->
     <div class="chat-float-btn" id="chatFloatBtn">💬</div>
 
     <!-- النافذة المنبثقة للشات -->
@@ -260,24 +273,30 @@
             <button class="back-btn" onclick="toggleChatModal()">✖</button>
         </div>
         
-        <!-- شريط البحث المخصص لأسماء المستخدمين -->
         <div class="chat-search-box" id="searchContainer">
             <input type="text" id="userSearchInput" placeholder="🔍 ابحث عن اسم مستخدم...">
         </div>
 
         <div class="modal-body">
-            <!-- قائمة أصدقاء واتساب -->
             <div class="users-list" id="usersList"></div>
 
-            <!-- غرفة الدردشة النشطة -->
             <div class="active-chat" id="activeChat">
                 <div class="chat-sub-header">
-                    <button class="back-btn" onclick="closeActiveChat()">➡️</button>
-                    <span id="targetUserName">المحادثة</span>
+                    <div class="chat-header-info">
+                        <button class="back-btn" onclick="closeActiveChat()">➡️</button>
+                        <span id="targetUserName">المحادثة</span>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button class="call-btn" onclick="makeAudioCall()" title="اتصال هاتفي">📞</button>
+                    </div>
                 </div>
                 <div class="messages-area" id="messagesArea"></div>
                 <form class="chat-input-row" id="chatForm">
-                    <input type="text" id="msgInput" placeholder="اكتب رسالة..." required>
+                    <label class="upload-img-label" title="إرسال صورة">
+                        📷
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    </label>
+                    <input type="text" id="msgInput" placeholder="اكتب رسالة...">
                     <button type="submit">إرسال</button>
                 </form>
             </div>
@@ -308,7 +327,7 @@
         let currentUser = null;
         let selectedUser = null;
         let currentChatId = null;
-        let allUsersData = []; // تخزين بيانات المستخدمين للبحث
+        let allUsersData = [];
 
         const authBox = document.getElementById('authBox');
         const usersList = document.getElementById('usersList');
@@ -318,6 +337,7 @@
         const msgInput = document.getElementById('msgInput');
         const userSearchInput = document.getElementById('userSearchInput');
         const searchContainer = document.getElementById('searchContainer');
+        const imageInput = document.getElementById('imageInput');
 
         function handleLogin() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -347,7 +367,7 @@
             } else {
                 currentUser = null;
                 authBox.innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول بـ Google</button>`;
-                usersList.innerHTML = '<div style="padding:20px; font-size:0.85rem; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل مع القرّاء وتكوين صداقات 💬</div>';
+                usersList.innerHTML = '<div style="padding:20px; font-size:0.85rem; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل مع القرّاء 💬</div>';
                 closeActiveChat();
             }
         });
@@ -362,10 +382,9 @@
         function closeActiveChat() {
             activeChat.classList.remove('open');
             usersList.style.display = 'block';
-            searchContainer.style.display = 'block'; // إعادة إظهار شريط البحث عند العودة للقائمة
+            searchContainer.style.display = 'block';
         }
 
-        // تحميل أصدقاء واتساب وتخزينهم للبحث
         function loadUsers() {
             database.ref('users').on('value', snapshot => {
                 allUsersData = [];
@@ -379,7 +398,6 @@
             });
         }
 
-        // دالة لعرض المستخدمين في القائمة
         function renderUsersList(users) {
             usersList.innerHTML = '';
             if (users.length === 0) {
@@ -401,7 +419,6 @@
             });
         }
 
-        // تفعيل البحث الفوري عن أسماء المستخدمين فقط
         userSearchInput.addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const filtered = allUsersData.filter(u => u.name.toLowerCase().includes(query));
@@ -413,7 +430,7 @@
             selectedUser = user;
             targetUserName.textContent = user.name;
             usersList.style.display = 'none';
-            searchContainer.style.display = 'none'; // إخفاء شريط البحث داخل المحادثة الفردية
+            searchContainer.style.display = 'none';
             activeChat.classList.add('open');
 
             currentChatId = currentUser.uid < selectedUser.uid 
@@ -430,25 +447,58 @@
                     const msg = child.val();
                     const b = document.createElement('div');
                     b.className = `msg-bubble ${msg.senderId === currentUser.uid ? 'me' : 'them'}`;
-                    b.textContent = msg.text;
+                    
+                    if (msg.type === 'image') {
+                        b.innerHTML = `<img src="${msg.text}">`;
+                    } else {
+                        b.textContent = msg.text;
+                    }
                     messagesArea.appendChild(b);
                 });
                 messagesArea.scrollTop = messagesArea.scrollHeight;
             });
         }
 
+        // إرسال النص العادي
         document.getElementById('chatForm').addEventListener('submit', e => {
             e.preventDefault();
-            if (!currentChatId || !msgInput.value.trim()) return;
+            const text = msgInput.value.trim();
+            if (!currentChatId || !text) return;
 
             database.ref('private_chats/' + currentChatId).push({
                 senderId: currentUser.uid,
-                text: msgInput.value.trim(),
+                text: text,
+                type: 'text',
                 timestamp: Date.now()
             });
 
             msgInput.value = '';
         });
+
+        // إرسال الصور (تحويلها إلى Base64 لعرضها مباشرة)
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file || !currentChatId) return;
+
+            const reader = new FileReader();
+            reader.onload = function(uploadEvent) {
+                const base64Image = uploadEvent.target.result;
+                database.ref('private_chats/' + currentChatId).push({
+                    senderId: currentUser.uid,
+                    text: base64Image,
+                    type: 'image',
+                    timestamp: Date.now()
+                });
+            };
+            reader.readAsDataURL(file);
+            imageInput.value = '';
+        });
+
+        // خاصية الاتصال بصديق (محاكاة اتصال هاتفي صوتي)
+        function makeAudioCall() {
+            if (!selectedUser) return;
+            alert(`جارٍ الاتصال بـ ${selectedUser.name} 📞... (ميزة محاكاة الاتصال الصوتي)`);
+        }
 
         document.getElementById("themeToggle").addEventListener("click", () => {
             const isLight = document.documentElement.getAttribute("data-theme") === "light";
