@@ -20,18 +20,36 @@
     <!-- خطوط خارجية -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --accent-color: #ff9800;
-            --accent-hover: #e68a00;
-            --text-color: #ffffff;
-            --text-muted: #b0b0b0;
-            --border-color: #333333;
+            /* الوضع الداكن (افتراضي مريح للعين) */
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #f59e0b;
+            --accent-hover: #d97706;
+            --border-color: #334155;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
             --font-main: 'Cairo', sans-serif;
+        }
+
+        [data-theme="light"] {
+            /* الوضع الفاتح المريح */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-input: #f1f5f9;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-color: #d97706;
+            --accent-hover: #b45309;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -39,31 +57,27 @@
             margin: 0;
             padding: 0;
             font-family: var(--font-main);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.7;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.8;
             direction: rtl;
         }
 
         header {
-            background-color: var(--card-bg);
-            padding: 1.2rem 2rem;
+            background-color: var(--bg-card);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 1000;
-        }
-
-        header .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            box-shadow: var(--shadow);
         }
 
         header h1 {
@@ -72,46 +86,64 @@
             font-weight: 800;
         }
 
-        nav a {
-            color: var(--text-color);
-            text-decoration: none;
-            margin-right: 20px;
-            font-weight: 600;
-            transition: color 0.3s;
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        nav a:hover, nav a.active {
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-right: 15px;
+            font-weight: 600;
+        }
+
+        nav a:hover {
             color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .container {
             max-width: 1150px;
-            margin: 2.5rem auto;
+            margin: 2rem auto;
             padding: 0 1.5rem;
         }
 
         .hero {
             text-align: center;
-            padding: 4rem 1.5rem;
-            background: linear-gradient(135deg, #252525 0%, #151515 100%);
-            border-radius: 12px;
+            padding: 3rem 1.5rem;
+            background-color: var(--bg-card);
+            border-radius: 16px;
             border: 1px solid var(--border-color);
-            margin-bottom: 3rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
         }
 
         .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.2rem;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
             color: var(--accent-color);
             font-weight: 800;
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--text-muted);
-            max-width: 750px;
-            margin: 0 auto 2rem;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .main-layout {
@@ -127,61 +159,91 @@
         }
 
         .section-title {
-            font-size: 1.6rem;
-            border-right: 5px solid var(--accent-color);
-            padding-right: 12px;
-            margin-bottom: 2rem;
-            color: var(--text-color);
+            font-size: 1.5rem;
+            border-right: 4px solid var(--accent-color);
+            padding-right: 10px;
+            margin-bottom: 1.5rem;
         }
 
         .story-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
+            background-color: var(--bg-card);
+            border-radius: 12px;
             padding: 1.8rem;
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.5rem;
             border: 1px solid var(--border-color);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .story-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.15);
+            box-shadow: var(--shadow);
+            position: relative;
         }
 
         .story-card h3 {
             color: var(--accent-color);
             font-size: 1.4rem;
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.5rem;
         }
 
         .story-card .meta-info {
             display: flex;
-            gap: 15px;
-            font-size: 0.9rem;
+            gap: 12px;
+            font-size: 0.85rem;
             color: var(--text-muted);
             margin-bottom: 1rem;
+            align-items: center;
         }
 
         .story-card .meta-tag {
-            background-color: #2b2b2b;
+            background-color: var(--bg-main);
             padding: 2px 10px;
-            border-radius: 4px;
+            border-radius: 6px;
             color: var(--accent-color);
+            border: 1px solid var(--border-color);
         }
 
         .story-card p {
-            color: #dddddd;
-            margin-bottom: 1.2rem;
-            font-size: 1.05rem;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
             white-space: pre-line;
+            font-size: 1.05rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-action:hover {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .btn-action.delete-btn:hover {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
         }
 
         .publish-box {
-            background-color: var(--card-bg);
-            border-radius: 10px;
+            background-color: var(--bg-card);
+            border-radius: 12px;
             padding: 1.8rem;
             border: 1px solid var(--border-color);
-            height: fit-content;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 90px;
         }
 
         .form-group {
@@ -190,8 +252,8 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
+            margin-bottom: 0.4rem;
+            color: var(--text-main);
             font-weight: 600;
         }
 
@@ -199,12 +261,12 @@
         .form-group select, 
         .form-group textarea {
             width: 100%;
-            padding: 0.8rem;
-            background-color: #121212;
+            padding: 0.75rem;
+            background-color: var(--bg-input);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: #fff;
-            font-size: 1rem;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
         }
 
         .form-group input:focus, 
@@ -213,29 +275,38 @@
             border-color: var(--accent-color);
         }
 
-        .btn {
-            display: inline-block;
+        .btn-primary {
             background-color: var(--accent-color);
-            color: #000;
-            padding: 0.7rem 1.6rem;
-            border-radius: 6px;
-            text-decoration: none;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: background 0.3s;
             width: 100%;
-            text-align: center;
+            transition: background 0.3s;
         }
 
-        .btn:hover {
+        .btn-primary:hover {
             background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px dashed var(--accent-color);
+            color: var(--accent-color);
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 1rem;
         }
 
         footer {
             text-align: center;
             padding: 2rem;
-            background-color: var(--card-bg);
+            background-color: var(--bg-card);
             border-top: 1px solid var(--border-color);
             margin-top: 4rem;
             color: var(--text-muted);
@@ -245,45 +316,48 @@
 <body>
 
     <header>
-        <div class="logo-container">
-            <h1>منصة حكاية</h1>
+        <h1>منصة حكاية</h1>
+        <div class="header-actions">
+            <nav>
+                <a href="#">الرئيسية</a>
+                <a href="#stories">القصص</a>
+            </nav>
+            <button class="theme-toggle" id="themeToggle">
+                <span id="themeIcon">🌙</span> <span id="themeText">الوضع الداكن</span>
+            </button>
         </div>
-        <nav>
-            <a href="#" class="active">الرئيسية</a>
-            <a href="#stories">القصص والروايات</a>
-            <a href="#publish">نشر قصة</a>
-        </nav>
     </header>
 
     <div class="container">
-        <!-- قسم الواجهة والتعريف -->
         <section class="hero">
             <h2>التجمع العربي الأكبر للقصص والروايات</h2>
-            <p>مرحباً بك في منصة حكاية، وجهتك الأولى لقراءة ونشر أحدث القصص والروايات العربية المشوقة من خيال، أكشن، غموض، ومغامرات.</p>
+            <p>اقرأ وانشر أحدث القصص والروايات العربية من خيال، أكشن، غموض، ومغامرات بيئة مريحة للعين ومجتمع إبداعي متكامل.</p>
         </section>
 
         <div class="main-layout">
-            <!-- قائمة عرض القصص -->
             <main>
-                <h2 class="section-title" id="stories">أحدث القصص والروايات</h2>
+                <h2 class="section-title" id="stories">أحدث القصص المنشورة</h2>
                 <div id="stories-container">
-                    <!-- يتم عرض القصص ديناميكياً بواسطة JavaScript -->
+                    <!-- يتم عرض القصص تلقائياً -->
                 </div>
             </main>
 
-            <!-- نموذج إضافة قصة جديدة -->
             <aside>
                 <div class="publish-box" id="publish">
-                    <h2 class="section-title">انشر قصتك الآن</h2>
+                    <h2 class="section-title">انشر قصتك</h2>
+                    
+                    <!-- زر جديد للصق المحتوى مباشرة من المحفظة -->
+                    <button type="button" class="btn-secondary" id="pasteBtn">📋 لصق قصة نسختها</button>
+
                     <form id="storyForm">
                         <div class="form-group">
                             <label for="storyTitle">عنوان القصة</label>
-                            <input type="text" id="storyTitle" placeholder="أدخل عنواناً جذاباً..." required>
+                            <input type="text" id="storyTitle" placeholder="أدخل العنوان..." required>
                         </div>
                         
                         <div class="form-group">
                             <label for="authorName">اسم الكاتب</label>
-                            <input type="text" id="authorName" placeholder="اسمك أو لقبك الإبداعي..." required>
+                            <input type="text" id="authorName" placeholder="اسمك..." required>
                         </div>
 
                         <div class="form-group">
@@ -297,11 +371,11 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="storyContent">محتوى القصة</label>
-                            <textarea id="storyContent" rows="8" placeholder="اكتب أحداث قصتك هنا..." required></textarea>
+                            <label for="storyContent">نص القصة</label>
+                            <textarea id="storyContent" rows="6" placeholder="اكتب أو الصق قصتك هنا..." required></textarea>
                         </div>
 
-                        <button type="submit" class="btn">نشر القصة</button>
+                        <button type="submit" class="btn-primary">نشر الآن</button>
                     </form>
                 </div>
             </aside>
@@ -312,27 +386,53 @@
         <p>&copy; 2026 منصة حكاية - جميع الحقوق محفوظة | أفضل موقع عربي لقراءة ونشر القصص والروايات</p>
     </footer>
 
-    <!-- برمجة JavaScript المدمجة بالكامل -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const storyForm = document.getElementById("storyForm");
             const storiesContainer = document.getElementById("stories-container");
+            const themeToggle = document.getElementById("themeToggle");
+            const themeIcon = document.getElementById("themeIcon");
+            const themeText = document.getElementById("themeText");
+            const pasteBtn = document.getElementById("pasteBtn");
 
-            // القصص الافتراضية والتخزين المحلي
+            // 1. إدارة المظهر (Dark / Light Mode)
+            const savedTheme = localStorage.getItem("hikaya_theme") || "dark";
+            setTheme(savedTheme);
+
+            themeToggle.addEventListener("click", () => {
+                const currentTheme = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+                setTheme(currentTheme);
+            });
+
+            function setTheme(theme) {
+                if (theme === "light") {
+                    document.documentElement.setAttribute("data-theme", "light");
+                    themeIcon.textContent = "☀️";
+                    themeText.textContent = "الوضع المضيء";
+                } else {
+                    document.documentElement.removeAttribute("data-theme");
+                    themeIcon.textContent = "🌙";
+                    themeText.textContent = "الوضع الداكن";
+                }
+                localStorage.setItem("hikaya_theme", theme);
+            }
+
+            // 2. إدارة التخزين وعرض القصص
             let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
                 {
+                    id: 1,
                     title: "رحلة غارلون - الجزء الأول",
                     author: "غارلون",
                     category: "أكشن وغموض",
+                    likes: 12,
                     content: "في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني جاء رجلان من قرية قريبة من تلك الغابة، وكانوا يريدون جمع فطر عش الغراب، فجاء رجل القرية ورأى منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: 'هذا رائع! يمكننا بيعه في القرية'. فاستغرب منه رجل القرية وقال: 'لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟'، فقال له زميله: 'إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها'. فقال رجل القرية: 'من قتل النمر؟'، فقال له زميله: 'إنه سياف مشهور يدعى غارلون'. انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما."
                 }
             ];
 
-            // دالة لعرض القصص
             function renderStories() {
                 storiesContainer.innerHTML = "";
 
-                stories.forEach((story) => {
+                stories.forEach((story, index) => {
                     const article = document.createElement("article");
                     article.className = "story-card";
 
@@ -343,13 +443,33 @@
                             <span>بواسطة: ${escapeHtml(story.author)}</span>
                         </div>
                         <p>${escapeHtml(story.content)}</p>
+                        <div class="card-actions">
+                            <button class="btn-action" onclick="likeStory(${index})">❤️ إعجاب (${story.likes || 0})</button>
+                            <button class="btn-action" onclick="shareStory('${escapeHtml(story.title)}')">🔗 مشاركة</button>
+                            <button class="btn-action delete-btn" onclick="deleteStory(${index})">🗑️ حذف</button>
+                        </div>
                     `;
 
                     storiesContainer.appendChild(article);
                 });
             }
 
-            // إضافة قصة جديدة
+            // 3. زر اللصق السريع تلقائياً
+            pasteBtn.addEventListener("click", async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    if(text) {
+                        document.getElementById("storyContent").value = text;
+                        alert("تم لصق النص بنجاح!");
+                    } else {
+                        alert("المحفظة فارغة!");
+                    }
+                } catch (err) {
+                    alert("يرجى إعطاء الإذن للصق أو استخدام CTRL+V");
+                }
+            });
+
+            // 4. إضافة قصة جديدة
             storyForm.addEventListener("submit", (e) => {
                 e.preventDefault();
 
@@ -359,19 +479,43 @@
                 const content = document.getElementById("storyContent").value.trim();
 
                 if (title && author && content) {
-                    const newStory = { title, author, category, content };
+                    const newStory = { id: Date.now(), title, author, category, content, likes: 0 };
                     stories.unshift(newStory);
-                    
-                    localStorage.setItem("hikaya_stories", JSON.stringify(stories));
-
-                    renderStories();
+                    saveAndRender();
                     storyForm.reset();
-
-                    alert("تم نشر قصتك بنجاح على منصة حكاية!");
                 }
             });
 
-            // حماية النصوص
+            // تفاعلات الأزرار
+            window.likeStory = (index) => {
+                stories[index].likes = (stories[index].likes || 0) + 1;
+                saveAndRender();
+            };
+
+            window.deleteStory = (index) => {
+                if(confirm("هل أنت تأكد من رغبتك في حذف هذه القصة؟")) {
+                    stories.splice(index, 1);
+                    saveAndRender();
+                }
+            };
+
+            window.shareStory = (title) => {
+                if(navigator.share) {
+                    navigator.share({
+                        title: title,
+                        url: window.location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("تم نسخ رابط الموقع لمشاركته!");
+                }
+            };
+
+            function saveAndRender() {
+                localStorage.setItem("hikaya_stories", JSON.stringify(stories));
+                renderStories();
+            }
+
             function escapeHtml(text) {
                 return text
                     .replace(/&/g, "&amp;")
