@@ -17,7 +17,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hikaya-5ff25.web.app">
     
-    <!-- خطوط وتنسيقات خارجية -->
+    <!-- خطوط خارجية -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -267,15 +267,7 @@
             <main>
                 <h2 class="section-title" id="stories">أحدث القصص والروايات</h2>
                 <div id="stories-container">
-                    <!-- قصة افتراضية -->
-                    <article class="story-card">
-                        <h3>رحلة غارلون - الجزء الأول</h3>
-                        <div class="meta-info">
-                            <span class="meta-tag">أكشن وغموض</span>
-                            <span>بواسطة: الكاتب</span>
-                        </div>
-                        <p>في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه...</p>
-                    </article>
+                    <!-- يتم عرض القصص ديناميكياً بواسطة JavaScript -->
                 </div>
             </main>
 
@@ -320,7 +312,77 @@
         <p>&copy; 2026 منصة حكاية - جميع الحقوق محفوظة | أفضل موقع عربي لقراءة ونشر القصص والروايات</p>
     </footer>
 
-    <!-- الربط ببرمجية الموقع -->
-    <script src="app.js"></script>
+    <!-- برمجة JavaScript المدمجة بالكامل -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const storyForm = document.getElementById("storyForm");
+            const storiesContainer = document.getElementById("stories-container");
+
+            // القصص الافتراضية والتخزين المحلي
+            let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
+                {
+                    title: "رحلة غارلون - الجزء الأول",
+                    author: "غارلون",
+                    category: "أكشن وغموض",
+                    content: "في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني جاء رجلان من قرية قريبة من تلك الغابة، وكانوا يريدون جمع فطر عش الغراب، فجاء رجل القرية ورأى منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: 'هذا رائع! يمكننا بيعه في القرية'. فاستغرب منه رجل القرية وقال: 'لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟'، فقال له زميله: 'إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها'. فقال رجل القرية: 'من قتل النمر؟'، فقال له زميله: 'إنه سياف مشهور يدعى غارلون'. انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما."
+                }
+            ];
+
+            // دالة لعرض القصص
+            function renderStories() {
+                storiesContainer.innerHTML = "";
+
+                stories.forEach((story) => {
+                    const article = document.createElement("article");
+                    article.className = "story-card";
+
+                    article.innerHTML = `
+                        <h3>${escapeHtml(story.title)}</h3>
+                        <div class="meta-info">
+                            <span class="meta-tag">${escapeHtml(story.category)}</span>
+                            <span>بواسطة: ${escapeHtml(story.author)}</span>
+                        </div>
+                        <p>${escapeHtml(story.content)}</p>
+                    `;
+
+                    storiesContainer.appendChild(article);
+                });
+            }
+
+            // إضافة قصة جديدة
+            storyForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const title = document.getElementById("storyTitle").value.trim();
+                const author = document.getElementById("authorName").value.trim();
+                const category = document.getElementById("storyCategory").value;
+                const content = document.getElementById("storyContent").value.trim();
+
+                if (title && author && content) {
+                    const newStory = { title, author, category, content };
+                    stories.unshift(newStory);
+                    
+                    localStorage.setItem("hikaya_stories", JSON.stringify(stories));
+
+                    renderStories();
+                    storyForm.reset();
+
+                    alert("تم نشر قصتك بنجاح على منصة حكاية!");
+                }
+            });
+
+            // حماية النصوص
+            function escapeHtml(text) {
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            renderStories();
+        });
+    </script>
 </body>
 </html>
