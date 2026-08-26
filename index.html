@@ -43,10 +43,9 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
         body { background-color: var(--bg-main); color: var(--text-main); direction: rtl; overflow-x: hidden; }
 
-        /* تعديل الهيدر ليناسب الشاشات الصغيرة ويمنع تداخل الأزرار */
         header {
             background-color: var(--bg-card);
-            padding: 0.7rem 1rem;
+            padding: 0.7rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -54,60 +53,55 @@
             position: sticky; top: 0; z-index: 999;
             gap: 10px;
         }
-        header h1 { color: var(--accent-color); font-size: 1.25rem; font-weight: 800; white-space: nowrap; }
-        .header-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer; object-fit: cover; }
-        .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
+        header h1 { color: var(--accent-color); font-size: 1.35rem; font-weight: 800; white-space: nowrap; }
+        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+        .user-avatar { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer; object-fit: cover; }
+        .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem; white-space: nowrap; }
         .btn-logout { background-color: #ef4444; }
 
-        .container { max-width: 1200px; margin: 1.5rem auto; padding: 0 1rem; }
+        .container { max-width: 1280px; margin: 2rem auto; padding: 0 1.5rem; }
+        
         .main-layout { 
             display: grid; 
-            grid-template-columns: 350px 1fr; 
-            gap: 1.5rem; 
+            grid-template-columns: 400px 1fr; 
+            gap: 2rem; 
             align-items: start;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 992px) {
             .main-layout { grid-template-columns: 1fr; }
         }
 
-        .section-title { font-size: 1.15rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1rem; }
+        .section-title { font-size: 1.2rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1rem; }
 
         .story-card { 
             background-color: var(--bg-card); 
             border-radius: 12px; 
-            padding: 1.2rem; 
-            margin-bottom: 1rem; 
+            padding: 1.5rem; 
+            margin-bottom: 1.2rem; 
             border: 1px solid var(--border-color);
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
-        .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; font-size: 1.2rem; }
-        .story-card .story-author { font-size: 0.85rem; color: var(--accent-color); margin-bottom: 12px; display: block; font-weight: 600; }
+        .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; font-size: 1.3rem; }
+        .story-card .story-author { font-size: 0.9rem; color: var(--accent-color); margin-bottom: 12px; display: block; font-weight: 600; }
+        .story-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); white-space: pre-line; }
         
-        .story-text { 
-            font-size: 1rem; 
-            line-height: 1.8; 
-            color: var(--text-muted); 
-            white-space: pre-line; 
-        }
-        
-        .publish-box { background-color: var(--bg-card); padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); }
-        .form-group { margin-bottom: 0.8rem; }
-        .form-group input, .form-group textarea { width: 100%; padding: 0.7rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); font-size: 0.9rem; outline: none; }
-        .form-group textarea { resize: vertical; min-height: 120px; }
-        .btn-primary { width: 100%; padding: 0.7rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+        .publish-box { background-color: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); position: sticky; top: 90px; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.8rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); font-size: 0.95rem; outline: none; }
+        .form-group textarea { resize: vertical; min-height: 140px; }
+        .btn-primary { width: 100%; padding: 0.8rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 1rem; }
 
         .chat-float-btn {
-            position: fixed; bottom: 20px; left: 20px; width: 55px; height: 55px;
+            position: fixed; bottom: 25px; left: 25px; width: 60px; height: 60px;
             background-color: var(--wa-green); color: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 26px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000;
         }
 
         .chat-modal {
-            position: fixed; bottom: 85px; left: 20px; width: 380px; height: 530px;
+            position: fixed; bottom: 95px; left: 25px; width: 380px; height: 530px;
             background-color: var(--wa-bg); border-radius: 16px; border: 1px solid var(--border-color);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1000;
         }
@@ -117,7 +111,7 @@
             .chat-modal { bottom: 0; left: 0; width: 100%; height: 100%; border-radius: 0; border: none; }
         }
 
-        .modal-header { background-color: var(--wa-card); padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
+        .modal-header { background-color: var(--wa-card); padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
         .modal-header h3 { font-size: 1rem; color: var(--text-main); }
         .chat-search-box { padding: 8px 10px; background-color: var(--wa-bg); border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
         .chat-search-box input { width: 100%; padding: 6px 10px; background: var(--wa-card); border: 1px solid var(--border-color); border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none; }
@@ -138,7 +132,7 @@
         .chat-header-info { display: flex; align-items: center; gap: 8px; }
         .back-btn { background: none; border: none; color: var(--accent-color); font-size: 1.1rem; cursor: pointer; }
         
-        .messages-area { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .messages-area { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         
         .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.4; word-break: break-word; }
         .msg-bubble.me { align-self: flex-start; background-color: var(--wa-bubble-me); color: #fff; border-top-right-radius: 0; }
@@ -185,10 +179,8 @@
         </div>
     </div>
 
-    <!-- زر المحادثات العائم -->
     <div class="chat-float-btn" id="chatFloatBtn">💬</div>
 
-    <!-- نافذة محادثات واتساب -->
     <div class="chat-modal" id="chatModal">
         <div class="modal-header">
             <h3>💬 المحادثات والأصدقاء</h3>
@@ -225,7 +217,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -400,7 +391,7 @@
             const reader = new FileReader();
             reader.onload = function(uploadEvent) {
                 const base64Image = uploadEvent.target.result;
-                database.ref('private_chats/' + currentCardId = currentChatId).push({
+                database.ref('private_chats/' + currentChatId).push({
                     senderId: currentUser.uid,
                     text: base64Image,
                     type: 'image',
@@ -431,6 +422,7 @@
             document.documentElement.setAttribute("data-theme", isLight ? "" : "light");
         });
 
+        // إدارة وعرض القصص بشكل سليم
         const storiesContainer = document.getElementById("stories-container");
         let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
             { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال في عوالم خيالية واسعة...\n\nالموقع يعمل بكفاءة تامة على الهواتف واللابتوب." }
@@ -455,10 +447,12 @@
 
         document.getElementById("storyForm").addEventListener("submit", (e) => {
             e.preventDefault();
-            const title = document.getElementById("storyTitle").value;
-            const author = document.getElementById("authorName").value;
-            const content = document.getElementById("storyContent").value;
+            const title = document.getElementById("storyTitle").value.trim();
+            const author = document.getElementById("authorName").value.trim();
+            const content = document.getElementById("storyContent").value.trim();
             
+            if (!title || !author || !content) return;
+
             stories.unshift({ id: Date.now(), title, author, content });
             localStorage.setItem("hikaya_stories", JSON.stringify(stories));
             renderStories();
