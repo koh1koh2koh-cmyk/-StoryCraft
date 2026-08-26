@@ -43,22 +43,23 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
         body { background-color: var(--bg-main); color: var(--text-main); direction: rtl; overflow-x: hidden; }
 
+        /* تعديل الهيدر ليناسب الشاشات الصغيرة ويمنع تداخل الأزرار */
         header {
             background-color: var(--bg-card);
-            padding: 0.8rem 1.5rem;
+            padding: 0.7rem 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             position: sticky; top: 0; z-index: 999;
+            gap: 10px;
         }
-        header h1 { color: var(--accent-color); font-size: 1.4rem; font-weight: 800; }
-        .header-actions { display: flex; align-items: center; gap: 8px; }
-        .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer; object-fit: cover; }
-        .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
-        .btn-auth:hover { opacity: 0.9; }
+        header h1 { color: var(--accent-color); font-size: 1.25rem; font-weight: 800; white-space: nowrap; }
+        .header-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer; object-fit: cover; }
+        .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem; white-space: nowrap; }
+        .btn-logout { background-color: #ef4444; }
 
-        /* هيكل متجاوب بالكامل للشاشات المختلفة (لابتوب وتَابليت وهواتف) */
         .container { max-width: 1200px; margin: 1.5rem auto; padding: 0 1rem; }
         .main-layout { 
             display: grid; 
@@ -103,11 +104,8 @@
             background-color: var(--wa-green); color: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; font-size: 26px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000;
-            transition: transform 0.2s;
         }
-        .chat-float-btn:hover { transform: scale(1.05); }
 
-        /* نافذة المحادثة المتجاوبة بالكامل على اللابتوب والهاتف */
         .chat-modal {
             position: fixed; bottom: 85px; left: 20px; width: 380px; height: 530px;
             background-color: var(--wa-bg); border-radius: 16px; border: 1px solid var(--border-color);
@@ -148,7 +146,6 @@
         .msg-bubble img { max-width: 100%; border-radius: 6px; margin-top: 4px; display: block; }
         .msg-bubble a { color: #38bdf8; text-decoration: underline; font-weight: bold; }
         
-        /* شريط الكتابة مثبت بأسفل المحادثة تماماً */
         .chat-input-row { padding: 10px; background-color: var(--wa-card); display: flex; gap: 6px; align-items: center; flex-shrink: 0; border-top: 1px solid var(--border-color); }
         .chat-input-row input[type="text"] { flex: 1; padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none; }
         .upload-img-label { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 0 4px; display: flex; align-items: center; }
@@ -277,7 +274,7 @@
                 currentUser = user;
                 authBox.innerHTML = `
                     <img src="${user.photoURL}" class="user-avatar" title="${user.displayName}">
-                    <button class="btn-auth" style="background:#ef4444" onclick="handleLogout()">خروج</button>
+                    <button class="btn-auth btn-logout" onclick="handleLogout()">خروج</button>
                 `;
                 document.getElementById('authorName').value = user.displayName;
 
@@ -403,7 +400,7 @@
             const reader = new FileReader();
             reader.onload = function(uploadEvent) {
                 const base64Image = uploadEvent.target.result;
-                database.ref('private_chats/' + currentChatId).push({
+                database.ref('private_chats/' + currentCardId = currentChatId).push({
                     senderId: currentUser.uid,
                     text: base64Image,
                     type: 'image',
@@ -436,7 +433,7 @@
 
         const storiesContainer = document.getElementById("stories-container");
         let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
-            { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال في عوالم خيالية واسعة...\n\nالموقع الآن يعمل بكفاءة تامة على الهواتف، اللابتوب، والأجهزة اللوحية." }
+            { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال في عوالم خيالية واسعة...\n\nالموقع يعمل بكفاءة تامة على الهواتف واللابتوب." }
         ];
 
         function renderStories() {
