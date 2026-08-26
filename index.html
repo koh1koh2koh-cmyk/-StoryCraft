@@ -59,45 +59,43 @@
         .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
         .btn-logout { background-color: #ef4444; }
 
-        .container { max-width: 1280px; margin: 2rem auto; padding: 0 1rem; }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 1rem; }
         
-        /* التصحيح الجذري للتخطيط: العكس تماماً (نموذج النشر بجانب، وقائمة القصص تأخذ المساحة الكبرى واسعة) */
+        /* تخطيط مرن يضمن أن القائمة تأخذ المساحة الضخمة والواسعة اليسرى بينما النشر ثابت في اليمين */
         .main-layout { 
-            display: grid; 
-            grid-template-columns: 350px 1fr; 
+            display: flex; 
             gap: 2rem; 
-            align-items: start;
+            align-items: flex-start;
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 992px) {
-            .main-layout { grid-template-columns: 1fr; }
+        @media (min-width: 992px) {
+            aside { width: 350px; flex-shrink: 0; position: sticky; top: 5rem; }
+            main { flex: 1; min-width: 0; }
+        }
+
+        @media (max-width: 991px) {
+            .main-layout { flex-direction: column; }
+            aside, main { width: 100%; }
         }
 
         .section-title { font-size: 1.2rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1rem; }
 
-        /* صندوق نشر القصة (في الجانب الأيمن أو الأيسر حسب الترتيب) */
         .publish-box { 
             background-color: var(--bg-card); 
             padding: 1.5rem; 
             border-radius: 12px; 
             border: 1px solid var(--border-color);
-            position: sticky;
-            top: 5rem;
         }
         .form-group { margin-bottom: 1rem; }
         .form-group input, .form-group textarea { width: 100%; padding: 0.8rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 0.95rem; outline: none; }
         .form-group textarea { resize: vertical; min-height: 150px; }
         .btn-primary { width: 100%; padding: 0.8rem; background: var(--accent-color); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; }
 
-        /* قسم عرض القصص (يأخذ المساحة الكبرى الواسعة 1fr لضمان عدم قص النصوص) */
-        .stories-section {
-            width: 100%;
-        }
-
         .story-card { 
             background-color: var(--bg-card); 
             border-radius: 12px; 
-            padding: 1.5rem; 
+            padding: 1.8rem; 
             margin-bottom: 1.5rem; 
             border: 1px solid var(--border-color);
             width: 100%;
@@ -107,7 +105,7 @@
         
         .story-text { 
             font-size: 1.1rem; 
-            line-height: 2; 
+            line-height: 2.2; 
             color: var(--text-muted); 
             white-space: pre-wrap; 
             word-break: break-word;
@@ -161,7 +159,7 @@
     <div class="container">
         <div class="main-layout">
             
-            <!-- نموذج نشر القصة (الجانب الأيمن) -->
+            <!-- نموذج نشر القصة (ثابت في أحد الجوانب) -->
             <aside>
                 <div class="publish-box">
                     <h2 class="section-title">انشر قصتك</h2>
@@ -174,11 +172,11 @@
                 </div>
             </aside>
 
-            <!-- قسم عرض أحدث القصص (يأخذ المساحة الواسعة الكبرى 1fr) -->
-            <section class="stories-section">
+            <!-- قسم عرض أحدث القصص (يأخذ المساحة الواسعة الكبرى Flex: 1) -->
+            <main>
                 <h2 class="section-title">أحدث القصص المنشورة</h2>
                 <div id="stories-container"></div>
-            </section>
+            </main>
 
         </div>
     </div>
@@ -344,10 +342,10 @@
         };
 
         const storiesContainer = document.getElementById("stories-container");
-        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v4")) || [
-            { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال في عوالم خيالية واسعة...\n\nتم ضبط مساحة العرض بالكامل لتظهر القصص بكامل راحتها وبدون أي اقتطاع للنصوص نهائياً." }
+        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v5")) || [
+            { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال في عوالم خيالية واسعة...\n\nتم إعادة ضبط هيكل العرض بالكامل باستخدام Flexbox المطور لضمان أخذ النص مساحته الكاملة المريحة دون أي تقييد." }
         ];
-        localStorage.setItem("hikaya_stories_v4", JSON.stringify(stories));
+        localStorage.setItem("hikaya_stories_v5", JSON.stringify(stories));
 
         function renderStories() {
             storiesContainer.innerHTML = "";
@@ -368,10 +366,10 @@
             e.preventDefault();
             const title = document.getElementById("storyTitle").value.trim();
             const author = document.getElementById("authorName").value.trim();
-            const content = document.getElementById("storyContent.value" || "storyContent").value.trim();
+            const content = document.getElementById("storyContent").value.trim();
             if (!title || !author || !content) return;
             stories.unshift({ id: Date.now(), title, author, content });
-            localStorage.setItem("hikaya_stories_v4", JSON.stringify(stories));
+            localStorage.setItem("hikaya_stories_v5", JSON.stringify(stories));
             renderStories();
             document.getElementById("storyForm").reset();
         };
