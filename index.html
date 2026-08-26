@@ -52,17 +52,26 @@
             border-bottom: 1px solid var(--border-color);
             position: sticky; top: 0; z-index: 999;
         }
-        header h1 { color: var(--accent-color); font-size: 1.5rem; font-weight: 800; }
-        .header-actions { display: flex; align-items: center; gap: 10px; }
+        header h1 { color: var(--accent-color); font-size: 1.4rem; font-weight: 800; }
+        .header-actions { display: flex; align-items: center; gap: 8px; }
         .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer; object-fit: cover; }
-        .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+        .btn-auth { background-color: var(--accent-color); color: #fff; border: none; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .btn-auth:hover { opacity: 0.9; }
 
-        .container { max-width: 800px; margin: 1.5rem auto; padding: 0 1rem; }
-        
-        /* تعديل التخطيط ليصبح عمودياً ومتوافقاً تماماً مع الهواتف والشاشات الصغيرة */
-        .main-layout { display: flex; flex-direction: column; gap: 1.5rem; }
+        /* هيكل متجاوب بالكامل للشاشات المختلفة (لابتوب وتَابليت وهواتف) */
+        .container { max-width: 1200px; margin: 1.5rem auto; padding: 0 1rem; }
+        .main-layout { 
+            display: grid; 
+            grid-template-columns: 350px 1fr; 
+            gap: 1.5rem; 
+            align-items: start;
+        }
 
-        .section-title { font-size: 1.2rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1rem; }
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        .section-title { font-size: 1.15rem; border-right: 4px solid var(--accent-color); padding-right: 10px; margin-bottom: 1rem; }
 
         .story-card { 
             background-color: var(--bg-card); 
@@ -73,49 +82,34 @@
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
-        .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; font-size: 1.1rem; }
-        .story-card .story-author { font-size: 0.85rem; color: var(--accent-color); margin-bottom: 8px; display: block; font-weight: 600; }
+        .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; font-size: 1.2rem; }
+        .story-card .story-author { font-size: 0.85rem; color: var(--accent-color); margin-bottom: 12px; display: block; font-weight: 600; }
         
         .story-text { 
-            font-size: 0.95rem; 
-            line-height: 1.7; 
+            font-size: 1rem; 
+            line-height: 1.8; 
             color: var(--text-muted); 
             white-space: pre-line; 
-        }
-        
-        .story-text.collapsed {
-            display: -webkit-box;
-            -webkit-line-clamp: 3; /* عرض أول 3 أسطر فقط */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .read-more-btn {
-            background: none;
-            border: none;
-            color: var(--accent-color);
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            margin-top: 10px;
-            display: inline-block;
         }
         
         .publish-box { background-color: var(--bg-card); padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); }
         .form-group { margin-bottom: 0.8rem; }
         .form-group input, .form-group textarea { width: 100%; padding: 0.7rem; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-main); font-size: 0.9rem; outline: none; }
-        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-group textarea { resize: vertical; min-height: 120px; }
         .btn-primary { width: 100%; padding: 0.7rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
 
         .chat-float-btn {
-            position: fixed; bottom: 20px; left: 20px; width: 50px; height: 50px;
+            position: fixed; bottom: 20px; left: 20px; width: 55px; height: 55px;
             background-color: var(--wa-green); color: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 22px;
+            display: flex; align-items: center; justify-content: center; font-size: 26px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000;
+            transition: transform 0.2s;
         }
+        .chat-float-btn:hover { transform: scale(1.05); }
 
+        /* نافذة المحادثة المتجاوبة بالكامل على اللابتوب والهاتف */
         .chat-modal {
-            position: fixed; bottom: 80px; left: 20px; width: 340px; height: 480px;
+            position: fixed; bottom: 85px; left: 20px; width: 380px; height: 530px;
             background-color: var(--wa-bg); border-radius: 16px; border: 1px solid var(--border-color);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; z-index: 1000;
         }
@@ -125,11 +119,12 @@
             .chat-modal { bottom: 0; left: 0; width: 100%; height: 100%; border-radius: 0; border: none; }
         }
 
-        .modal-header { background-color: var(--wa-card); padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+        .modal-header { background-color: var(--wa-card); padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
         .modal-header h3 { font-size: 1rem; color: var(--text-main); }
-        .chat-search-box { padding: 8px 10px; background-color: var(--wa-bg); border-bottom: 1px solid var(--border-color); }
+        .chat-search-box { padding: 8px 10px; background-color: var(--wa-bg); border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
         .chat-search-box input { width: 100%; padding: 6px 10px; background: var(--wa-card); border: 1px solid var(--border-color); border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none; }
-        .modal-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        
+        .modal-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .users-list { flex: 1; overflow-y: auto; }
         .user-item { display: flex; align-items: center; gap: 10px; padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
         .user-item:hover { background-color: var(--wa-card); }
@@ -138,20 +133,25 @@
         .user-item .name { font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
         .user-item .sub { font-size: 0.75rem; color: var(--text-muted); }
 
-        .active-chat { flex: 1; display: none; flex-direction: column; }
+        .active-chat { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--wa-bg); display: none; flex-direction: column; z-index: 10; }
         .active-chat.open { display: flex; }
-        .chat-sub-header { padding: 8px 12px; background-color: var(--wa-card); display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.85rem; }
+        
+        .chat-sub-header { padding: 8px 12px; background-color: var(--wa-card); display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; border-bottom: 1px solid var(--border-color); }
         .chat-header-info { display: flex; align-items: center; gap: 8px; }
         .back-btn { background: none; border: none; color: var(--accent-color); font-size: 1.1rem; cursor: pointer; }
+        
         .messages-area { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        
         .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; line-height: 1.4; word-break: break-word; }
         .msg-bubble.me { align-self: flex-start; background-color: var(--wa-bubble-me); color: #fff; border-top-right-radius: 0; }
         .msg-bubble.them { align-self: flex-end; background-color: var(--wa-bubble-them); color: var(--text-main); border-top-left-radius: 0; }
         .msg-bubble img { max-width: 100%; border-radius: 6px; margin-top: 4px; display: block; }
         .msg-bubble a { color: #38bdf8; text-decoration: underline; font-weight: bold; }
-        .chat-input-row { padding: 8px; background-color: var(--wa-card); display: flex; gap: 6px; align-items: center; }
+        
+        /* شريط الكتابة مثبت بأسفل المحادثة تماماً */
+        .chat-input-row { padding: 10px; background-color: var(--wa-card); display: flex; gap: 6px; align-items: center; flex-shrink: 0; border-top: 1px solid var(--border-color); }
         .chat-input-row input[type="text"] { flex: 1; padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 20px; color: var(--text-main); font-size: 0.85rem; outline: none; }
-        .upload-img-label { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
+        .upload-img-label { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 0 4px; display: flex; align-items: center; }
         .chat-input-row button[type="submit"] { background: var(--wa-green); color: #fff; border: none; padding: 8px 14px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
     </style>
 </head>
@@ -169,7 +169,6 @@
 
     <div class="container">
         <div class="main-layout">
-            <!-- قسم انشر قصتك أصبح بالأعلى ليأخذ مساحة مريحة على الجوال -->
             <aside>
                 <div class="publish-box">
                     <h2 class="section-title">انشر قصتك</h2>
@@ -214,7 +213,9 @@
                     </div>
                     <button style="background:none; border:none; color:var(--wa-green); font-size:1.2rem; cursor:pointer;" onclick="startRealCallLink()" title="مكالمة صوتية/فيديو">📞</button>
                 </div>
+                
                 <div class="messages-area" id="messagesArea"></div>
+                
                 <form class="chat-input-row" id="chatForm">
                     <label class="upload-img-label" title="إرسال صورة">
                         📷
@@ -260,7 +261,6 @@
         const targetUserName = document.getElementById('targetUserName');
         const msgInput = document.getElementById('msgInput');
         const userSearchInput = document.getElementById('userSearchInput');
-        const searchContainer = document.getElementById('searchContainer');
         const imageInput = document.getElementById('imageInput');
 
         function handleLogin() {
@@ -305,8 +305,6 @@
 
         function closeActiveChat() {
             activeChat.classList.remove('open');
-            usersList.style.display = 'block';
-            searchContainer.style.display = 'block';
         }
 
         function loadUsers() {
@@ -353,8 +351,6 @@
             if (!currentUser) return alert("سجل الدخول أولاً للمحادثة!");
             selectedUser = user;
             targetUserName.textContent = user.name;
-            usersList.style.display = 'none';
-            searchContainer.style.display = 'none';
             activeChat.classList.add('open');
 
             currentChatId = currentUser.uid < selectedUser.uid 
@@ -440,36 +436,22 @@
 
         const storiesContainer = document.getElementById("stories-container");
         let stories = JSON.parse(localStorage.getItem("hikaya_stories")) || [
-            { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال في عوالم خيالية واسعة...\n\nهذا سطر جديد يوضح أن القصة تظهر بالكامل وبأريحية تامة على شاشة الهاتف." }
+            { id: 1, title: "رحلة غارلون", author: "غارلون", content: "قصة مشوقة عن المغامرات والقتال في عوالم خيالية واسعة...\n\nالموقع الآن يعمل بكفاءة تامة على الهواتف، اللابتوب، والأجهزة اللوحية." }
         ];
 
         function renderStories() {
             storiesContainer.innerHTML = "";
-            stories.forEach((story, index) => {
+            stories.forEach(story => {
                 const article = document.createElement("article");
                 article.className = "story-card";
                 
                 article.innerHTML = `
                     <h3>${story.title}</h3>
                     <span class="story-author">الكاتب: ${story.author}</span>
-                    <div class="story-text collapsed" id="story-text-${index}">${story.content}</div>
-                    <button class="read-more-btn" id="btn-read-${index}" onclick="toggleStory(${index})">قراءة المزيد</button>
+                    <div class="story-text">${story.content}</div>
                 `;
                 storiesContainer.appendChild(article);
             });
-        }
-
-        function toggleStory(index) {
-            const textDiv = document.getElementById(`story-text-${index}`);
-            const btn = document.getElementById(`btn-read-${index}`);
-            
-            if (textDiv.classList.contains('collapsed')) {
-                textDiv.classList.remove('collapsed');
-                btn.textContent = "إخفاء التفاصيل";
-            } else {
-                textDiv.classList.add('collapsed');
-                btn.textContent = "قراءة المزيد";
-            }
         }
 
         renderStories();
