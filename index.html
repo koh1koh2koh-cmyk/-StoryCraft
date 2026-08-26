@@ -86,37 +86,16 @@
             overflow-wrap: break-word;
         }
         .story-card h3 { color: var(--accent-color); margin-bottom: 0.4rem; font-size: 1.2rem; }
-        .story-card .story-author { font-size: 0.85rem; color: var(--accent-color); margin-bottom: 10px; display: block; font-weight: 600; }
+        .story-card .story-author { font-size: 0.85rem; color: var(--accent-color); margin-bottom: 12px; display: block; font-weight: 600; }
         
-        /* تنسيق النص مع خاصية الاقتصاص والتحكم بالارتفاع */
+        /* عرض النص بالكامل بشكل نهائي بدون أي اقتصاص أو إخفاء */
         .story-text { 
             font-size: 1rem; 
             line-height: 1.9; 
             color: var(--text-muted); 
             white-space: pre-wrap; 
             word-break: break-word;
-            overflow: hidden;
-            max-height: 120px; /* الارتفاع الافتراضي قبل التوسيع */
-            transition: max-height 0.3s ease-in-out;
-        }
-
-        .story-card.expanded .story-text {
-            max-height: 2000px; /* ارتفاع كافي جداً لعرض القصة كاملة عند التوسيع */
-        }
-
-        .btn-read-more {
-            background: none;
-            border: none;
-            color: var(--accent-color);
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            display: inline-block;
-            padding: 0;
-        }
-        .btn-read-more:hover {
-            text-decoration: underline;
+            display: block;
         }
         
         .publish-box { background-color: var(--bg-card); padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border-color); }
@@ -469,21 +448,9 @@
                     <h3>${story.title}</h3>
                     <span class="story-author">الكاتب: ${story.author}</span>
                     <div class="story-text">${story.content}</div>
-                    <button class="btn-read-more" onclick="toggleStory(this)">اقرأ المزيد...</button>
                 `;
                 storiesContainer.appendChild(article);
             });
-        }
-
-        // دالة التحكم بزر عرض المزيد / إخلاء القصة الكاملة
-        function toggleStory(button) {
-            const card = button.parentElement;
-            card.classList.toggle('expanded');
-            if (card.classList.contains('expanded')) {
-                button.textContent = "إخلاء";
-            } else {
-                button.textContent = "اقرأ المزيد...";
-            }
         }
 
         renderStories();
