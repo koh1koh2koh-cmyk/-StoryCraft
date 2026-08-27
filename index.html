@@ -153,6 +153,9 @@
             flex-shrink: 0;
             position: sticky;
             top: 5.5rem;
+            max-height: calc(100vh - 7rem);
+            overflow-y: auto;
+            padding-bottom: 1rem;
         }
 
         main {
@@ -168,15 +171,16 @@
                 width: 100%;
                 position: relative;
                 top: 0;
+                max-height: none;
             }
         }
 
         .section-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 800;
             border-right: 5px solid var(--accent-color);
-            padding-right: 12px;
-            margin-bottom: 1.2rem;
+            padding-right: 10px;
+            margin-bottom: 1rem;
             color: var(--text-main);
             display: flex;
             justify-content: space-between;
@@ -188,21 +192,21 @@
            ================================---------- */
         .publish-box, .author-folder-box {
             background-color: var(--bg-card);
-            padding: 1.8rem;
+            padding: 1.4rem;
             border-radius: 16px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         .form-group input, 
         .form-group textarea {
             width: 100%;
-            padding: 0.9rem 1rem;
+            padding: 0.8rem 1rem;
             background: var(--bg-input);
             border: 1px solid var(--border-color);
             border-radius: 10px;
@@ -219,13 +223,13 @@
 
         .form-group textarea {
             resize: vertical;
-            min-height: 140px;
+            min-height: 120px;
             line-height: 1.6;
         }
 
         .btn-primary {
             width: 100%;
-            padding: 0.9rem;
+            padding: 0.8rem;
             background: var(--accent-color);
             color: #fff;
             border: none;
@@ -241,12 +245,12 @@
         }
 
         .folder-list {
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .folder-item {
@@ -586,12 +590,12 @@
 
                 <!-- مجلد أعمال وأجزاء الكاتب -->
                 <div class="author-folder-box">
-                    <h2 class="section-title" style="font-size: 1.1rem;">📁 مجلد أجزاء الكاتب</h2>
-                    <div class="form-group" style="margin-bottom: 8px;">
+                    <h2 class="section-title" style="font-size: 1.05rem;">📁 مجلد أجزاء الكاتب</h2>
+                    <div class="form-group" style="margin-bottom: 6px;">
                         <input type="text" id="folderSearchInput" placeholder="ابحث باسم الكاتب لعرض أجزائه...">
                     </div>
                     <div class="folder-list" id="authorFolderList">
-                        <div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 10px;">أدخل اسم الكاتب لعرض أرشيفه</div>
+                        <div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">أدخل اسم الكاتب لعرض أرشيفه</div>
                     </div>
                 </div>
             </aside>
@@ -704,7 +708,7 @@
                     photo: user.photoURL
                 });
                 loadUsers();
-                renderStories(); // إعادة العرض لإظهار أزرار الحذف الخاصة بالناشر
+                renderStories();
             } else {
                 currentUser = null;
                 document.getElementById('authBox').innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول</button>`;
@@ -837,7 +841,7 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
 
-        // إدارة نظام نشر وعرض القصص والأجزاء (متضمنة أجزاء رحلة غارلون)
+        // إدارة نظام نشر وعرض القصص والأجزاء
         const storiesContainer = document.getElementById("stories-container");
         let stories = JSON.parse(localStorage.getItem("hikaya_stories_v9")) || [
             { 
@@ -873,7 +877,6 @@
                 const article = document.createElement("article");
                 article.className = "story-card";
                 
-                // زر الحذف يظهر فقط إذا كان المستخدم الحالي مسجل دخوله وهو صاحب القصة المنشورة
                 let deleteBtnHtml = "";
                 if (currentUser && story.userId && currentUser.uid === story.userId) {
                     deleteBtnHtml = `<button class="btn-delete" onclick="deleteStory(${story.id})">إزالة القصة</button>`;
@@ -890,18 +893,15 @@
         }
         renderStories();
 
-        // دالة حذف القصة (الناشر فقط)
         function deleteStory(id) {
             if(confirm("هل أنت متأكد من رغبتك في إزالة هذه القصة أو الجزء؟")) {
                 stories = stories.filter(s => s.id !== id);
                 localStorage.setItem("hikaya_stories_v9", JSON.stringify(stories));
                 renderStories();
-                // تحديث المجلد إن كان متاحاً
                 document.getElementById('folderSearchInput').dispatchEvent(new Event('input'));
             }
         }
 
-        // نشر قصة جديدة مع ربطها بمعرف المستخدم الحالي (UID)
         document.getElementById("storyForm").onsubmit = (e) => {
             e.preventDefault();
             const title = document.getElementById("storyTitle").value.trim();
@@ -925,25 +925,24 @@
             }
         };
 
-        // تصفية وعرض مجلد أجزاء الكاتب
         const folderSearchInput = document.getElementById('folderSearchInput');
         const authorFolderList = document.getElementById('authorFolderList');
 
         folderSearchInput.oninput = (e) => {
             const query = e.target.value.trim().toLowerCase();
             if(!query) {
-                authorFolderList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 10px;">أدخل اسم الكاتب لعرض أرشيفه</div>';
+                authorFolderList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">أدخل اسم الكاتب لعرض أرشيفه</div>';
                 return;
             }
             const authorStories = stories.filter(s => s.author.toLowerCase().includes(query));
-            authorFolderList.innerHTML = authorStories.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 10px;">لا توجد أجزاء لهذا الكاتب</div>' : '';
+            authorFolderList.innerHTML = authorStories.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">لا توجد أجزاء لهذا الكاتب</div>' : '';
             
             authorStories.forEach(s => {
                 const div = document.createElement('div');
                 div.className = 'folder-item';
                 div.textContent = `📖 ${s.title}`;
                 div.onclick = () => {
-                    renderStories(); // أو التمرير للقصة المطلوبة
+                    renderStories();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 };
                 authorFolderList.appendChild(div);
