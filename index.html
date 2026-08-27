@@ -178,17 +178,21 @@
             padding-right: 12px;
             margin-bottom: 1.2rem;
             color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         /* ==========================================
-           5. صندوق نموذج النشر (Publish Box)
+           5. صندوق نموذج النشر وأرشيف الكاتب
            ================================---------- */
-        .publish-box {
+        .publish-box, .author-folder-box {
             background-color: var(--bg-card);
             padding: 1.8rem;
             border-radius: 16px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
         }
 
         .form-group {
@@ -215,7 +219,7 @@
 
         .form-group textarea {
             resize: vertical;
-            min-height: 160px;
+            min-height: 140px;
             line-height: 1.6;
         }
 
@@ -236,6 +240,27 @@
             background: var(--accent-hover);
         }
 
+        .folder-list {
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .folder-item {
+            background: var(--bg-input);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+        .folder-item:hover {
+            border-color: var(--accent-color);
+        }
+
         /* ==========================================
            6. بطاقات عرض القصص (Story Cards)
            ================================---------- */
@@ -247,6 +272,7 @@
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
             width: 100%;
+            position: relative;
         }
 
         .story-card h3 {
@@ -275,6 +301,23 @@
             word-break: break-word;
             overflow-wrap: break-word;
             width: 100%;
+        }
+
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 700;
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+        }
+        .btn-delete:hover {
+            background-color: #dc2626;
         }
 
         /* ==========================================
@@ -523,28 +566,42 @@
     <div class="container">
         <div class="main-layout">
             
-            <!-- نموذج نشر القصة (الجانب الأيمن) -->
+            <!-- لوحة التحكم الجانبية (نشر + مجلد أعمال الكاتب) -->
             <aside>
                 <div class="publish-box">
                     <h2 class="section-title">انشر قصتك</h2>
                     <form id="storyForm">
                         <div class="form-group">
-                            <input type="text" id="storyTitle" placeholder="عنوان القصة" required>
+                            <input type="text" id="storyTitle" placeholder="عنوان القصة أو الجزء" required>
                         </div>
                         <div class="form-group">
                             <input type="text" id="authorName" placeholder="اسم الكاتب" required>
                         </div>
                         <div class="form-group">
-                            <textarea id="storyContent" placeholder="اكتب أو الصق نص القصة كاملاً هنا..." required></textarea>
+                            <textarea id="storyContent" placeholder="اكتب نص القصة أو الجزء هنا..." required></textarea>
                         </div>
                         <button type="submit" class="btn-primary">نشر القصة الآن</button>
                     </form>
                 </div>
+
+                <!-- مجلد أعمال وأجزاء الكاتب -->
+                <div class="author-folder-box">
+                    <h2 class="section-title" style="font-size: 1.1rem;">📁 مجلد أجزاء الكاتب</h2>
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <input type="text" id="folderSearchInput" placeholder="ابحث باسم الكاتب لعرض أجزائه...">
+                    </div>
+                    <div class="folder-list" id="authorFolderList">
+                        <div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 10px;">أدخل اسم الكاتب لعرض أرشيفه</div>
+                    </div>
+                </div>
             </aside>
 
-            <!-- قسم عرض أحدث القصص (المساحة الكبرى الواسعة) -->
+            <!-- قسم عرض أحدث القصص -->
             <main>
-                <h2 class="section-title">أحدث القصص المنشورة</h2>
+                <h2 class="section-title">
+                    أحدث القصص والأجزاء المنشورة
+                    <button class="btn-auth" onclick="renderStories()" style="font-size: 0.8rem; padding: 4px 10px;">عرض الكل</button>
+                </h2>
                 <div id="stories-container"></div>
             </main>
 
@@ -647,10 +704,12 @@
                     photo: user.photoURL
                 });
                 loadUsers();
+                renderStories(); // إعادة العرض لإظهار أزرار الحذف الخاصة بالناشر
             } else {
                 currentUser = null;
                 document.getElementById('authBox').innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول</button>`;
                 document.getElementById('usersList').innerHTML = '<div style="padding:25px; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل مع المستخدمين 📞</div>';
+                renderStories();
             }
         });
 
@@ -778,26 +837,52 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
 
-        // إدارة نظام نشر وعرض القصص محلياً ومع قاعدة البيانات (متضمنة قصة غارلون النمر)
+        // إدارة نظام نشر وعرض القصص والأجزاء (متضمنة أجزاء رحلة غارلون)
         const storiesContainer = document.getElementById("stories-container");
-        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v8")) || [
+        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v9")) || [
             { 
                 id: 1, 
-                title: "رحلة غارلون", 
+                title: "رحلة غارلون - الجزء الأول", 
                 author: "غارلون", 
+                userId: "default_author",
                 content: "في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم توتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني جاء رجلان من قرية قريبة من تلك الغابة، وكانوا يريدون جمع فطر عش الغراب، فجاء رجل القرية ورأى منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: \"هذا رائع! يمكننا بيعه في القرية\". فاستغرب منه رجل القرية وقال: \"لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟\", فقال له زميله: \"إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها\". فقال رجل القرية: \"من قتل النمر؟\", فقال له زميله: \"إنه سياف مشهور يدعى غارلون\". انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما." 
+            },
+            {
+                id: 2,
+                title: "رحلة غارلون - الجزء الثاني",
+                author: "غارلون",
+                userId: "default_author",
+                content: "بعد أن مشى الرجلان اللذان من القرية، قضيا 4 ساعات للوصول إلى كوراساوا؛ فكان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. لكن أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص فضولاً منه، وإذ بالصدمة تملأ وجهه؛ إذ من كان أمامه هو السياف غارلون، الذي كان يتدرب في الغابة. فلمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له أن يهدأ: \"لأنني لن أؤذيك\". فهمه غارلون وهدأ، وقرر أن يتركه.\n\nولكن قبل أن يتركه، سمع غارلون صوت شيء ما خلف رجل القرية، وركض خلفه ورأى أن سيافاً آخر قتل زميل رجل القرية! فحزن عليه زميله كثيراً. لكن السياف غارلون انقض على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملحوظ.\n\nوأثناء قتالهما، ذهب الرجل إلى زميله الذي كان يحتضر وقال له: \"أين أصبت؟\", فقال له بصوت مليء بالألم: \"أصابني في بطني\". فقال له زميله: \"أين بالضبط؟\", فقال له الرجل من القرية بصوت متألم: \"لا أعرف\". فحاول زميله أن يعالجه لكنه فشل. وقال له الرجل من القرية: \"هذه نهايتي، لا تتعب نفسك، اذهب مع غارلون فهو سيحميك بدلا مني، فالقرية بعيدة جداً ولن تستطيع الوصول أبداً. أريد أن أقول شيئاً كنت أود قوله في مماتي\", فقال له زميله: \"ما هو؟\", فقال له الرجل: \"ليت الواقع حلم، وليت مماتي لم يكن واقعاً\", وتوفى الرجل.\n\nفبكى عليه زميله، لكن عندما نظر إلى غارلون كان مندهشاً مما رآه."
             }
         ];
-        localStorage.setItem("hikaya_stories_v8", JSON.stringify(stories));
+        localStorage.setItem("hikaya_stories_v9", JSON.stringify(stories));
 
-        function renderStories() {
+        function renderStories(filterAuthor = null) {
             storiesContainer.innerHTML = "";
-            stories.forEach(story => {
+            let displayList = stories;
+            if(filterAuthor) {
+                displayList = stories.filter(s => s.author.toLowerCase().includes(filterAuthor.toLowerCase()));
+            }
+
+            if(displayList.length === 0) {
+                storiesContainer.innerHTML = '<div style="background:var(--bg-card); padding:2rem; border-radius:16px; text-align:center; color:var(--text-muted);">لا توجد قصص أو أجزاء مطابقة حالياً.</div>';
+                return;
+            }
+
+            displayList.forEach(story => {
                 const article = document.createElement("article");
                 article.className = "story-card";
+                
+                // زر الحذف يظهر فقط إذا كان المستخدم الحالي مسجل دخوله وهو صاحب القصة المنشورة
+                let deleteBtnHtml = "";
+                if (currentUser && story.userId && currentUser.uid === story.userId) {
+                    deleteBtnHtml = `<button class="btn-delete" onclick="deleteStory(${story.id})">إزالة القصة</button>`;
+                }
+
                 article.innerHTML = `
+                    ${deleteBtnHtml}
                     <h3>${story.title}</h3>
-                    <span class="story-author">الكاتب: ${story.author}</span>
+                    <span class="story-author" style="cursor:pointer;" onclick="filterByAuthor('${story.author}')">الكاتب: ${story.author} 📁</span>
                     <div class="story-text">${story.content}</div>
                 `;
                 storiesContainer.appendChild(article);
@@ -805,6 +890,18 @@
         }
         renderStories();
 
+        // دالة حذف القصة (الناشر فقط)
+        function deleteStory(id) {
+            if(confirm("هل أنت متأكد من رغبتك في إزالة هذه القصة أو الجزء؟")) {
+                stories = stories.filter(s => s.id !== id);
+                localStorage.setItem("hikaya_stories_v9", JSON.stringify(stories));
+                renderStories();
+                // تحديث المجلد إن كان متاحاً
+                document.getElementById('folderSearchInput').dispatchEvent(new Event('input'));
+            }
+        }
+
+        // نشر قصة جديدة مع ربطها بمعرف المستخدم الحالي (UID)
         document.getElementById("storyForm").onsubmit = (e) => {
             e.preventDefault();
             const title = document.getElementById("storyTitle").value.trim();
@@ -812,15 +909,52 @@
             const content = document.getElementById("storyContent").value.trim();
             if (!title || !author || !content) return;
 
-            const newStory = { id: Date.now(), title, author, content };
+            const newStory = { 
+                id: Date.now(), 
+                title, 
+                author, 
+                content,
+                userId: currentUser ? currentUser.uid : "guest_user"
+            };
             stories.unshift(newStory);
-            localStorage.setItem("hikaya_stories_v8", JSON.stringify(stories));
+            localStorage.setItem("hikaya_stories_v9", JSON.stringify(stories));
             renderStories();
             document.getElementById("storyForm").reset();
             if(currentUser) {
                 document.getElementById('authorName').value = currentUser.displayName;
             }
         };
+
+        // تصفية وعرض مجلد أجزاء الكاتب
+        const folderSearchInput = document.getElementById('folderSearchInput');
+        const authorFolderList = document.getElementById('authorFolderList');
+
+        folderSearchInput.oninput = (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            if(!query) {
+                authorFolderList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 10px;">أدخل اسم الكاتب لعرض أرشيفه</div>';
+                return;
+            }
+            const authorStories = stories.filter(s => s.author.toLowerCase().includes(query));
+            authorFolderList.innerHTML = authorStories.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 10px;">لا توجد أجزاء لهذا الكاتب</div>' : '';
+            
+            authorStories.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'folder-item';
+                div.textContent = `📖 ${s.title}`;
+                div.onclick = () => {
+                    renderStories(); // أو التمرير للقصة المطلوبة
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                authorFolderList.appendChild(div);
+            });
+        };
+
+        function filterByAuthor(authorName) {
+            document.getElementById('folderSearchInput').value = authorName;
+            document.getElementById('folderSearchInput').dispatchEvent(new Event('input'));
+            renderStories(authorName);
+        }
     </script>
 </body>
 </html>
