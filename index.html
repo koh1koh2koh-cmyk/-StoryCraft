@@ -92,6 +92,7 @@
             font-size: 1.5rem;
             font-weight: 900;
             letter-spacing: -0.5px;
+            cursor: pointer;
         }
 
         .header-actions {
@@ -188,7 +189,7 @@
         }
 
         /* ==========================================
-           5. صندوق نموذج النشر وأرشيف الكاتب
+           5. صندوق النشر ومجلد الكاتب
            ================================---------- */
         .publish-box, .author-folder-box {
             background-color: var(--bg-card);
@@ -204,6 +205,7 @@
         }
 
         .form-group input, 
+        .form-group select,
         .form-group textarea {
             width: 100%;
             padding: 0.8rem 1rem;
@@ -216,6 +218,7 @@
         }
 
         .form-group input:focus, 
+        .form-group select:focus,
         .form-group textarea:focus {
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
@@ -266,7 +269,7 @@
         }
 
         /* ==========================================
-           6. بطاقات عرض القصص (Story Cards)
+           6. بطاقات عرض القصص وملفات الأجزاء
            ================================---------- */
         .story-card {
             background-color: var(--bg-card);
@@ -322,6 +325,64 @@
         }
         .btn-delete:hover {
             background-color: #dc2626;
+        }
+
+        /* أزرار أجزاء القصة المجمعة في ملف واحد */
+        .story-bundle-box {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .bundle-title {
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+        }
+
+        .parts-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .part-btn {
+            background: var(--bg-input);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .part-btn:hover, .part-btn.active {
+            background: var(--accent-color);
+            color: #fff;
+            border-color: var(--accent-color);
+        }
+
+        .read-all-btn {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 12px;
+            display: inline-block;
+        }
+        .read-all-btn:hover {
+            background: var(--accent-color);
+            color: #fff;
         }
 
         /* ==========================================
@@ -557,7 +618,7 @@
 
     <!-- الهيدر العلوي -->
     <header>
-        <h1>منصة حكاية</h1>
+        <h1 onclick="renderStories()">منصة حكاية</h1>
         <div class="header-actions">
             <button class="btn-auth" id="themeToggle" title="تغيير المظهر">🌙 المظهر</button>
             <div id="authBox">
@@ -576,10 +637,20 @@
                     <h2 class="section-title">انشر قصتك</h2>
                     <form id="storyForm">
                         <div class="form-group">
-                            <input type="text" id="storyTitle" placeholder="عنوان القصة أو الجزء" required>
+                            <input type="text" id="storyTitle" placeholder="عنوان القصة أو الجزء (مثال: رحلة غارلون)" required>
                         </div>
                         <div class="form-group">
                             <input type="text" id="authorName" placeholder="اسم الكاتب" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="storyPartNumber">
+                                <option value="الجزء الأول">الجزء الأول</option>
+                                <option value="الجزء الثاني">الجزء الثاني</option>
+                                <option value="الجزء الثالث">الجزء الثالث</option>
+                                <option value="الجزء الرابع">الجزء الرابع</option>
+                                <option value="الجزء الخامس">الجزء الخامس</option>
+                                <option value="قصة مستقلة">قصة مستقلة / كاملة</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <textarea id="storyContent" placeholder="اكتب نص القصة أو الجزء هنا..." required></textarea>
@@ -600,10 +671,10 @@
                 </div>
             </aside>
 
-            <!-- قسم عرض أحدث القصص -->
+            <!-- قسم عرض أحدث القصص والأجزاء المجمعة -->
             <main>
                 <h2 class="section-title">
-                    أحدث القصص والأجزاء المنشورة
+                    أحدث القصص والروايات المنشورة
                     <button class="btn-auth" onclick="renderStories()" style="font-size: 0.8rem; padding: 4px 10px;">عرض الكل</button>
                 </h2>
                 <div id="stories-container"></div>
@@ -841,25 +912,27 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
 
-        // إدارة نظام نشر وعرض القصص والأجزاء
+        // إدارة نظام نشر وعرض القصص والأجزاء المجمعة
         const storiesContainer = document.getElementById("stories-container");
-        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v9")) || [
+        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v10")) || [
             { 
                 id: 1, 
-                title: "رحلة غارلون - الجزء الأول", 
+                title: "رحلة غارلون", 
+                part: "الجزء الأول",
                 author: "غارلون", 
                 userId: "default_author",
                 content: "في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم توتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني جاء رجلان من قرية قريبة من تلك الغابة، وكانوا يريدون جمع فطر عش الغراب، فجاء رجل القرية ورأى منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: \"هذا رائع! يمكننا بيعه في القرية\". فاستغرب منه رجل القرية وقال: \"لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟\", فقال له زميله: \"إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها\". فقال رجل القرية: \"من قتل النمر؟\", فقال له زميله: \"إنه سياف مشهور يدعى غارلون\". انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما." 
             },
             {
                 id: 2,
-                title: "رحلة غارلون - الجزء الثاني",
+                title: "رحلة غارلون",
+                part: "الجزء الثاني",
                 author: "غارلون",
                 userId: "default_author",
-                content: "بعد أن مشى الرجلان اللذان من القرية، قضيا 4 ساعات للوصول إلى كوراساوا؛ فكان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. لكن أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص فضولاً منه، وإذ بالصدمة تملأ وجهه؛ إذ من كان أمامه هو السياف غارلون، الذي كان يتدرب في الغابة. فلمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له أن يهدأ: \"لأنني لن أؤذيك\". فهمه غارلون وهدأ، وقرر أن يتركه.\n\nولكن قبل أن يتركه، سمع غارلون صوت شيء ما خلف رجل القرية، وركض خلفه ورأى أن سيافاً آخر قتل زميل رجل القرية! فحزن عليه زميله كثيراً. لكن السياف غارلون انقض على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملحوظ.\n\nوأثناء قتالهما، ذهب الرجل إلى زميله الذي كان يحتضر وقال له: \"أين أصبت؟\", فقال له بصوت مليء بالألم: \"أصابني في بطني\". فقال له زميله: \"أين بالضبط؟\", فقال له الرجل من القرية بصوت متألم: \"لا أعرف\". فحاول زميله أن يعالجه لكنه فشل. وقال له الرجل من القرية: \"هذه نهايتي، لا تتعب نفسك، اذهب مع غارلون فهو سيحميك بدلا مني، فالقرية بعيدة جداً ولن تستطيع الوصول أبداً. أريد أن أقول شيئاً كنت أود قوله في مماتي\", فقال له زميله: \"ما هو؟\", فقال له الرجل: \"ليت الواقع حلم، وليت مماتي لم يكن واقعاً\", وتوفى الرجل.\n\nفبكى عليه زميله، لكن عندما نظر إلى غارلون كان مندهشاً مما رآه."
+                content: "بعد أن مشى الرجلان اللذان من القرية، قضيا 4 ساعات للوصول إلى كوراساوا؛ فكان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. لكن أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص فضولاً منه، وإذ بالصدمة تملأ وجهه؛ إذ من كان أمامه هو السياف غارلون، الذي كان يتدرب في الغابة. فلمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له أن يهدأ: \"لأنني لن أؤذيك\". فهمه غارلون وهدأ، وقرر أن يتركه.\n\nولكن قبل أن يتركه، سمع غارلون صوت شيء ما خلف رجل القرية، وركض خلفه ورأى أن سيافاً آخر قتل زميل رجل القرية! فحزن عليه زميله كثيراً. لكن السياف غارلون انقض على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملاحظ.\n\nوأثناء قتالهما، ذهب الرجل إلى زميله الذي كان يحتضر وقال له: \"أين أصبت؟\", فقال له بصوت مليء بالألم: \"أصابني في بطني\". فقال له زميله: \"أين بالضبط؟\", فقال له الرجل من القرية بصوت متألم: \"لا أعرف\". فحاول زميله أن يعالجه لكنه فشل. وقال له الرجل من القرية: \"هذه نهايتي، لا تتعب نفسك، اذهب مع غارلون فهو سيحميك بدلا مني، فالقرية بعيدة جداً ولن تستطيع الوصول أبداً. أريد أن أقول شيئاً كنت أود قوله في مماتي\", فقال له زميله: \"ما هو؟\", فقال له الرجل: \"ليت الواقع حلم، وليت مماتي لم يكن واقعاً\", وتوفى الرجل.\n\nفبكى عليه زميله، لكن عندما نظر إلى غارلون كان مندهشاً مما رآه."
             }
         ];
-        localStorage.setItem("hikaya_stories_v9", JSON.stringify(stories));
+        localStorage.setItem("hikaya_stories_v10", JSON.stringify(stories));
 
         function renderStories(filterAuthor = null) {
             storiesContainer.innerHTML = "";
@@ -873,53 +946,141 @@
                 return;
             }
 
+            // تجميع القصص حسب العنوان الرئيسي (لتجميع الأجزاء في ملف واحد)
+            const groupedStories = {};
             displayList.forEach(story => {
-                const article = document.createElement("article");
-                article.className = "story-card";
-                
-                let deleteBtnHtml = "";
-                if (currentUser && story.userId && currentUser.uid === story.userId) {
-                    deleteBtnHtml = `<button class="btn-delete" onclick="deleteStory(${story.id})">إزالة القصة</button>`;
+                const mainTitle = story.title.trim();
+                if (!groupedStories[mainTitle]) {
+                    groupedStories[mainTitle] = [];
                 }
+                groupedStories[mainTitle].push(story);
+            });
 
-                article.innerHTML = `
-                    ${deleteBtnHtml}
-                    <h3>${story.title}</h3>
-                    <span class="story-author" style="cursor:pointer;" onclick="filterByAuthor('${story.author}')">الكاتب: ${story.author} 📁</span>
-                    <div class="story-text">${story.content}</div>
+            // رسم كل قصة وملف أجزائها
+            Object.keys(groupedStories).forEach(mainTitle => {
+                const parts = groupedStories[mainTitle];
+                const author = parts[0].author;
+                const bundleBox = document.createElement("div");
+                bundleBox.className = "story-bundle-box";
+
+                let partsButtonsHtml = '';
+                parts.forEach((p, index) => {
+                    partsButtonsHtml += `<button class="part-btn" onclick="openStoryPart('${encodeURIComponent(mainTitle)}', ${index})">📖 ${p.part || ('الجزء ' + (index+1))}</button>`;
+                });
+
+                bundleBox.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <h3 class="bundle-title">${mainTitle}</h3>
+                            <span class="story-author">الكاتب: ${author}</span>
+                        </div>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom: 10px;">تحتوي هذه القصة على ${parts.length} جزء/أجزاء منشورة. اختر الجزء للقراءة أو تصفح الملف الكامل:</p>
+                    <div class="parts-btn-group">
+                        ${partsButtonsHtml}
+                    </div>
+                    <div>
+                        <button class="read-all-btn" onclick="openFullStoryFile('${encodeURIComponent(mainTitle)}')">📂 فتح ملف القصة كاملاً (جميع الأجزاء بمكان واحد)</button>
+                    </div>
                 `;
-                storiesContainer.appendChild(article);
+                storiesContainer.appendChild(bundleBox);
             });
         }
         renderStories();
 
+        // عرض جزء محدد من القصة
+        function openStoryPart(encodedTitle, partIndex) {
+            const title = decodeURIComponent(encodedTitle);
+            const matchingParts = stories.filter(s => s.title.trim() === title);
+            const targetStory = matchingParts[partIndex];
+            if (!targetStory) return;
+
+            storiesContainer.innerHTML = "";
+            const article = document.createElement("article");
+            article.className = "story-card";
+            
+            let deleteBtnHtml = "";
+            if (currentUser && targetStory.userId && currentUser.uid === targetStory.userId) {
+                deleteBtnHtml = `<button class="btn-delete" onclick="deleteStory(${targetStory.id})">إزالة هذا الجزء</button>`;
+            }
+
+            let partsNavHtml = '<div class="parts-btn-group" style="margin-bottom:20px;">';
+            matchingParts.forEach((p, idx) => {
+                const activeClass = idx === partIndex ? 'active' : '';
+                partsNavHtml += `<button class="part-btn ${activeClass}" onclick="openStoryPart('${encodedTitle}', ${idx})">📖 ${p.part || ('الجزء ' + (idx+1))}</button>`;
+            });
+            partsNavHtml += '</div>';
+
+            article.innerHTML = `
+                ${deleteBtnHtml}
+                <button class="btn-auth" onclick="renderStories()" style="margin-bottom:12px; font-size:0.8rem; padding:4px 10px;">⬅ العودة لقائمة القصص</button>
+                <h3>${targetStory.title} - ${targetStory.part || ''}</h3>
+                <span class="story-author">الكاتب: ${targetStory.author}</span>
+                ${partsNavHtml}
+                <div class="story-text">${targetStory.content}</div>
+            `;
+            storiesContainer.appendChild(article);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // عرض ملف القصة كاملاً مدمجاً في صفحة واحدة
+        function openFullStoryFile(encodedTitle) {
+            const title = decodeURIComponent(encodedTitle);
+            const matchingParts = stories.filter(s => s.title.trim() === title);
+            if (matchingParts.length === 0) return;
+
+            storiesContainer.innerHTML = "";
+            const article = document.createElement("article");
+            article.className = "story-card";
+
+            let combinedContentHtml = '';
+            matchingParts.forEach((p, idx) => {
+                combinedContentHtml += `<div style="margin-bottom:30px; border-bottom:1px dashed var(--border-color); padding-bottom:20px;">
+                    <h4 style="color:var(--accent-color); margin-bottom:10px; font-size:1.2rem;">📑 ${p.part || ('الجزء ' + (idx+1))}</h4>
+                    <div class="story-text">${p.content}</div>
+                </div>`;
+            });
+
+            article.innerHTML = `
+                <button class="btn-auth" onclick="renderStories()" style="margin-bottom:12px; font-size:0.8rem; padding:4px 10px;">⬅ العودة لقائمة القصص</button>
+                <h3>📂 ملف القصة الكامل: ${title}</h3>
+                <span class="story-author">الكاتب: ${matchingParts[0].author}</span>
+                <div style="margin-top:20px;">${combinedContentHtml}</div>
+            `;
+            storiesContainer.appendChild(article);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function deleteStory(id) {
-            if(confirm("هل أنت متأكد من رغبتك في إزالة هذه القصة أو الجزء؟")) {
+            if(confirm("هل أنت متأكد من رغبتك في إزالة هذا الجزء؟")) {
                 stories = stories.filter(s => s.id !== id);
-                localStorage.setItem("hikaya_stories_v9", JSON.stringify(stories));
+                localStorage.setItem("hikaya_stories_v10", JSON.stringify(stories));
                 renderStories();
                 document.getElementById('folderSearchInput').dispatchEvent(new Event('input'));
             }
         }
 
+        // نشر قصة جديدة مع اختيار الجزء (أول، ثاني، إلخ)
         document.getElementById("storyForm").onsubmit = (e) => {
             e.preventDefault();
             const title = document.getElementById("storyTitle").value.trim();
             const author = document.getElementById("authorName").value.trim();
+            const part = document.getElementById("storyPartNumber").value;
             const content = document.getElementById("storyContent").value.trim();
             if (!title || !author || !content) return;
 
             const newStory = { 
                 id: Date.now(), 
                 title, 
+                part,
                 author, 
                 content,
                 userId: currentUser ? currentUser.uid : "guest_user"
             };
             stories.unshift(newStory);
-            localStorage.setItem("hikaya_stories_v9", JSON.stringify(stories));
+            localStorage.setItem("hikaya_stories_v10", JSON.stringify(stories));
             renderStories();
-            document.getElementById("storyForm").reset();
+            document.getElementById("storyContent").value = "";
             if(currentUser) {
                 document.getElementById('authorName').value = currentUser.displayName;
             }
@@ -940,20 +1101,13 @@
             authorStories.forEach(s => {
                 const div = document.createElement('div');
                 div.className = 'folder-item';
-                div.textContent = `📖 ${s.title}`;
+                div.textContent = `📖 ${s.title} (${s.part})`;
                 div.onclick = () => {
-                    renderStories();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    openStoryPart(encodeURIComponent(s.title), authorStories.indexOf(s));
                 };
                 authorFolderList.appendChild(div);
             });
         };
-
-        function filterByAuthor(authorName) {
-            document.getElementById('folderSearchInput').value = authorName;
-            document.getElementById('folderSearchInput').dispatchEvent(new Event('input'));
-            renderStories(authorName);
-        }
     </script>
 </body>
 </html>
