@@ -11,9 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* ==========================================
-           1. متغيرات التصميم ونظام الألوان (Variables)
-           ================================---------- */
         :root {
             --bg-main: #0f172a;
             --bg-card: #1e293b;
@@ -31,6 +28,7 @@
             --wa-bubble-them: #202c33;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
+            --story-font-size: 1.1rem;
         }
 
         [data-theme="light"] {
@@ -50,9 +48,6 @@
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
 
-        /* ==========================================
-           2. التنسيقات الأساسية وإعادة الضبط (Reset)
-           ================================---------- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -71,9 +66,23 @@
             flex-direction: column;
         }
 
-        /* ==========================================
-           3. شريط التنقل العلوي (Header)
-           ================================---------- */
+        /* شريط تقدم القراءة العلوي */
+        .reading-progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1000;
+        }
+        .reading-progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
         header {
             background-color: var(--bg-card);
             padding: 1rem 2rem;
@@ -91,7 +100,6 @@
             color: var(--accent-color);
             font-size: 1.5rem;
             font-weight: 900;
-            letter-spacing: -0.5px;
             cursor: pointer;
         }
 
@@ -132,9 +140,6 @@
             background-color: #dc2626;
         }
 
-        /* ==========================================
-           4. الهيكل الرئيسي للصفحة (Grid & Layout)
-           ================================---------- */
         .container {
             max-width: 1440px;
             margin: 2rem auto;
@@ -188,9 +193,6 @@
             align-items: center;
         }
 
-        /* ==========================================
-           5. صندوق النشر ومجلد الكاتب
-           ================================---------- */
         .publish-box, .author-folder-box {
             background-color: var(--bg-card);
             padding: 1.4rem;
@@ -268,9 +270,6 @@
             border-color: var(--accent-color);
         }
 
-        /* ==========================================
-           6. بطاقات عرض القصص وملفات الأجزاء
-           ================================---------- */
         .story-card {
             background-color: var(--bg-card);
             border-radius: 16px;
@@ -301,13 +300,39 @@
         }
 
         .story-text {
-            font-size: 1.1rem;
+            font-size: var(--story-font-size);
             line-height: 2.2;
             color: var(--text-muted);
             white-space: pre-wrap;
             word-break: break-word;
             overflow-wrap: break-word;
             width: 100%;
+        }
+
+        .reading-toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            background: var(--bg-input);
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tool-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .tool-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
         }
 
         .btn-delete {
@@ -327,7 +352,6 @@
             background-color: #dc2626;
         }
 
-        /* أزرار أجزاء القصة المجمعة في ملف واحد */
         .story-bundle-box {
             background: var(--bg-card);
             border-radius: 16px;
@@ -385,9 +409,6 @@
             color: #fff;
         }
 
-        /* ==========================================
-           7. نظام المحادثات الفورية (WhatsApp Style Chat)
-           ================================---------- */
         .chat-float-btn {
             position: fixed;
             bottom: 30px;
@@ -616,6 +637,11 @@
 </head>
 <body>
 
+    <!-- شريط التقدم العلوي -->
+    <div class="reading-progress-container">
+        <div class="reading-progress-bar" id="readingProgressBar"></div>
+    </div>
+
     <!-- الهيدر العلوي -->
     <header>
         <h1 onclick="renderStories()">منصة حكاية</h1>
@@ -631,7 +657,7 @@
     <div class="container">
         <div class="main-layout">
             
-            <!-- لوحة التحكم الجانبية (نشر + مجلد أعمال الكاتب) -->
+            <!-- لوحة التحكم الجانبية -->
             <aside>
                 <div class="publish-box">
                     <h2 class="section-title">انشر قصتك</h2>
@@ -659,7 +685,7 @@
                     </form>
                 </div>
 
-                <!-- مجلد أعمال وأجزاء الكاتب -->
+                <!-- مجلد أعمال الأجزاء -->
                 <div class="author-folder-box">
                     <h2 class="section-title" style="font-size: 1.05rem;">📁 مجلد أجزاء الكاتب</h2>
                     <div class="form-group" style="margin-bottom: 6px;">
@@ -671,11 +697,14 @@
                 </div>
             </aside>
 
-            <!-- قسم عرض أحدث القصص والأجزاء المجمعة -->
+            <!-- قسم عرض أحدث القصص -->
             <main>
                 <h2 class="section-title">
                     أحدث القصص والروايات المنشورة
-                    <button class="btn-auth" onclick="renderStories()" style="font-size: 0.8rem; padding: 4px 10px;">عرض الكل</button>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="globalSearchInput" placeholder="🔍 ابحث في القصص..." style="padding: 4px 10px; font-size: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); outline: none;">
+                        <button class="btn-auth" onclick="renderStories()" style="font-size: 0.8rem; padding: 4px 10px;">عرض الكل</button>
+                    </div>
                 </h2>
                 <div id="stories-container"></div>
             </main>
@@ -686,7 +715,7 @@
     <!-- زر المحادثات العائم -->
     <button class="chat-float-btn" id="chatFloatBtn" title="المحادثات والأصدقاء">💬</button>
 
-    <!-- نافذة الدردشة والرسائل -->
+    <!-- نافذة الدردشة -->
     <div class="chat-modal" id="chatModal">
         <div class="modal-header">
             <h3>💬 المحادثات والأصدقاء</h3>
@@ -718,14 +747,12 @@
         </div>
     </div>
 
-    <!-- مكتبات فايربيس (Firebase SDKs النسخة المتوافقة) -->
+    <!-- مكتبات فايربيس -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-    <!-- سكريبت البرمجة وإدارة المنصة بالكامل -->
     <script>
-        // --- نظام إعلانات Monetag (فتح الإعلان بعد كل 10 نقرات) ---
         let clickCount = 0;
         const adUrl = "https://omg10.com/4/11651127";
 
@@ -737,7 +764,6 @@
             }
         });
 
-        // إعدادات مشروع فايربيس الخاص بك
         const firebaseConfig = {
           apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
           authDomain: "hikaya-5ff25.firebaseapp.com",
@@ -749,14 +775,12 @@
           measurementId: "G-KR76L2WSZ7"
         };
 
-        // تهيئة فايربيس
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
 
         let currentUser = null, selectedUser = null, currentChatId = null, allUsersData = [];
 
-        // إدارة المصادقة وتسجيل الدخول بحساب جوجل
         function handleLogin() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).catch(err => alert(err.message));
@@ -788,13 +812,11 @@
             }
         });
 
-        // نافذة المحادثات المنبثقة
         const chatModal = document.getElementById('chatModal');
         document.getElementById('chatFloatBtn').onclick = () => chatModal.classList.toggle('open');
         function toggleChatModal() { chatModal.classList.remove('open'); }
         function closeActiveChat() { document.getElementById('activeChat').classList.remove('open'); }
 
-        // تحميل قائمة المستخدمين
         function loadUsers() {
             database.ref('users').on('value', snapshot => {
                 allUsersData = [];
@@ -837,7 +859,6 @@
             renderUsersList(allUsersData.filter(u => u.name.toLowerCase().includes(q)));
         };
 
-        // جلب الرسائل الفورية
         function loadMessages() {
             database.ref('private_chats/' + currentChatId).on('value', snapshot => {
                 const area = document.getElementById('messagesArea');
@@ -859,7 +880,6 @@
             });
         }
 
-        // إرسال رسالة نصية
         document.getElementById('chatForm').onsubmit = (e) => {
             e.preventDefault();
             const text = document.getElementById('msgInput').value.trim();
@@ -873,7 +893,6 @@
             document.getElementById('msgInput').value = '';
         };
 
-        // إرسال صورة في الدردشة
         document.getElementById('imageInput').onchange = (e) => {
             const file = e.target.files[0];
             if (!file || !currentChatId) return;
@@ -889,7 +908,6 @@
             reader.readAsDataURL(file);
         };
 
-        // إنشاء رابط مكالمة فيديو فورية
         function startRealCallLink() {
             if (!selectedUser || !currentChatId) return;
             const callUrl = `https://meet.jit.si/HikayaCall-${Math.random().toString(36).substring(2, 9)}`;
@@ -902,7 +920,6 @@
             window.open(callUrl, '_blank');
         }
 
-        // تبديل المظهر (ليلي / نهاري)
         document.getElementById("themeToggle").onclick = () => {
             const isLight = document.documentElement.getAttribute("data-theme") === "light";
             document.documentElement.setAttribute("data-theme", isLight ? "" : "light");
@@ -912,16 +929,31 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
 
-        // إدارة نظام نشر وعرض القصص والأجزاء المجمعة
+        // أداة تغيير حجم الخط
+        let currentFontSize = 1.1;
+        function changeFontSize(delta) {
+            currentFontSize = Math.min(Math.max(currentFontSize + delta, 0.9), 1.6);
+            document.documentElement.style.setProperty('--story-font-size', currentFontSize + 'rem');
+        }
+
+        // شريط التقدم أثناء القراءة
+        window.onscroll = function() {
+            let winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            const bar = document.getElementById("readingProgressBar");
+            if(bar) bar.style.width = scrolled + "%";
+        };
+
         const storiesContainer = document.getElementById("stories-container");
-        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v11")) || [
+        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v12")) || [
             { 
                 id: 1, 
                 title: "رحلة غارلون", 
                 part: "الجزء الأول",
                 author: "غارلون", 
                 userId: "default_author",
-                content: "في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني، جاء رجلان من قرية قريبة من تلك الغابة، وكانا يريدان جمع فطر عش الغراب، فرأى رجل القرية منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: \"هذا رائع! يمكننا بيعه في القرية\". فاستغرب منه رجل القرية وقال: \"لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟\", فقال له زميله: \"إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها\". فقال رجل القرية: \"من قتل النمر؟\", فقال له زميله: \"إنه سياف مشهور يدعى غارلون\". انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما." 
+                content: "في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني، جاء رجلان من قرية قريبة من تلك الغابة، وكانا يريدان جمع فطر عش الغراب، فرأى رجل القرية منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: \"هذا رائع! يمكننا بيعه في القرية\". فاستغرب منه رجل القرية وقال: \"لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟\", فقال له زميله: \"إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها\". فقال رجل القرية: \"من قتل النمر؟\", فقال له زميله: \"إنه سياف مشهور يدعى غارلون\". انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطقا في رحلتهما." 
             },
             {
                 id: 2,
@@ -937,24 +969,24 @@
                 part: "الجزء الثالث",
                 author: "غارلون",
                 userId: "default_author",
-                content: "بعد أن رآى رجل القرية ما رآه، وأن غارلون قد قتل السياف الآخر بمهارة متقنة، فجاء غارلون إليه بخطوات هادئة وقال له بصوت هادئ: \"هل أنت بخير؟\". قال له الرجل: \"نعم، لكن زميلي توفي، وقال لي أن أذهب معك\". فقال له غارلون: \"حسناً، ولكن هل يمكنك أن تشارك معي في رحلتي؟\". فقال له رجل القرية: \"نعم بكل سرور\".\n\nفمشى غارلون مع رجل القرية، وقال له غارلون: \"عرفني عن نفسك\". فقال له رجل القرية: \"اسمي هو محمد، وأنا من قرية هيوكامارا التي تبعد عن هنا بمسافة 7 كيلومترات\". فقال له غارلون إنه من مدينة ميكارليس وهي مدينة بعيدة جداً.\n\nفقال محمد لغارلون: \"ما هو هدفك الذي تسعى إليه؟\". فقال له غارلون: \"أريد أن اجمع المال، وأنا أسعى لتسديد ديوني\". فقال له محمد: \"لماذا أنت مديون؟\". فقال له غارلون: \"لأنه في الماضي كان والدي يلعب القمار، وكان يستسلف النقود من العصابات، وعندما لم يسدد والدي الديون، قتل رجال العصابة والدي، وأصبحت الديون على عاتقي وقدر هذا الدين هو 500 مليون ين!\".\n\nانصدم محمد من الرقم، وقال له بصوت مهزوز من الصدمة: \"إلى أين سنذهب يا غارلون؟\". فقال له غارلون: \"سنذهب إلى رجال العصابة للانتقام منهم\"."
+                content: "بعد أن رأى رجل القرية ما رآه، وأن غارلون قد قتل السياف الآخر بمهارة متقنة، فجاء غارلون إليه بخطوات هادئة وقال له بصوت هادئ: \"هل أنت بخير؟\". قال له الرجل: \"نعم، لكن زميلي توفي، وقال لي أن أذهب معك\". فقال له غارلون: \"حسناً، ولكن هل يمكنك أن تشارك معي في رحلتي؟\". فقال له رجل القرية: \"نعم بكل سرور\".\n\nفمشى غارلون مع رجل القرية، وقال له غارلون: \"عرفني عن نفسك\". فقال له رجل القرية: \"اسمي هو محمد، وأنا من قرية هيوكامارا التي تبعد عن هنا بمسافة 7 كيلومترات\". فقال له غارلون إنه من مدينة ميكارليس وهي مدينة بعيدة جداً.\n\nفقال محمد لغارلون: \"ما هو هدفك الذي تسعى إليه؟\". فقال له غارلون: \"أريد أن أجمع المال، وأنا أسعى لتسديد ديوني\". فقال له محمد: \"لماذا أنت مديون؟\". فقال له غارلون: \"لأنه في الماضي كان والدي يلعب القمار، وكان يستسلف النقود من العصابات، وعندما لم يسدد والدي الديون، قتل رجال العصابة والدي، وأصبحت الديون على عاتقي وقدر هذا الدين هو 500 مليون ين!\".\n\nانصدم محمد من الرقم، وقال له بصوت مهزوز من الصدمة: \"إلى أين سنذهب يا غارلون؟\". فقال له غارلون: \"سنذهب إلى رجال العصابة للانتقام منهم\"."
             }
         ];
-        localStorage.setItem("hikaya_stories_v11", JSON.stringify(stories));
+        localStorage.setItem("hikaya_stories_v12", JSON.stringify(stories));
 
-        function renderStories(filterAuthor = null) {
+        function renderStories(filterText = null) {
             storiesContainer.innerHTML = "";
             let displayList = stories;
-            if(filterAuthor) {
-                displayList = stories.filter(s => s.author.toLowerCase().includes(filterAuthor.toLowerCase()));
+            if(filterText) {
+                const q = filterText.toLowerCase();
+                displayList = stories.filter(s => s.author.toLowerCase().includes(q) || s.title.toLowerCase().includes(q) || s.content.toLowerCase().includes(q));
             }
 
             if(displayList.length === 0) {
-                storiesContainer.innerHTML = '<div style="background:var(--bg-card); padding:2rem; border-radius:16px; text-align:center; color:var(--text-muted);">لا توجد قصص أو أجزاء مطابقة حالياً.</div>';
+                storiesContainer.innerHTML = '<div style="background:var(--bg-card); padding:2rem; border-radius:16px; text-align:center; color:var(--text-muted);">لا توجد قصص أو نتائج مطابقة للبحث حالياً.</div>';
                 return;
             }
 
-            // تجميع القصص حسب العنوان الرئيسي (لتجميع الأجزاء في ملف واحد)
             const groupedStories = {};
             displayList.forEach(story => {
                 const mainTitle = story.title.trim();
@@ -964,7 +996,6 @@
                 groupedStories[mainTitle].push(story);
             });
 
-            // رسم كل قصة وملف أجزائها
             Object.keys(groupedStories).forEach(mainTitle => {
                 const parts = groupedStories[mainTitle];
                 const author = parts[0].author;
@@ -996,7 +1027,10 @@
         }
         renderStories();
 
-        // عرض جزء محدد من القصة
+        document.getElementById('globalSearchInput').oninput = (e) => {
+            renderStories(e.target.value.trim());
+        };
+
         function openStoryPart(encodedTitle, partIndex) {
             const title = decodeURIComponent(encodedTitle);
             const matchingParts = stories.filter(s => s.title.trim() === title);
@@ -1024,6 +1058,14 @@
                 <button class="btn-auth" onclick="renderStories()" style="margin-bottom:12px; font-size:0.8rem; padding:4px 10px;">⬅ العودة لقائمة القصص</button>
                 <h3>${targetStory.title} - ${targetStory.part || ''}</h3>
                 <span class="story-author">الكاتب: ${targetStory.author}</span>
+                
+                <!-- شريط أداة القراءة وتحكم الخط -->
+                <div class="reading-toolbar">
+                    <span style="font-size:0.85rem; color:var(--text-muted);">تحكم بحجم الخط:</span>
+                    <button class="tool-btn" onclick="changeFontSize(0.1)">➕ تكبير</button>
+                    <button class="tool-btn" onclick="changeFontSize(-0.1)">➖ تصغير</button>
+                </div>
+
                 ${partsNavHtml}
                 <div class="story-text">${targetStory.content}</div>
             `;
@@ -1031,7 +1073,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // عرض ملف القصة كاملاً مدمجاً في صفحة واحدة
         function openFullStoryFile(encodedTitle) {
             const title = decodeURIComponent(encodedTitle);
             const matchingParts = stories.filter(s => s.title.trim() === title);
@@ -1053,6 +1094,13 @@
                 <button class="btn-auth" onclick="renderStories()" style="margin-bottom:12px; font-size:0.8rem; padding:4px 10px;">⬅ العودة لقائمة القصص</button>
                 <h3>📂 ملف القصة الكامل: ${title}</h3>
                 <span class="story-author">الكاتب: ${matchingParts[0].author}</span>
+                
+                <div class="reading-toolbar">
+                    <span style="font-size:0.85rem; color:var(--text-muted);">تحكم بحجم الخط:</span>
+                    <button class="tool-btn" onclick="changeFontSize(0.1)">➕ تكبير</button>
+                    <button class="tool-btn" onclick="changeFontSize(-0.1)">➖ تصغير</button>
+                </div>
+
                 <div style="margin-top:20px;">${combinedContentHtml}</div>
             `;
             storiesContainer.appendChild(article);
@@ -1062,13 +1110,11 @@
         function deleteStory(id) {
             if(confirm("هل أنت متأكد من رغبتك في إزالة هذا الجزء؟")) {
                 stories = stories.filter(s => s.id !== id);
-                localStorage.setItem("hikaya_stories_v11", JSON.stringify(stories));
+                localStorage.setItem("hikaya_stories_v12", JSON.stringify(stories));
                 renderStories();
-                document.getElementById('folderSearchInput').dispatchEvent(new Event('input'));
             }
         }
 
-        // نشر قصة جديدة مع اختيار الجزء
         document.getElementById("storyForm").onsubmit = (e) => {
             e.preventDefault();
             const title = document.getElementById("storyTitle").value.trim();
@@ -1086,7 +1132,7 @@
                 userId: currentUser ? currentUser.uid : "guest_user"
             };
             stories.unshift(newStory);
-            localStorage.setItem("hikaya_stories_v11", JSON.stringify(stories));
+            localStorage.setItem("hikaya_stories_v12", JSON.stringify(stories));
             renderStories();
             document.getElementById("storyContent").value = "";
             if(currentUser) {
