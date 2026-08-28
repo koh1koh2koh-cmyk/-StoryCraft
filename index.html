@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
     
-    <!-- خطوط جوجل العربية -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -66,7 +65,6 @@
             flex-direction: column;
         }
 
-        /* شريط تقدم القراءة العلوي */
         .reading-progress-container {
             position: fixed;
             top: 0;
@@ -193,7 +191,7 @@
             align-items: center;
         }
 
-        .publish-box, .author-folder-box, .analytics-box {
+        .publish-box, .author-folder-box, .resume-reading-box {
             background-color: var(--bg-card);
             padding: 1.4rem;
             border-radius: 16px;
@@ -202,30 +200,9 @@
             margin-bottom: 1.2rem;
         }
 
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .stat-card {
-            background: var(--bg-input);
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .stat-card .val {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--accent-color);
-        }
-
-        .stat-card .lbl {
-            font-size: 0.75rem;
-            color: var(--text-muted);
+        .resume-reading-box {
+            border-right: 4px solid var(--accent-color);
+            display: none;
         }
 
         .form-group {
@@ -314,15 +291,30 @@
             font-weight: 800;
         }
 
-        .story-author {
-            font-size: 0.9rem;
-            color: var(--accent-color);
+        .story-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
             margin-bottom: 1.2rem;
-            display: inline-block;
+            flex-wrap: wrap;
+        }
+
+        .story-author {
+            font-size: 0.88rem;
+            color: var(--accent-color);
             font-weight: 700;
             background: rgba(245, 158, 11, 0.1);
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
+        }
+
+        .read-time-badge {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
         }
 
         .story-text {
@@ -432,6 +424,25 @@
         }
         .read-all-btn:hover {
             background: var(--accent-color);
+            color: #fff;
+        }
+
+        .like-btn {
+            background: var(--bg-input);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        .like-btn:hover {
+            background: #ef4444;
             color: #fff;
         }
 
@@ -663,12 +674,10 @@
 </head>
 <body>
 
-    <!-- شريط التقدم العلوي -->
     <div class="reading-progress-container">
         <div class="reading-progress-bar" id="readingProgressBar"></div>
     </div>
 
-    <!-- الهيدر العلوي -->
     <header>
         <h1 onclick="renderStories()">منصة حكاية</h1>
         <div class="header-actions">
@@ -679,33 +688,15 @@
         </div>
     </header>
 
-    <!-- المحتوى الرئيسي -->
     <div class="container">
         <div class="main-layout">
             
-            <!-- لوحة التحكم الجانبية -->
             <aside>
-                <!-- محرك تتبع الأداء والتحليلات -->
-                <div class="analytics-box">
-                    <h2 class="section-title" style="font-size: 1.05rem;">📊 تحليلات وتتبع المنصة</h2>
-                    <div class="analytics-grid">
-                        <div class="stat-card">
-                            <div class="val" id="statPageViews">0</div>
-                            <div class="lbl">زيارات الصفحات</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="val" id="statAdClicks">0</div>
-                            <div class="lbl">نقرات الإعلانات</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="val" id="statMaxScroll">0%</div>
-                            <div class="lbl">عمق التصفح</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="val" id="statTimeSpent">0s</div>
-                            <div class="lbl">وقت البقاء</div>
-                        </div>
-                    </div>
+                <!-- ميزة حقيقية 1: علامة استكمال القراءة من حيث توقفت -->
+                <div class="resume-reading-box" id="resumeReadingBox">
+                    <h2 class="section-title" style="font-size: 1.05rem;">🔖 متابعة القراءة</h2>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 10px;" id="resumeStoryText">توقفت عند قراءة: -</p>
+                    <button class="btn-primary" style="font-size:0.85rem; padding: 6px 12px;" id="resumeStoryBtn">الانتقال للفصل مباشرة</button>
                 </div>
 
                 <div class="publish-box">
@@ -734,7 +725,6 @@
                     </form>
                 </div>
 
-                <!-- مجلد أعمال الأجزاء -->
                 <div class="author-folder-box">
                     <h2 class="section-title" style="font-size: 1.05rem;">📁 مجلد أجزاء الكاتب</h2>
                     <div class="form-group" style="margin-bottom: 6px;">
@@ -746,7 +736,6 @@
                 </div>
             </aside>
 
-            <!-- قسم عرض أحدث القصص -->
             <main>
                 <h2 class="section-title">
                     أحدث القصص والروايات المنشورة
@@ -761,10 +750,8 @@
         </div>
     </div>
 
-    <!-- زر المحادثات العائم -->
     <button class="chat-float-btn" id="chatFloatBtn" title="المحادثات والأصدقاء">💬</button>
 
-    <!-- نافذة الدردشة -->
     <div class="chat-modal" id="chatModal">
         <div class="modal-header">
             <h3>💬 المحادثات والأصدقاء</h3>
@@ -802,85 +789,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <script>
-        // --- 1. محرك التتبع والتحليلات المتطور (Advanced Analytics Engine) ---
-        const Tracker = {
-            analytics: {
-                pageViews: parseInt(localStorage.getItem("track_pv") || "0"),
-                adClicks: parseInt(localStorage.getItem("track_ac") || "0"),
-                maxScrollDepth: 0,
-                startTime: Date.now()
-            },
-
-            init() {
-                this.analytics.pageViews++;
-                localStorage.setItem("track_pv", this.analytics.pageViews);
-                this.updateUI();
-
-                // تتبع الوقت
-                setInterval(() => {
-                    const timeSpentSeconds = Math.floor((Date.now() - this.analytics.startTime) / 1000);
-                    const el = document.getElementById("statTimeSpent");
-                    if (el) el.textContent = timeSpentSeconds + "s";
-                }, 1000);
-
-                // تتبع التمرير العميق (Scroll Depth)
-                window.addEventListener("scroll", () => {
-                    let winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-                    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                    if (height > 0) {
-                        let depth = Math.round((winScroll / height) * 100);
-                        if (depth > this.analytics.maxScrollDepth) {
-                            this.analytics.maxScrollDepth = depth;
-                            this.updateUI();
-                        }
-                    }
-                });
-            },
-
-            logAdClick() {
-                this.analytics.adClicks++;
-                localStorage.setItem("track_ac", this.analytics.adClicks);
-                this.updateUI();
-                this.syncWithFirebase("ad_click");
-            },
-
-            updateUI() {
-                const pvEl = document.getElementById("statPageViews");
-                const acEl = document.getElementById("statAdClicks");
-                const sdEl = document.getElementById("statMaxScroll");
-                
-                if (pvEl) pvEl.textContent = this.analytics.pageViews;
-                if (acEl) acEl.textContent = this.analytics.adClicks;
-                if (sdEl) sdEl.textContent = this.analytics.maxScrollDepth + "%";
-            },
-
-            syncWithFirebase(eventType) {
-                if (typeof database !== "undefined" && database) {
-                    database.ref("analytics_logs").push({
-                        event: eventType,
-                        timestamp: Date.now(),
-                        userAgent: navigator.userAgent
-                    });
-                }
-            }
-        };
-
-        // تشغيل التتبع
-        Tracker.init();
-
-        // تتبع نقرات الإعلانات والتوجيه
-        let clickCount = 0;
-        const adUrl = "https://omg10.com/4/11651127";
-
-        document.addEventListener("click", function(event) {
-            clickCount++;
-            if (clickCount >= 10) {
-                Tracker.logAdClick();
-                window.open(adUrl, '_blank');
-                clickCount = 0;
-            }
-        });
-
         const firebaseConfig = {
           apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
           authDomain: "hikaya-5ff25.firebaseapp.com",
@@ -895,6 +803,36 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
+
+        // --- نظام التتبع الخفي المباشر إلى فايربيس فقط (Hidden Analytics Engine) ---
+        const SilentTracker = {
+            logEvent(eventType, extraData = {}) {
+                if (database) {
+                    database.ref("analytics_events").push({
+                        event: eventType,
+                        data: extraData,
+                        timestamp: Date.now(),
+                        device: navigator.userAgent
+                    });
+                }
+            }
+        };
+
+        // تسجيل زيارة الصفحة سرياً
+        SilentTracker.logEvent("page_view");
+
+        // تتبع نقرات الإعلانات والتوجيه
+        let clickCount = 0;
+        const adUrl = "https://omg10.com/4/11651127";
+
+        document.addEventListener("click", function(event) {
+            clickCount++;
+            if (clickCount >= 10) {
+                SilentTracker.logEvent("ad_trigger_click", { count: clickCount });
+                window.open(adUrl, '_blank');
+                clickCount = 0;
+            }
+        });
 
         let currentUser = null, selectedUser = null, currentChatId = null, allUsersData = [];
 
@@ -927,6 +865,7 @@
                 document.getElementById('usersList').innerHTML = '<div style="padding:25px; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل مع المستخدمين 📞</div>';
                 renderStories();
             }
+            checkLastBookmark();
         });
 
         const chatModal = document.getElementById('chatModal');
@@ -1046,14 +985,12 @@
             document.documentElement.setAttribute("data-theme", "light");
         }
 
-        // أداة تغيير حجم الخط
         let currentFontSize = 1.1;
         function changeFontSize(delta) {
             currentFontSize = Math.min(Math.max(currentFontSize + delta, 0.9), 1.6);
             document.documentElement.style.setProperty('--story-font-size', currentFontSize + 'rem');
         }
 
-        // شريط التقدم أثناء القراءة
         window.onscroll = function() {
             let winScroll = document.documentElement.scrollTop || document.body.scrollTop;
             let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1090,6 +1027,33 @@
             }
         ];
         localStorage.setItem("hikaya_stories_v12", JSON.stringify(stories));
+
+        // ميزة حقيقية 2: حساب الوقت التقديري للقراءة
+        function calculateReadTime(text) {
+            const words = text.trim().split(/\s+/).length;
+            const minutes = Math.ceil(words / 150); // متوسط القراءة 150 كلمة بالدقيقة
+            return `${minutes} دقيقة قراءة (${words} كلمة)`;
+        }
+
+        // ميزة حقيقية 3: نظام حفظ علامات توقف القراءة (Auto-Bookmark)
+        function saveBookmark(storyTitle, partIndex) {
+            const bookmark = { title: storyTitle, partIndex: partIndex, timestamp: Date.now() };
+            localStorage.setItem("hikaya_bookmark", JSON.stringify(bookmark));
+            checkLastBookmark();
+        }
+
+        function checkLastBookmark() {
+            const saved = localStorage.getItem("hikaya_bookmark");
+            const box = document.getElementById("resumeReadingBox");
+            if (saved && box) {
+                const b = JSON.parse(saved);
+                document.getElementById("resumeStoryText").textContent = `توقفت عند: ${b.title} (${b.partIndex + 1})`;
+                document.getElementById("resumeStoryBtn").onclick = () => {
+                    openStoryPart(encodeURIComponent(b.title), b.partIndex);
+                };
+                box.style.display = "block";
+            }
+        }
 
         function renderStories(filterText = null) {
             storiesContainer.innerHTML = "";
@@ -1154,8 +1118,11 @@
             const targetStory = matchingParts[partIndex];
             if (!targetStory) return;
 
-            // تسجيل حدث قراءة فصل بالتحليلات
-            Tracker.syncWithFirebase("read_part_" + targetStory.id);
+            // حفظ إشارة التوقف تلقائياً
+            saveBookmark(title, partIndex);
+
+            // تتبع خفي للفايربيس
+            SilentTracker.logEvent("read_part", { storyId: targetStory.id, title: targetStory.title, part: targetStory.part });
 
             storiesContainer.innerHTML = "";
             const article = document.createElement("article");
@@ -1173,13 +1140,17 @@
             });
             partsNavHtml += '</div>';
 
+            const readTimeStr = calculateReadTime(targetStory.content);
+
             article.innerHTML = `
                 ${deleteBtnHtml}
                 <button class="btn-auth" onclick="renderStories()" style="margin-bottom:12px; font-size:0.8rem; padding:4px 10px;">⬅ العودة لقائمة القصص</button>
                 <h3>${targetStory.title} - ${targetStory.part || ''}</h3>
-                <span class="story-author">الكاتب: ${targetStory.author}</span>
+                <div class="story-meta">
+                    <span class="story-author">الكاتب: ${targetStory.author}</span>
+                    <span class="read-time-badge">⏱ ${readTimeStr}</span>
+                </div>
                 
-                <!-- شريط أداة القراءة وتحكم الخط -->
                 <div class="reading-toolbar">
                     <span style="font-size:0.85rem; color:var(--text-muted);">تحكم بحجم الخط:</span>
                     <button class="tool-btn" onclick="changeFontSize(0.1)">➕ تكبير</button>
@@ -1188,9 +1159,29 @@
 
                 ${partsNavHtml}
                 <div class="story-text">${targetStory.content}</div>
+                <div>
+                    <button class="like-btn" id="likeBtn_${targetStory.id}" onclick="toggleLike(${targetStory.id})">❤️ إعجاب (<span id="likeCount_${targetStory.id}">0</span>)</button>
+                </div>
             `;
             storiesContainer.appendChild(article);
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            loadLikes(targetStory.id);
+        }
+
+        // ميزة حقيقية 4: الإعجابات الحقيقية عبر فايربيس (Realtime Likes)
+        function toggleLike(storyId) {
+            const likeRef = database.ref(`story_likes/${storyId}`);
+            likeRef.transaction(currentLikes => {
+                return (currentLikes || 0) + 1;
+            });
+            SilentTracker.logEvent("like_story", { storyId });
+        }
+
+        function loadLikes(storyId) {
+            database.ref(`story_likes/${storyId}`).on('value', snapshot => {
+                const el = document.getElementById(`likeCount_${storyId}`);
+                if (el) el.textContent = snapshot.val() || 0;
+            });
         }
 
         function openFullStoryFile(encodedTitle) {
@@ -1198,7 +1189,7 @@
             const matchingParts = stories.filter(s => s.title.trim() === title);
             if (matchingParts.length === 0) return;
 
-            Tracker.syncWithFirebase("read_full_story_" + title);
+            SilentTracker.logEvent("read_full_story", { title });
 
             storiesContainer.innerHTML = "";
             const article = document.createElement("article");
@@ -1217,7 +1208,7 @@
                 <h3>📂 ملف القصة الكامل: ${title}</h3>
                 <span class="story-author">الكاتب: ${matchingParts[0].author}</span>
                 
-                <div class="reading-toolbar">
+                <div class="reading-toolbar" style="margin-top:15px;">
                     <span style="font-size:0.85rem; color:var(--text-muted);">تحكم بحجم الخط:</span>
                     <button class="tool-btn" onclick="changeFontSize(0.1)">➕ تكبير</button>
                     <button class="tool-btn" onclick="changeFontSize(-0.1)">➖ تصغير</button>
@@ -1260,6 +1251,7 @@
             if(currentUser) {
                 document.getElementById('authorName').value = currentUser.displayName;
             }
+            SilentTracker.logEvent("publish_story", { title, author });
         };
 
         const folderSearchInput = document.getElementById('folderSearchInput');
