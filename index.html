@@ -193,13 +193,39 @@
             align-items: center;
         }
 
-        .publish-box, .author-folder-box {
+        .publish-box, .author-folder-box, .analytics-box {
             background-color: var(--bg-card);
             padding: 1.4rem;
             border-radius: 16px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
             margin-bottom: 1.2rem;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stat-card {
+            background: var(--bg-input);
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-card .val {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+
+        .stat-card .lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
 
         .form-group {
@@ -659,6 +685,29 @@
             
             <!-- لوحة التحكم الجانبية -->
             <aside>
+                <!-- محرك تتبع الأداء والتحليلات -->
+                <div class="analytics-box">
+                    <h2 class="section-title" style="font-size: 1.05rem;">📊 تحليلات وتتبع المنصة</h2>
+                    <div class="analytics-grid">
+                        <div class="stat-card">
+                            <div class="val" id="statPageViews">0</div>
+                            <div class="lbl">زيارات الصفحات</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="val" id="statAdClicks">0</div>
+                            <div class="lbl">نقرات الإعلانات</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="val" id="statMaxScroll">0%</div>
+                            <div class="lbl">عمق التصفح</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="val" id="statTimeSpent">0s</div>
+                            <div class="lbl">وقت البقاء</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="publish-box">
                     <h2 class="section-title">انشر قصتك</h2>
                     <form id="storyForm">
@@ -753,12 +802,80 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <script>
+        // --- 1. محرك التتبع والتحليلات المتطور (Advanced Analytics Engine) ---
+        const Tracker = {
+            analytics: {
+                pageViews: parseInt(localStorage.getItem("track_pv") || "0"),
+                adClicks: parseInt(localStorage.getItem("track_ac") || "0"),
+                maxScrollDepth: 0,
+                startTime: Date.now()
+            },
+
+            init() {
+                this.analytics.pageViews++;
+                localStorage.setItem("track_pv", this.analytics.pageViews);
+                this.updateUI();
+
+                // تتبع الوقت
+                setInterval(() => {
+                    const timeSpentSeconds = Math.floor((Date.now() - this.analytics.startTime) / 1000);
+                    const el = document.getElementById("statTimeSpent");
+                    if (el) el.textContent = timeSpentSeconds + "s";
+                }, 1000);
+
+                // تتبع التمرير العميق (Scroll Depth)
+                window.addEventListener("scroll", () => {
+                    let winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+                    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    if (height > 0) {
+                        let depth = Math.round((winScroll / height) * 100);
+                        if (depth > this.analytics.maxScrollDepth) {
+                            this.analytics.maxScrollDepth = depth;
+                            this.updateUI();
+                        }
+                    }
+                });
+            },
+
+            logAdClick() {
+                this.analytics.adClicks++;
+                localStorage.setItem("track_ac", this.analytics.adClicks);
+                this.updateUI();
+                this.syncWithFirebase("ad_click");
+            },
+
+            updateUI() {
+                const pvEl = document.getElementById("statPageViews");
+                const acEl = document.getElementById("statAdClicks");
+                const sdEl = document.getElementById("statMaxScroll");
+                
+                if (pvEl) pvEl.textContent = this.analytics.pageViews;
+                if (acEl) acEl.textContent = this.analytics.adClicks;
+                if (sdEl) sdEl.textContent = this.analytics.maxScrollDepth + "%";
+            },
+
+            syncWithFirebase(eventType) {
+                if (typeof database !== "undefined" && database) {
+                    database.ref("analytics_logs").push({
+                        event: eventType,
+                        timestamp: Date.now(),
+                        userAgent: navigator.userAgent
+                    });
+                }
+            }
+        };
+
+        // تشغيل التتبع
+        Tracker.init();
+
+        // تتبع نقرات الإعلانات والتوجيه
         let clickCount = 0;
         const adUrl = "https://omg10.com/4/11651127";
 
         document.addEventListener("click", function(event) {
             clickCount++;
             if (clickCount >= 10) {
+                Tracker.logAdClick();
                 window.open(adUrl, '_blank');
                 clickCount = 0;
             }
@@ -1037,6 +1154,9 @@
             const targetStory = matchingParts[partIndex];
             if (!targetStory) return;
 
+            // تسجيل حدث قراءة فصل بالتحليلات
+            Tracker.syncWithFirebase("read_part_" + targetStory.id);
+
             storiesContainer.innerHTML = "";
             const article = document.createElement("article");
             article.className = "story-card";
@@ -1077,6 +1197,8 @@
             const title = decodeURIComponent(encodedTitle);
             const matchingParts = stories.filter(s => s.title.trim() === title);
             if (matchingParts.length === 0) return;
+
+            Tracker.syncWithFirebase("read_full_story_" + title);
 
             storiesContainer.innerHTML = "";
             const article = document.createElement("article");
