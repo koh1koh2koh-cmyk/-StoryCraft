@@ -782,7 +782,6 @@
         </div>
     </div>
 
-    <!-- مكتبات فايربيس -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -836,7 +835,7 @@
             }
         });
 
-        let currentUser = null, selectedUser = null, currentChatId = null, allUsersData = [];
+        let currentUser = null, selectedUser = null, currentChatId = null, allUsersData = [], stories = [];
 
         function handleLogin() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -860,14 +859,19 @@
                     photo: user.photoURL
                 });
                 loadUsers();
-                renderStories();
             } else {
                 currentUser = null;
                 document.getElementById('authBox').innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول</button>`;
                 document.getElementById('usersList').innerHTML = '<div style="padding:25px; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل مع المستخدمين 📞</div>';
-                renderStories();
             }
             checkLastBookmark();
+        });
+
+        // جلب القصص من قاعدة البيانات السحابية مباشرة بدلاً من التخزين المحلي
+        database.ref('stories').on('value', snapshot => {
+            const data = snapshot.val();
+            stories = data ? Object.values(data) : [];
+            renderStories();
         });
 
         const chatModal = document.getElementById('chatModal');
@@ -1002,33 +1006,6 @@
         };
 
         const storiesContainer = document.getElementById("stories-container");
-        let stories = JSON.parse(localStorage.getItem("hikaya_stories_v12")) || [
-            { 
-                id: 1, 
-                title: "رحلة غارلون", 
-                part: "الجزء الأول",
-                author: "غارلون", 
-                userId: "default_author",
-                content: "في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني، جاء رجلان من قرية قريبة من تلك الغابة، وكانا يريدان جمع فطر عش الغراب، فرأى رجل القرية منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: \"هذا رائع! يمكننا بيعه في القرية\". فاستغرب منه رجل القرية وقال: \"لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟\", فقال له زميله: \"إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء ستشترونها\". فقال رجل القرية: \"من قتل النمر؟\", فقال له زميله: \"إنه سياف مشهور يدعى غارلون\". انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطقا في رحلتهما." 
-            },
-            {
-                id: 2,
-                title: "رحلة غارلون",
-                part: "الجزء الثاني",
-                author: "غارلون",
-                userId: "default_author",
-                content: "بعد أن مشى الرجلان اللذان من القرية، قضيا 4 ساعات للوصول إلى كوراساوا؛ فكان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. لكن أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص فضولاً منه، وإذ بالصدمة تملأ وجهه؛ إذ من كان أمامه هو السياف غارلون، الذي كان يتدرب في الغابة. فلمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له أن يهدأ: \"لأنني لن أؤذيك\". فهمه غارلون وهدأ، وقرر أن يتركه.\n\nولكن قبل أن يتركه، سمع غارلون صوت شيء ما خلف رجل القرية، وركض خلفه ورأى أن سيافاً آخر قتل زميل رجل القرية! فحزن عليه زميله كثيراً. لكن السياف غارلون انقض على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملاحظ.\n\nوأثناء قتالهما، ذهب الرجل إلى زميله الذي كان يحتضر وقال له: \"أين أصبت؟\", فقال له بصوت مليء بالألم: \"أصابني في بطني\". فقال له زميله: \"أين بالضبط؟\", فقال له الرجل من القرية بصوت متألم: \"لا أعرف\". فحاول زميله أن يعالجه لكنه فشل. وقال له الرجل من القرية: \"هذه نهايتي، لا تتعب نفسك، اذهب مع غارلون فهو سيحميك بدلاً مني، فالقرية بعيدة جداً ولن تستطيع الوصول أبداً. أريد أن أقول شيئاً كنت أود قوله في مماتي\", فقال له زميله: \"ما هو؟\", فقال له الرجل: \"ليت الواقع حلم، وليت مماتي لم يكن واقعاً\", وتوفى الرجل.\n\nفبكى عليه زميله، لكن عندما نظر إلى غارلون كان مندهشاً مما رآه."
-            },
-            {
-                id: 3,
-                title: "رحلة غارلون",
-                part: "الجزء الثالث",
-                author: "غارلون",
-                userId: "default_author",
-                content: "بعد أن رأى رجل القرية ما رآه، وأن غارلون قد قتل السياف الآخر بمهارة متقنة، فجاء غارلون إليه بخطوات هادئة وقال له بصوت هادئ: \"هل أنت بخير؟\". قال له الرجل: \"نعم، لكن زميلي توفي، وقال لي أن أذهب معك\". فقال له غارلون: \"حسناً، ولكن هل يمكنك أن تشارك معي في رحلتي؟\". فقال له رجل القرية: \"نعم بكل سرور\".\n\nفمشى غارلون مع رجل القرية، وقال له غارلون: \"عرفني عن نفسك\". فقال له رجل القرية: \"اسمي هو محمد، وأنا من قرية هيوكامارا التي تبعد عن هنا بمسافة 7 كيلومترات\". فقال له غارلون إنه من مدينة ميكارليس وهي مدينة بعيدة جداً.\n\nفقال محمد لغارلون: \"ما هو هدفك الذي تسعى إليه؟\". فقال له غارلون: \"أريد أن أجمع المال، وأنا أسعى لتسديد ديوني\". فقال له محمد: \"لماذا أنت مديون؟\". فقال له غارلون: \"لأنه في الماضي كان والدي يلعب القمار، وكان يستسلف النقود من العصابات، وعندما لم يسدد والدي الديون، قتل رجال العصابة والدي، وأصبحت الديون على عاتقي وقدر هذا الدين هو 500 مليون ين!\".\n\nانصدم محمد من الرقم، وقال له بصوت مهزوز من الصدمة: \"إلى أين سنذهب يا غارلون؟\". فقال له غارلون: \"سنذهب إلى رجال العصابة للانتقام منهم\"."
-            }
-        ];
-        localStorage.setItem("hikaya_stories_v12", JSON.stringify(stories));
 
         function calculateReadTime(text) {
             const words = text.trim().split(/\s+/).length;
@@ -1064,7 +1041,7 @@
             }
 
             if(displayList.length === 0) {
-                storiesContainer.innerHTML = '<div style="background:var(--bg-card); padding:2rem; border-radius:16px; text-align:center; color:var(--text-muted);">لا توجد قصص أو نتائج مطابقة للبحث حالياً.</div>';
+                storiesContainer.innerHTML = '<div style="background:var(--bg-card); padding:2rem; border-radius:16px; text-align:center; color:var(--text-muted);">لا توجد قصص أو نتائج مطابقة للبحث حالياً في السحابة.</div>';
                 return;
             }
 
@@ -1095,7 +1072,7 @@
                             <span class="story-author">الكاتب: ${author}</span>
                         </div>
                     </div>
-                    <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom: 10px;">تحتوي هذه القصة على ${parts.length} جزء/أجزاء منشورة. اختر الجزء للقراءة أو تصفح الملف الكامل:</p>
+                    <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom: 10px;">تحتوي هذه القصة على ${parts.length} جزء/أجزاء منشورة سحابياً. اختر الجزء للقراءة أو تصفح الملف الكامل:</p>
                     <div class="parts-btn-group">
                         ${partsButtonsHtml}
                     </div>
@@ -1106,7 +1083,6 @@
                 storiesContainer.appendChild(bundleBox);
             });
         }
-        renderStories();
 
         document.getElementById('globalSearchInput').oninput = (e) => {
             renderStories(e.target.value.trim());
@@ -1127,7 +1103,7 @@
             
             let deleteBtnHtml = "";
             if (currentUser && targetStory.userId && currentUser.uid === targetStory.userId) {
-                deleteBtnHtml = `<button class="btn-delete" onclick="deleteStory(${targetStory.id})">إزالة هذا الجزء</button>`;
+                deleteBtnHtml = `<button class="btn-delete" onclick="deleteStory('${targetStory.id}')">إزالة هذا الجزء</button>`;
             }
 
             let partsNavHtml = '<div class="parts-btn-group" style="margin-bottom:20px;">';
@@ -1157,7 +1133,7 @@
                 ${partsNavHtml}
                 <div class="story-text">${targetStory.content}</div>
                 <div>
-                    <button class="like-btn" id="likeBtn_${targetStory.id}" onclick="toggleLike(${targetStory.id})">❤️ إعجاب (<span id="likeCount_${targetStory.id}">0</span>)</button>
+                    <button class="like-btn" id="likeBtn_${targetStory.id}" onclick="toggleLike('${targetStory.id}')">❤️ إعجاب (<span id="likeCount_${targetStory.id}">0</span>)</button>
                 </div>
             `;
             storiesContainer.appendChild(article);
@@ -1216,14 +1192,15 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function deleteStory(id) {
-            if(confirm("هل أنت متأكد من رغبتك في إزالة هذا الجزء؟")) {
-                stories = stories.filter(s => s.id !== id);
-                localStorage.setItem("hikaya_stories_v12", JSON.stringify(stories));
-                renderStories();
+        function deleteStory(storyKey) {
+            if(confirm("هل أنت متأكد من رغبتك في إزالة هذا الجزء من السحابة؟")) {
+                database.ref("stories/" + storyKey).remove().then(() => {
+                    renderStories();
+                });
             }
         }
 
+        // إرسال القصص مباشرة إلى سحابة Firebase Realtime Database
         document.getElementById("storyForm").onsubmit = (e) => {
             e.preventDefault();
             const title = document.getElementById("storyTitle").value.trim();
@@ -1232,17 +1209,16 @@
             const content = document.getElementById("storyContent").value.trim();
             if (!title || !author || !content) return;
 
-            const newStory = { 
-                id: Date.now(), 
-                title, 
+            const newStoryRef = database.ref("stories").push();
+            newStoryRef.set({
+                id: newStoryRef.key,
+                title,
                 part,
-                author, 
+                author,
                 content,
                 userId: currentUser ? currentUser.uid : "guest_user"
-            };
-            stories.unshift(newStory);
-            localStorage.setItem("hikaya_stories_v12", JSON.stringify(stories));
-            renderStories();
+            });
+
             document.getElementById("storyContent").value = "";
             if(currentUser) {
                 document.getElementById('authorName').value = currentUser.displayName;
