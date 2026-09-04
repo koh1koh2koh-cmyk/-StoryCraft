@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
-    <!-- ضع كود التحقق الخاص بـ Monetag هنا داخل الـ head -->
+    <!-- كود التحقق الخاص بـ Monetag -->
     <meta name="monetag" content="ضع_الكود_هنا">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -868,7 +868,7 @@
 
         database.ref('stories').once('value', snapshot => {
             if (!snapshot.exists()) {
-                // إضافة الجزء الأول افتراضياً
+                // الجزء الأول
                 const defaultStoryRef = database.ref("stories").push();
                 defaultStoryRef.set({
                     id: defaultStoryRef.key,
@@ -879,7 +879,7 @@
                     userId: "system"
                 });
 
-                // إضافة الجزء الرابع المصحح تلقائياً
+                // الجزء الرابع تلقائياً
                 const part4StoryRef = database.ref("stories").push();
                 part4StoryRef.set({
                     id: part4StoryRef.key,
