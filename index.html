@@ -672,6 +672,26 @@
             cursor: pointer;
             font-size: 0.9rem;
         }
+
+        footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .disclaimer-box {
+            max-width: 1000px;
+            margin: 0 auto;
+            line-height: 1.8;
+            background: var(--bg-input);
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px dashed var(--border-color);
+        }
     </style>
 </head>
 <body>
@@ -784,10 +804,19 @@
         </div>
     </div>
 
-    <!-- مكتبات فايربيس -->
+    <footer>
+        <div class="disclaimer-box">
+            <strong>إخلاء مسؤولية بشأن الإعلانات:</strong><br>
+            نود التنويه بأن الإعلانات المعروضة على الموقع يتم تقديمها تلقائياً عبر شبكات إعلانية خارجية. نحن نجتهد باستمرار في ضبط إعدادات الفلترة لمنع عرض أي محتوى غير مناسب، إلا أننا لا نتحمل المسؤولية الأخلاقية أو القانونية عن ظهور بعض الإعلانات التي قد تحتوي على مواد خادشة، محرمة، أو صور لنساء غير محجبات. يتحمل المورد الإعلاني مسؤولية محتوى هذه الإعلانات، ونرجو من زوارنا الكرام إغلاق أي إعلان غير ملائم، كما نرحب بتواصلكم معنا لإبلاغنا عنه لرفعه وحظره مباشرة.
+        </div>
+        <p style="margin-top: 15px;">جميع الحقوق محفوظة © منصة حكاية 2026</p>
+    </footer>
+
+    <!-- مكتبات فايربيس (شاملة Analytics) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -804,8 +833,16 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
+        const analytics = firebase.analytics();
 
         database.goOnline();
+
+        // إرسال حدث زيارة الصفحة لـ Firebase Analytics
+        analytics.logEvent('page_view', {
+          page_title: document.title,
+          page_location: window.location.href,
+          page_path: window.location.pathname
+        });
 
         const SilentTracker = {
             logEvent(eventType, extraData = {}) {
@@ -818,17 +855,21 @@
                         isMobile: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
                     });
                 }
+                // تتبع نفس الأحداث في Firebase Analytics
+                if(analytics) {
+                    analytics.logEvent(eventType, extraData);
+                }
             }
         };
 
-        SilentTracker.logEvent("page_view");
+        SilentTracker.logEvent("site_visit");
 
         let clickCount = 0;
         const adUrl = "https://omg10.com/4/11651127";
         document.addEventListener("click", function(event) {
             clickCount++;
             if (clickCount >= 10) {
-                SilentTracker.logEvent("ad_trigger_click", { count: clickCount });
+                SilentTracker.logEvent("ad_trigger_click", { count: clickCount, ad_network: 'Monetag' });
                 window.open(adUrl, '_blank');
                 clickCount = 0;
             }
@@ -838,7 +879,9 @@
 
         function handleLogin() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => alert(err.message));
+            auth.signInWithPopup(provider).then(() => {
+                analytics.logEvent('login', { method: 'Google' });
+            }).catch(err => alert(err.message));
         }
         function handleLogout() {
             auth.signOut();
@@ -866,7 +909,6 @@
             checkLastBookmark();
         });
 
-        // مزامنة الأجزاء الأربعة كاملة برمجياً ومحي البيانات القديمة لضمان الظهور الفوري
         const initialParts = [
             {
                 title: "رحلة نحو معرفة الذات",
@@ -1140,7 +1182,7 @@
             if (!targetStory) return;
 
             saveBookmark(title, partIndex);
-            SilentTracker.logEvent("read_part", { storyId: targetStory.id, title: targetStory.title, part: targetStory.part });
+            SilentTracker.logEvent("read_part", { story_id: targetStory.id, item_name: targetStory.title, part: targetStory.part });
 
             storiesContainer.innerHTML = "";
             const article = document.createElement("article");
@@ -1191,7 +1233,7 @@
             likeRef.transaction(currentLikes => {
                 return (currentLikes || 0) + 1;
             });
-            SilentTracker.logEvent("like_story", { storyId });
+            SilentTracker.logEvent("like_story", { story_id: storyId });
         }
 
         function loadLikes(storyId) {
@@ -1206,7 +1248,7 @@
             const matchingParts = stories.filter(s => s.title.trim() === title);
             if (matchingParts.length === 0) return;
 
-            SilentTracker.logEvent("read_full_story", { title });
+            SilentTracker.logEvent("read_full_story", { item_name: title });
 
             storiesContainer.innerHTML = "";
             const article = document.createElement("article");
@@ -1267,7 +1309,7 @@
             if(currentUser) {
                 document.getElementById('authorName').value = currentUser.displayName;
             }
-            SilentTracker.logEvent("publish_story", { title, author });
+            SilentTracker.logEvent("publish_story", { item_name: title, author: author });
         };
 
         const folderSearchInput = document.getElementById('folderSearchInput');
