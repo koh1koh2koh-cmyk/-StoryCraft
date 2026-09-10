@@ -275,80 +275,42 @@
             border-color: var(--accent-color);
         }
 
-        /* تنسيقات حزمة القصة والأزرار */
+        /* تنسيق مجمع الأجزاء المباشر */
         .story-bundle-box {
             background: var(--bg-card);
             border-radius: 16px;
             padding: 1.8rem;
-            margin-bottom: 1.8rem;
+            margin-bottom: 2rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
         }
 
         .bundle-title {
             color: var(--accent-color);
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 800;
             margin-bottom: 0.4rem;
         }
 
-        .parts-btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-            margin-bottom: 12px;
-        }
-
-        .part-btn {
-            background: var(--bg-input);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .part-btn:hover, .part-btn.active {
-            background: var(--accent-color);
-            color: #fff;
-            border-color: var(--accent-color);
-        }
-
-        .read-all-btn {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 4px;
-            display: inline-block;
-        }
-        .read-all-btn:hover {
-            background: var(--accent-color);
-            color: #fff;
-        }
-
         .story-card {
             background-color: var(--bg-card);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 1.8rem;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-md);
+            border-radius: 12px;
+            padding: 1.5rem 0;
+            margin-top: 1rem;
+            border-top: 1px dashed var(--border-color);
             width: 100%;
             position: relative;
+        }
+
+        .story-card:first-of-type {
+            border-top: none;
+            padding-top: 0.5rem;
         }
 
         .story-card h3 {
             color: var(--accent-color);
             margin-bottom: 0.4rem;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 800;
         }
 
@@ -356,7 +318,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
         }
 
@@ -386,13 +348,14 @@
             word-break: break-word;
             overflow-wrap: break-word;
             width: 100%;
+            margin-top: 10px;
         }
 
         .reading-toolbar {
             display: flex;
             gap: 10px;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             background: var(--bg-input);
             padding: 8px 12px;
             border-radius: 10px;
@@ -424,8 +387,8 @@
             cursor: pointer;
             font-weight: 700;
             position: absolute;
-            top: 2rem;
-            left: 2rem;
+            top: 1rem;
+            left: 0;
         }
         .btn-delete:hover {
             background-color: #dc2626;
@@ -840,7 +803,6 @@
         database.goOnline();
 
         let currentUser = null, stories = [], selectedUser = null, currentChatId = null, allUsersData = [];
-        let activePartsMap = {}; // لتخزين الجزء النشط الحالي لكل قصة
 
         // التحكم بوضع الليل والنهار
         const themeToggleBtn = document.getElementById('themeToggle');
@@ -898,7 +860,7 @@
             renderStories();
         });
 
-        // تجميع القصص حسب العنوان والكاتب لعمل أزرار الأجزاء
+        // تجميع القصص حسب العنوان والكاتب
         function groupStoriesByTitle(storyList) {
             const groups = {};
             storyList.forEach(item => {
@@ -908,10 +870,29 @@
                 }
                 groups[key].push(item);
             });
+            
+            // ترتيب الأجزاء داخل القصة (الجزء الأول، الجزء الثاني... إلخ)
+            const partOrder = {
+                'الجزء الأول': 1,
+                'الجزء الثاني': 2,
+                'الجزء الثالث': 3,
+                'الجزء الرابع': 4,
+                'الجزء الخامس': 5,
+                'قصة مستقلة': 6
+            };
+
+            Object.keys(groups).forEach(key => {
+                groups[key].sort((a, b) => {
+                    const orderA = partOrder[a.part] || 99;
+                    const orderB = partOrder[b.part] || 99;
+                    return orderA - orderB;
+                });
+            });
+
             return groups;
         }
 
-        // عرض القصص والأجزاء
+        // عرض القصص وكافة الأجزاء مباشرة وتحت بعضها
         function renderStories(filterText = '') {
             const container = document.getElementById('stories-container');
             container.innerHTML = '';
@@ -919,7 +900,11 @@
             let filtered = stories;
             if (filterText) {
                 const q = filterText.toLowerCase();
-                filtered = stories.filter(s => s.title.toLowerCase().includes(q) || s.author.toLowerCase().includes(q) || s.content.toLowerCase().includes(q));
+                filtered = stories.filter(s => 
+                    (s.title && s.title.toLowerCase().includes(q)) || 
+                    (s.author && s.author.toLowerCase().includes(q)) || 
+                    (s.content && s.content.toLowerCase().includes(q))
+                );
             }
 
             if (filtered.length === 0) {
@@ -931,97 +916,45 @@
 
             Object.keys(grouped).forEach(groupKey => {
                 const partList = grouped[groupKey];
-                const mainTitle = partList[0].title;
-                const authorName = partList[0].author;
+                const mainTitle = partList[0].title || 'بدون عنوان';
+                const authorName = partList[0].author || 'مجهول';
 
-                // إنشاء كارت القصة المجمع
                 const bundleBox = document.createElement('div');
                 bundleBox.className = 'story-bundle-box';
-
-                // في حالة كانت أجزاء متعددة أو جزء واحد مع خيار الأزرار
-                let activePartId = activePartsMap[groupKey];
-                if (!activePartId && partList.length > 0) {
-                    activePartId = partList[0].id; // الجزء الأول افتراضياً
-                    activePartsMap[groupKey] = activePartId;
-                }
 
                 let html = `<div class="bundle-title">📖 ${mainTitle}</div>`;
                 html += `<div class="story-meta"><span class="story-author">الكاتب: ${authorName}</span></div>`;
 
-                // إذا كان هناك أكثر من جزء أو جزء مسجل رسم الأزرار
-                if (partList.length > 1 || (partList.length === 1 && partList[0].part !== 'قصة مستقلة')) {
-                    html += `<div style="font-size:0.9rem; font-weight:700; color:var(--text-muted); margin-top:8px;">اختر الجزء للقراءة:</div>`;
-                    html += `<div class="parts-btn-group">`;
-                    
-                    partList.forEach(p => {
-                        const isActive = (p.id === activePartId) ? 'active' : '';
-                        html += `<button class="part-btn ${isActive}" onclick="switchStoryPart('${groupKey}', '${p.id}')">${p.part || 'جزء'}</button>`;
-                    });
+                // عرض جميع الأجزاء مباشرة بالتوالي
+                partList.forEach((item) => {
+                    const words = item.content ? item.content.trim().split(/\s+/).length : 0;
+                    const readMinutes = Math.max(1, Math.ceil(words / 150));
+                    const canDelete = currentUser && (currentUser.uid === item.uid || currentUser.displayName === item.author);
+                    const partTitle = item.part ? item.part : '';
 
-                    html += `</div>`;
-                    html += `<button class="read-all-btn" onclick="switchStoryPart('${groupKey}', 'ALL')">📜 قراءة كافة الأجزاء متتالية</button>`;
-                }
-
-                html += `<div id="content-display-${groupKey.replace(/[^a-zA-Z0-9]/g, '_')}" style="margin-top:200px;"></div>`;
+                    html += `
+                        <div class="story-card" id="story-${item.id}">
+                            ${canDelete ? `<button class="btn-delete" onclick="deleteStory('${item.id}')">حذف</button>` : ''}
+                            <h3>${partTitle ? partTitle : mainTitle}</h3>
+                            <div class="story-meta">
+                                <span class="read-time-badge">⏱️ وقت القراءة: ${readMinutes} دقيقة</span>
+                            </div>
+                            <div class="reading-toolbar">
+                                <button class="tool-btn" onclick="changeFontSize('${item.id}', 0.1)">أ+ تكبير الخط</button>
+                                <button class="tool-btn" onclick="changeFontSize('${item.id}', -0.1)">أ- تصغير الخط</button>
+                                <button class="tool-btn" onclick="bookmarkStory('${item.id}', '${item.title}', '${partTitle}')">🔖 حفظ إشارة قراءة</button>
+                            </div>
+                            <div class="story-text" id="text-${item.id}">${item.content}</div>
+                            <button class="like-btn" onclick="likeStory('${item.id}')">
+                                ❤️ إعجاب (${item.likes || 0})
+                            </button>
+                        </div>
+                    `;
+                });
 
                 bundleBox.innerHTML = html;
                 container.appendChild(bundleBox);
-
-                // عرض محتوى الجزء النشط داخل الصندوق
-                renderPartContent(groupKey, partList);
             });
-        }
-
-        // التبديل بين الأجزاء عبر الأزرار
-        function switchStoryPart(groupKey, partId) {
-            activePartsMap[groupKey] = partId;
-            renderStories(document.getElementById('globalSearchInput').value);
-        }
-
-        // عرض تفاصيل المحتوى للنص النشط
-        function renderPartContent(groupKey, partList) {
-            const targetId = 'content-display-' + groupKey.replace(/[^a-zA-Z0-9]/g, '_');
-            const targetDiv = document.getElementById(targetId);
-            if (!targetDiv) return;
-
-            const selectedPartId = activePartsMap[groupKey];
-            let itemsToDisplay = [];
-
-            if (selectedPartId === 'ALL') {
-                itemsToDisplay = partList;
-            } else {
-                const found = partList.find(p => p.id === selectedPartId);
-                if (found) itemsToDisplay.push(found);
-                else if (partList.length > 0) itemsToDisplay.push(partList[0]);
-            }
-
-            let html = '';
-            itemsToDisplay.forEach(item => {
-                const words = item.content ? item.content.trim().split(/\s+/).length : 0;
-                const readMinutes = Math.max(1, Math.ceil(words / 150));
-                const canDelete = currentUser && (currentUser.uid === item.uid || currentUser.displayName === item.author);
-
-                html += `
-                    <div class="story-card" id="story-${item.id}" style="margin-top:15px; border-top: 2px dashed var(--border-color);">
-                        ${canDelete ? `<button class="btn-delete" onclick="deleteStory('${item.id}')">حذف</button>` : ''}
-                        <h3>${item.title} - <span style="font-size:1.1rem; color:var(--text-muted);">${item.part || ''}</span></h3>
-                        <div class="story-meta">
-                            <span class="read-time-badge">⏱️ وقت القراءة: ${readMinutes} دقيقة</span>
-                        </div>
-                        <div class="reading-toolbar">
-                            <button class="tool-btn" onclick="changeFontSize('${item.id}', 0.1)">أ+ تكبير الخط</button>
-                            <button class="tool-btn" onclick="changeFontSize('${item.id}', -0.1)">أ- تصغير الخط</button>
-                            <button class="tool-btn" onclick="bookmarkStory('${item.id}', '${item.title}', '${item.part}')">🔖 حفظ إشارة قراءة</button>
-                        </div>
-                        <div class="story-text" id="text-${item.id}">${item.content}</div>
-                        <button class="like-btn" onclick="likeStory('${item.id}')">
-                            ❤️ إعجاب (${item.likes || 0})
-                        </button>
-                    </div>
-                `;
-            });
-
-            targetDiv.innerHTML = html;
         }
 
         // نشر قصة أو جزء جديد
@@ -1083,7 +1016,7 @@
             const box = document.getElementById('resumeReadingBox');
             if (saved) {
                 const data = JSON.parse(saved);
-                document.getElementById('resumeStoryText').textContent = `توقفت عند: ${data.title} (${data.part})`;
+                document.getElementById('resumeStoryText').textContent = `توقفت عند: ${data.title} (${data.part || ''})`;
                 document.getElementById('resumeStoryBtn').onclick = () => {
                     const el = document.getElementById('story-' + data.id);
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -1118,7 +1051,7 @@
                 return;
             }
 
-            const filteredStories = stories.filter(s => s.author.toLowerCase().includes(authorQuery));
+            const filteredStories = stories.filter(s => s.author && s.author.toLowerCase().includes(authorQuery));
             if (filteredStories.length === 0) {
                 listDiv.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">لا يوجد أرشيف لهذا الكاتب</div>';
                 return;
@@ -1127,7 +1060,7 @@
             filteredStories.forEach(s => {
                 const item = document.createElement('div');
                 item.className = 'folder-item';
-                item.textContent = `${s.title} - (${s.part})`;
+                item.textContent = `${s.title} - (${s.part || 'قصة كاملة'})`;
                 item.onclick = () => {
                     renderStories(s.title);
                 };
