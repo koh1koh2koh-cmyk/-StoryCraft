@@ -771,7 +771,7 @@
         </div>
     </div>
 
-    <button class="chat-float-btn" id="chatFloatBtn" title="المحادثات والأصدقاء">💬</button>
+    <button class="chat-float-btn" id="chatFloatBtn" onclick="toggleChatModal()" title="المحادثات والأصدقاء">💬</button>
 
     <div class="chat-modal" id="chatModal">
         <div class="modal-header">
@@ -837,7 +837,6 @@
 
         database.goOnline();
 
-        // إرسال حدث زيارة الصفحة لـ Firebase Analytics
         analytics.logEvent('page_view', {
           page_title: document.title,
           page_location: window.location.href,
@@ -855,7 +854,6 @@
                         isMobile: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
                     });
                 }
-                // تتبع نفس الأحداث في Firebase Analytics
                 if(analytics) {
                     analytics.logEvent(eventType, extraData);
                 }
@@ -911,429 +909,324 @@
 
         const initialParts = [
             {
+                id: "init_1",
                 title: "رحلة نحو معرفة الذات",
                 part: "الجزء الأول",
                 author: "محمد",
-                content: "في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني جاء رجلان من قرية قريبة من تلك الغابة، وكانوا يريدون جمع فطر عش الغراب، فجاء رجل القرية ورأى منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: 'هذا رائع! يمكننا بيعه في القرية'. فاستغرب منه رجل القرية وقال: 'لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟'، فقال له زميله: 'إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها'. فقال رجل القرية: 'من قتل النمر؟'، فقال له زميله: 'إنه سياف مشهور يدعى غارلون'. انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلاقا في رحلتهما بعد أن مشى الرجلان اللذان من القرية، قضيا 4 ساعات للوصول إلى كوراساوا؛ فكان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. لكن أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص فضولاً منه، وإذ بالصدمة تملأ وجهه؛ إذ من كان أمامه هو السياف غارلون، الذي كان يتدرب في الغابة. فلمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له أن يهدأ: 'لأنني لن أؤذيك'. فهمه غارلون وهدأ، وقرر أن يتركه.\n\nولكن قبل أن يتركه، سمع غارلون صوت شيء ما خلف رجل القرية، وركض خلفه ورأى أن سيافاً آخر قتل زميل رجل القرية! فحزن عليه زميله كثيراً. لكن السياف غارلون انقض على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملاحظ.\n\nوأثناء قتالهما، ذهب الرجل إلى زميله الذي كان يحتضر وقال له: 'أين أصبت؟'، فقال له صوت مليء بالألم: 'أصابني في بطني'. فقال له زميله: 'أين بالضبط؟'، فقال له الرجل من القرية بصوت متألم: 'لا أعرف'. فحاول زميله أن يعالجه لكنه فشل. وقال له الرجل من القرية: 'هذه نهايتي، لا تتعب نفسك، اذهب مع غارلون فهو سيحميك بدلا مني، القرية بعيدة جداً ولن تستطيع الوصول أبداً. أريد أن أقول شيئاً كنت أود قوله في مماتي'، فقال له زميله: 'ما هو؟'، فقال له الرجل: 'ليت الواقع حلم، وليت مماتي لم يكن واقعاً'، وتوفى الرجل.\n\nفبكى عليه زميله، لكن عندما نظر إلى غارلون كان مندهشاً مما رآه بعد أن انصدم رجل القرية مما رآه، إذ أن غارلون قد قتل السياف الآخر بمهارة متقنة، فجاء غارلون إليه بخطوات هادئة وقال له بصوت هادئ: 'هل أنت بخير؟'، قال له الرجل: 'نعم، لكن زميلي توفى وقال لي أن أذهب معك'، فقال له غارلون: 'حسناً، لكن هل يمكنك أن تشارك معي في رحلتي؟'، فقال له رجل القرية: 'نعم بكل سرور'. فمشى غارلون مع رجل القرية، وقال له غارلون: 'عرفني عن نفسك'، فقال له رجل القرية: 'اسمي هو محمد وأنا من قرية هيوكامارا التي تبعد عن هنا بمسافة 7 كم'، فقال له غارلون إنه من مدينة ميكارليس وهي مدينة بعيدة جداً. فقال محمد لغارلون: 'ما هو هدفك الذي تسعى إليه؟'، فقال له غارلون: 'أريد أن اجمع المال وأن أسعى لتسديد ديوني'، فقال له محمد: 'لماذا أنت مديون؟'، فقال له غارلون: 'لأنه كان في الماضي والدي يلعب القمار وكان يستلف النقود من العصابات، وعندما لم يسدد والدي الديون قتل رجال العصابة والدي، والديون اصبحت على عاتقي وقدر هذا الدين هو 500 مليون ين'. فانصدم محمد من الرقم وقال له بصوت مهزوز من الصدمة: 'إلى أين سنذهب يا غارلون؟'، فقال له غارلون: 'سنذهب إلى رجال العصابة للإنتقام منهم'."
-            },
-            {
-                title: "رحلة نحو معرفة الذات",
-                part: "الجزء الثاني",
-                author: "محمد",
-                content: "سار غارلون ومحمد عبر طرق الغابة الوعرة باتجاه أطراف إقليم ميكارليس. تبادل الاثنان أطراف الحديث واكتشف محمد الكثير عن المهارات القتالية التي يمتلكها غارلون، بينما بدأ غارلون يثق بمرافقه الجديد رغم هدوئه المعتاد وحذره شديد الحرص."
-            },
-            {
-                title: "رحلة نحو معرفة الذات",
-                part: "الجزء الثالث",
-                author: "محمد",
-                content: "وصل المسافران إلى بلدة صغيرة على حدود كوراساوا لجمع الأنباء والتجهيز للمرحلة التالية من رحلتهما الشاقة، وهناك بدأت الأخطار تلوح في الأفق مع ظهور أعين تابعة للعصابات تترصد تحركاتهما."
-            },
-            {
-                title: "رحلة نحو معرفة الذات",
-                part: "الجزء الرابع",
-                author: "محمد",
-                content: "في اليوم التالي، مشى غارلون ومحمد في طريقهما نحو مدينة كوراساوا لبيع جلد النمر. وفي طريقهما واجها العدو اللدود لأي شخص وهو الجوع.\n\nفقال غارلون لمحمد أن ينتظر لكي يصطاد أي غزال أو أرنب بري، فانتظر محمد، وذهب غارلون متعمقاً في الغابة. وبعد 20 دقيقة من البحث، وجد غارلون أرنباً برياً، فحبس أنفاسه وركز جيداً، وأمسك سيفه ساحباً إياه ببطء، وانقض عليه مسرعاً بدون صوت وقتله قتلاً رحيماً.\n\nخرج غارلون من الغابة، واندهش محمد مما جلبه غارلون وقال له:\n\"كيف اصطدت هذا الأرنب؟ إنه مذهل!\"\n\nفأخبره غارلون ببرود:\n\"ليس من شأنك أن تعرف... فالتجمع الحطب وأنت صامت!\"\n\nفقال محمد بابتسامة: \"حاضر.\"\n\nوأثناء تجميع محمد للحطب، قال في نفسه إنه لن يجعل برود غارلون عائقاً، وإنه لن يجعله شخصاً بارداً بل سيعامله بلطف دائماً.\n\nجمع محمد الحطب وأشعل النار لشوي الأرنب وأكلا معاً. وبعد ساعة وصلا إلى مدينة كوراساوا، وذهبا إلى تاجر لجلود الحيوانات وباعا له جلد النمر بثمن باهظ وهو 100 ألف ين.\n\nوعندما مشى غارلون مع محمد، كان متعصباً من شيء ما..."
+                content: `في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.\n\nفي اليوم الثاني جاء رجلان من قرية قريبة من تلك الغابة، وكانوا يريدون جمع فطر عش الغراب، فجاء رجل القرية ورأى منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: 'هذا رائع! يمكننا بيعه في القرية'. فاستغرب منه رجل القرية وقال: 'لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟'، فقال له زميله: 'إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها'. فقال رجل القرية: 'من قتل النمر؟'، فقال له زميله: 'إنه سياف مشهور يدعى غارلون'. انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلاقا في رحلتهما بعد أن مشى الرجلان اللذان من القرية، قضيا 4 ساعات للوصول إلى كوراساوا؛ فكان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. لكن أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص فضولاً منه، وإذ بالصدمة تملأ وجهه؛ إذ من كان أمامه هو السياف غارلون، الذي كان يتدرب في الغابة. فلمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له أن يهدأ: 'لأنني لن أؤذيك'. فهمه غارلون وهدأ، وقرر أن يتركه.\n\nولكن قبل أن يتركه، سمع غارلون صوت شيء ما خلف رجل القرية، وركض خلفه ورأى أن سيافاً آخر قتل زميل رجل القرية! فحزن عليه زميله كثيراً. لكن السياف غارلون انقض على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملاحظ.\n\nوأثناء قتالهما، ذهب الرجل إلى زميله الذي كان يحتضر وقال له: 'أين أصبت؟'، فقال له صوت مليء بالألم: 'أصابني في بطني'. فقال له زميله: 'أين بالضبط؟'، فقال له الرجل من القرية بصوت متألم: 'لا أعرف'. فحاول زميله أن يعالجه لكنه فشل. وقال له الرجل من القرية: 'هذه نهايتي، لا تتعب نفسك، اذهب مع غارلون فهو سيحميك بدلا مني، القرية بعيدة جداً ولن تستطيع الوصول أبداً. أريد أن أقول شيئاً كنت أود قوله في مماتي'، فقال له زميله: 'ما هو؟'، فقال له الرجل: 'ليت الواقع حلم، وليت مماتي لم يكن واقعاً'، وتوفى الرجل.\n\nفبكى عليه زميله، لكن عندما نظر إلى غارلون كان مندهشاً مما رآه بعد أن انصدم رجل القرية مما رآه، إذ أن غارلون قد قتل السياف الآخر بمهارة متقنة، فجاء غارلون إليه بخطوات هادئة وقال له بصوت هادئ: 'هل أنت بخير؟'، قال له الرجل: 'نعم، لكن زميلي توفى وقال لي أن أذهب معك'، فقال له غارلون: 'حسناً، لكن هل يمكنك أن تشارك معي في رحلتي؟'، فقال له رجل القرية: 'نعم بكل سرور'. فمشى غارلون مع رجل القرية، وقال له غارلون: 'عرفني بنفسك أولاً'، رد الرجل: 'اسمي هو صابر'. ابتسم غارلون وقال: 'خيار ممتاز يا صابر، رحلتنا طويلة والدروب مليئة بالمخاطر، فلنبدأ الآن'.`,
+                likes: 0,
+                timestamp: Date.now()
             }
         ];
 
-        database.ref('stories').once('value', snapshot => {
-            const data = snapshot.val();
-            const currentList = data ? Object.values(data) : [];
-            const hasPart4 = currentList.some(s => s.title === "رحلة نحو معرفة الذات" && s.part === "الجزء الرابع");
-            
-            if (!hasPart4) {
-                database.ref('stories').remove().then(() => {
-                    initialParts.forEach(storyData => {
-                        const newRef = database.ref("stories").push();
-                        newRef.set({
-                            id: newRef.key,
-                            ...storyData,
-                            userId: "system"
-                        });
-                    });
-                });
-            }
-        });
-
+        // تحميل القصص من Firebase Realtime Database
         database.ref('stories').on('value', snapshot => {
             const data = snapshot.val();
-            stories = data ? Object.values(data) : [];
+            stories = [];
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    stories.push({ id: key, ...data[key] });
+                });
+            } else {
+                initialParts.forEach(part => {
+                    database.ref('stories/' + part.id).set(part);
+                });
+            }
             renderStories();
+            updateFolderList();
         });
 
-        const chatModal = document.getElementById('chatModal');
-        document.getElementById('chatFloatBtn').onclick = () => chatModal.classList.toggle('open');
-        function toggleChatModal() { chatModal.classList.remove('open'); }
-        function closeActiveChat() { document.getElementById('activeChat').classList.remove('open'); }
+        // إضافة قصة جديدة
+        document.getElementById('storyForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const title = document.getElementById('storyTitle').value.trim();
+            const author = document.getElementById('authorName').value.trim();
+            const part = document.getElementById('storyPartNumber').value;
+            const content = document.getElementById('storyContent').value.trim();
+
+            if (!title || !author || !content) return;
+
+            const newStoryRef = database.ref('stories').push();
+            newStoryRef.set({
+                title: title,
+                author: author,
+                part: part,
+                content: content,
+                likes: 0,
+                timestamp: Date.now(),
+                ownerUid: currentUser ? currentUser.uid : null
+            }).then(() => {
+                SilentTracker.logEvent('publish_story', { title, author, part });
+                document.getElementById('storyTitle').value = '';
+                document.getElementById('storyContent').value = '';
+                alert('تم نشر القصة بنجاح!');
+            });
+        });
+
+        function renderStories(filterStories = null) {
+            const container = document.getElementById('stories-container');
+            container.innerHTML = '';
+            const listToRender = filterStories || stories;
+
+            if (listToRender.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-muted);">لا توجد قصص معروضة حالياً.</div>';
+                return;
+            }
+
+            listToRender.forEach(story => {
+                const readTime = Math.ceil(story.content.split(' ').length / 150);
+                const card = document.createElement('div');
+                card.className = 'story-card';
+                card.id = 'story-' + story.id;
+
+                let deleteBtn = '';
+                if (currentUser && story.ownerUid === currentUser.uid) {
+                    deleteBtn = `<button class="btn-delete" onclick="deleteStory('${story.id}')">حذف</button>`;
+                }
+
+                card.innerHTML = `
+                    ${deleteBtn}
+                    <h3>${story.title} (${story.part})</h3>
+                    <div class="story-meta">
+                        <span class="story-author">✍️ ${story.author}</span>
+                        <span class="read-time-badge">⏱️ وقت القراءة: ~${readTime} دقيقة</span>
+                    </div>
+                    <div class="reading-toolbar">
+                        <button class="tool-btn" onclick="changeFontSize('${story.id}', 0.1)">A+</button>
+                        <button class="tool-btn" onclick="changeFontSize('${story.id}', -0.1)">A-</button>
+                        <button class="tool-btn" onclick="bookmarkStory('${story.id}', '${story.title}')">🔖 حفظ العلامة</button>
+                    </div>
+                    <div class="story-text" id="text-${story.id}">${story.content}</div>
+                    <button class="like-btn" onclick="likeStory('${story.id}', ${story.likes || 0})">❤️ إعجاب (${story.likes || 0})</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function changeFontSize(id, delta) {
+            const elem = document.getElementById('text-' + id);
+            const currentSize = parseFloat(window.getComputedStyle(elem).fontSize);
+            elem.style.fontSize = (currentSize + delta * 2) + 'px';
+        }
+
+        function likeStory(id, currentLikes) {
+            database.ref('stories/' + id + '/likes').set(currentLikes + 1);
+            SilentTracker.logEvent('like_story', { storyId: id });
+        }
+
+        function deleteStory(id) {
+            if (confirm('هل أنت تأكد من رغبتك في حذف هذه القصة؟')) {
+                database.ref('stories/' + id).remove();
+            }
+        }
+
+        function bookmarkStory(id, title) {
+            localStorage.setItem('hikaya_bookmark', JSON.stringify({ id, title }));
+            checkLastBookmark();
+            alert('تم حفظ موضع القراءة!');
+        }
+
+        function checkLastBookmark() {
+            const saved = localStorage.getItem('hikaya_bookmark');
+            const box = document.getElementById('resumeReadingBox');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('resumeStoryText').innerText = 'توقفت عند قراءة: ' + data.title;
+                document.getElementById('resumeStoryBtn').onclick = () => {
+                    const targetElem = document.getElementById('story-' + data.id);
+                    if (targetElem) {
+                        targetElem.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        alert('القصة غير موجودة في القائمة حالياً.');
+                    }
+                };
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+
+        // البحث الشامل
+        document.getElementById('globalSearchInput').addEventListener('input', e => {
+            const term = e.target.value.toLowerCase().trim();
+            if (!term) {
+                renderStories();
+                return;
+            }
+            const filtered = stories.filter(s => 
+                s.title.toLowerCase().includes(term) || 
+                s.author.toLowerCase().includes(term) ||
+                s.content.toLowerCase().includes(term)
+            );
+            renderStories(filtered);
+        });
+
+        // المجلد الأرشيفي للكاتب
+        document.getElementById('folderSearchInput').addEventListener('input', updateFolderList);
+
+        function updateFolderList() {
+            const term = document.getElementById('folderSearchInput').value.toLowerCase().trim();
+            const folderList = document.getElementById('authorFolderList');
+            folderList.innerHTML = '';
+
+            if (!term) {
+                folderList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">أدخل اسم الكاتب لعرض أرشيفه</div>';
+                return;
+            }
+
+            const authorStories = stories.filter(s => s.author.toLowerCase().includes(term));
+            if (authorStories.length === 0) {
+                folderList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">لم يتم العثور على أجزاء لهذا الكاتب</div>';
+                return;
+            }
+
+            authorStories.forEach(s => {
+                const item = document.createElement('div');
+                item.className = 'folder-item';
+                item.innerText = `${s.title} - [${s.part}]`;
+                item.onclick = () => {
+                    renderStories([s]);
+                };
+                folderList.appendChild(item);
+            });
+        }
+
+        // المحادثات والمستخدمين
+        function toggleChatModal() {
+            const modal = document.getElementById('chatModal');
+            modal.classList.toggle('open');
+        }
 
         function loadUsers() {
             database.ref('users').on('value', snapshot => {
+                const data = snapshot.val();
                 allUsersData = [];
-                snapshot.forEach(child => {
-                    const u = child.val();
-                    if (currentUser && u.uid !== currentUser.uid) {
-                        allUsersData.push(u);
-                    }
-                });
+                if (data) {
+                    Object.keys(data).forEach(k => {
+                        if (currentUser && k !== currentUser.uid) {
+                            allUsersData.push(data[k]);
+                        }
+                    });
+                }
                 renderUsersList(allUsersData);
             });
         }
 
         function renderUsersList(users) {
             const list = document.getElementById('usersList');
-            list.innerHTML = users.length === 0 ? '<div style="padding:25px; text-align:center; color:var(--text-muted);">لا يوجد مستخدمون نشطون حالياً</div>' : '';
+            list.innerHTML = '';
+            if (users.length === 0) {
+                list.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">لا يوجد مستخدمون متصلون حالياً</div>';
+                return;
+            }
             users.forEach(u => {
-                const div = document.createElement('div');
-                div.className = 'user-item';
-                div.innerHTML = `
-                    <img src="${u.photo}">
-                    <div style="flex:1;">
+                const item = document.createElement('div');
+                item.className = 'user-item';
+                item.innerHTML = `
+                    <img src="${u.photo || 'https://via.placeholder.com/45'}">
+                    <div>
                         <div class="name">${u.name}</div>
                         <div class="sub">انقر لبدء المحادثة</div>
                     </div>
                 `;
-                div.onclick = () => {
-                    selectedUser = u;
-                    document.getElementById('targetUserName').textContent = u.name;
-                    document.getElementById('activeChat').classList.add('open');
-                    currentChatId = currentUser.uid < u.uid ? `${currentUser.uid}_${u.uid}` : `${u.uid}_${currentUser.uid}`;
-                    loadMessages();
-                };
-                list.appendChild(div);
+                item.onclick = () => openChatWith(u);
+                list.appendChild(item);
             });
         }
 
-        document.getElementById('userSearchInput').oninput = (e) => {
-            const q = e.target.value.trim().toLowerCase();
-            renderUsersList(allUsersData.filter(u => u.name.toLowerCase().includes(q)));
-        };
+        function openChatWith(user) {
+            selectedUser = user;
+            document.getElementById('targetUserName').innerText = user.name;
+            currentChatId = currentUser.uid < user.uid ? `${currentUser.uid}_${user.uid}` : `${user.uid}_${currentUser.uid}`;
+            document.getElementById('activeChat').classList.add('open');
+            loadMessages();
+        }
+
+        function closeActiveChat() {
+            document.getElementById('activeChat').classList.remove('open');
+        }
 
         function loadMessages() {
-            database.ref('private_chats/' + currentChatId).on('value', snapshot => {
+            if (!currentChatId) return;
+            database.ref('chats/' + currentChatId).on('value', snapshot => {
                 const area = document.getElementById('messagesArea');
                 area.innerHTML = '';
-                snapshot.forEach(child => {
-                    const msg = child.val();
-                    const b = document.createElement('div');
-                    b.className = `msg-bubble ${msg.senderId === currentUser.uid ? 'me' : 'them'}`;
-                    if (msg.type === 'image') {
-                        b.innerHTML = `<img src="${msg.text}">`;
-                    } else if (msg.type === 'call_link') {
-                        b.innerHTML = `🎥 رابط مكالمة فيديو:<br><a href="${msg.text}" target="_blank" style="color: #60a5fa; text-decoration: underline;">انضم للمكالمة هنا</a>`;
-                    } else {
-                        b.textContent = msg.text;
-                    }
-                    area.appendChild(b);
-                });
-                area.scrollTop = area.scrollHeight;
+                const msgs = snapshot.val();
+                if (msgs) {
+                    Object.keys(msgs).forEach(k => {
+                        const m = msgs[k];
+                        const bubble = document.createElement('div');
+                        const isMe = m.sender === currentUser.uid;
+                        bubble.className = `msg-bubble ${isMe ? 'me' : 'them'}`;
+                        if (m.image) {
+                            bubble.innerHTML = `${m.text ? `<div>${m.text}</div>` : ''}<img src="${m.image}">`;
+                        } else {
+                            bubble.innerText = m.text;
+                        }
+                        area.appendChild(bubble);
+                    });
+                    area.scrollTop = area.scrollHeight;
+                }
             });
         }
 
-        document.getElementById('chatForm').onsubmit = (e) => {
+        document.getElementById('chatForm').addEventListener('submit', e => {
             e.preventDefault();
-            const text = document.getElementById('msgInput').value.trim();
-            if (!currentChatId || !text) return;
-            database.ref('private_chats/' + currentChatId).push({
-                senderId: currentUser.uid,
+            const msgInput = document.getElementById('msgInput');
+            const text = msgInput.value.trim();
+            const imageInput = document.getElementById('imageInput');
+
+            if (!text && !imageInput.files[0]) return;
+
+            if (imageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    sendMessage(text, evt.target.result);
+                    imageInput.value = '';
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                sendMessage(text, null);
+            }
+            msgInput.value = '';
+        });
+
+        function sendMessage(text, imageBase64) {
+            if (!currentChatId) return;
+            database.ref('chats/' + currentChatId).push({
+                sender: currentUser.uid,
                 text: text,
-                type: 'text',
+                image: imageBase64,
                 timestamp: Date.now()
             });
-            document.getElementById('msgInput').value = '';
-        };
-
-        document.getElementById('imageInput').onchange = (e) => {
-            const file = e.target.files[0];
-            if (!file || !currentChatId) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                database.ref('private_chats/' + currentChatId).push({
-                    senderId: currentUser.uid,
-                    text: ev.target.result,
-                    type: 'image',
-                    timestamp: Date.now()
-                });
-            };
-            reader.readAsDataURL(file);
-        };
+        }
 
         function startRealCallLink() {
-            if (!selectedUser || !currentChatId) return;
-            const callUrl = `https://meet.jit.si/HikayaCall-${Math.random().toString(36).substring(2, 9)}`;
-            database.ref('private_chats/' + currentChatId).push({
-                senderId: currentUser.uid,
-                text: callUrl,
-                type: 'call_link',
-                timestamp: Date.now()
-            });
-            window.open(callUrl, '_blank');
+            const callRoomUrl = `https://meet.jit.si/HikayaCall_${currentChatId}`;
+            sendMessage(`📞 دعوتك للانضمام لمكالمة فيديو عبر الرابط: ${callRoomUrl}`, null);
+            window.open(callRoomUrl, '_blank');
         }
 
-        document.getElementById("themeToggle").onclick = () => {
-            const isLight = document.documentElement.getAttribute("data-theme") === "light";
-            document.documentElement.setAttribute("data-theme", isLight ? "" : "light");
-            localStorage.setItem("hikaya_theme", isLight ? "dark" : "light");
-        };
-        if (localStorage.getItem("hikaya_theme") === "light") {
-            document.documentElement.setAttribute("data-theme", "light");
-        }
+        // شريط تقدم القراءة وقيم التمرير
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('readingProgressBar').style.width = scrolled + '%';
+        });
 
-        let currentFontSize = 1.1;
-        function changeFontSize(delta) {
-            currentFontSize = Math.min(Math.max(currentFontSize + delta, 0.9), 1.6);
-            document.documentElement.style.setProperty('--story-font-size', currentFontSize + 'rem');
-        }
-
-        window.onscroll = function() {
-            let winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            const bar = document.getElementById("readingProgressBar");
-            if(bar) bar.style.width = scrolled + "%";
-        };
-
-        const storiesContainer = document.getElementById("stories-container");
-
-        function calculateReadTime(text) {
-            const words = text.trim().split(/\s+/).length;
-            const minutes = Math.ceil(words / 150);
-            return `${minutes} دقيقة قراءة (${words} كلمة)`;
-        }
-
-        function saveBookmark(storyTitle, partIndex) {
-            const bookmark = { title: storyTitle, partIndex: partIndex, timestamp: Date.now() };
-            localStorage.setItem("hikaya_bookmark", JSON.stringify(bookmark));
-            checkLastBookmark();
-        }
-
-        function checkLastBookmark() {
-            const saved = localStorage.getItem("hikaya_bookmark");
-            const box = document.getElementById("resumeReadingBox");
-            if (saved && box) {
-                const b = JSON.parse(saved);
-                document.getElementById("resumeStoryText").textContent = `توقفت عند: ${b.title} (${b.partIndex + 1})`;
-                document.getElementById("resumeStoryBtn").onclick = () => {
-                    openStoryPart(encodeURIComponent(b.title), b.partIndex);
-                };
-                box.style.display = "block";
+        // تبديل الوضع الليلي
+        const themeToggleBtn = document.getElementById('themeToggle');
+        themeToggleBtn.addEventListener('click', () => {
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            if (isLight) {
+                document.body.removeAttribute('data-theme');
+                themeToggleBtn.innerText = '🌙 المظهر';
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+                themeToggleBtn.innerText = '☀️ المظهر';
             }
-        }
-
-        function renderStories(filterText = null) {
-            storiesContainer.innerHTML = "";
-            let displayList = stories;
-            if(filterText) {
-                const q = filterText.toLowerCase();
-                displayList = stories.filter(s => s.author.toLowerCase().includes(q) || s.title.toLowerCase().includes(q) || s.content.toLowerCase().includes(q));
-            }
-
-            if(displayList.length === 0) {
-                storiesContainer.innerHTML = '<div style="background:var(--bg-card); padding:2rem; border-radius:16px; text-align:center; color:var(--text-muted);">جاري تحميل القصص والأجزاء من السحابة...</div>';
-                return;
-            }
-
-            const groupedStories = {};
-            displayList.forEach(story => {
-                const mainTitle = story.title.trim();
-                if (!groupedStories[mainTitle]) {
-                    groupedStories[mainTitle] = [];
-                }
-                groupedStories[mainTitle].push(story);
-            });
-
-            Object.keys(groupedStories).forEach(mainTitle => {
-                const parts = groupedStories[mainTitle];
-                const author = parts[0].author;
-                const bundleBox = document.createElement("div");
-                bundleBox.className = "story-bundle-box";
-
-                let partsButtonsHtml = '';
-                parts.forEach((p, index) => {
-                    partsButtonsHtml += `<button class="part-btn" onclick="openStoryPart('${encodeURIComponent(mainTitle)}', ${index})">📖 ${p.part || ('الجزء ' + (index+1))}</button>`;
-                });
-
-                bundleBox.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                        <div>
-                            <h3 class="bundle-title">${mainTitle}</h3>
-                            <span class="story-author">الكاتب: ${author}</span>
-                        </div>
-                    </div>
-                    <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom: 10px;">تحتوي هذه القصة على ${parts.length} جزء/أجزاء منشورة سحابياً. اختر الجزء للقراءة أو تصفح الملف الكامل:</p>
-                    <div class="parts-btn-group">
-                        ${partsButtonsHtml}
-                    </div>
-                    <div>
-                        <button class="read-all-btn" onclick="openFullStoryFile('${encodeURIComponent(mainTitle)}')">📂 فتح ملف القصة كاملاً (جميع الأجزاء بمكان واحد)</button>
-                    </div>
-                `;
-                storiesContainer.appendChild(bundleBox);
-            });
-        }
-
-        document.getElementById('globalSearchInput').oninput = (e) => {
-            renderStories(e.target.value.trim());
-        };
-
-        function openStoryPart(encodedTitle, partIndex) {
-            const title = decodeURIComponent(encodedTitle);
-            const matchingParts = stories.filter(s => s.title.trim() === title);
-            const targetStory = matchingParts[partIndex];
-            if (!targetStory) return;
-
-            saveBookmark(title, partIndex);
-            SilentTracker.logEvent("read_part", { story_id: targetStory.id, item_name: targetStory.title, part: targetStory.part });
-
-            storiesContainer.innerHTML = "";
-            const article = document.createElement("article");
-            article.className = "story-card";
-            
-            let deleteBtnHtml = "";
-            if (currentUser && targetStory.userId && (currentUser.uid === targetStory.userId || currentUser.uid === "system")) {
-                deleteBtnHtml = `<button class="btn-delete" onclick="deleteStory('${targetStory.id}')">إزالة هذا الجزء</button>`;
-            }
-
-            let partsNavHtml = '<div class="parts-btn-group" style="margin-bottom:20px;">';
-            matchingParts.forEach((p, idx) => {
-                const activeClass = idx === partIndex ? 'active' : '';
-                partsNavHtml += `<button class="part-btn ${activeClass}" onclick="openStoryPart('${encodedTitle}', ${idx})">📖 ${p.part || ('الجزء ' + (idx+1))}</button>`;
-            });
-            partsNavHtml += '</div>';
-
-            const readTimeStr = calculateReadTime(targetStory.content);
-
-            article.innerHTML = `
-                ${deleteBtnHtml}
-                <button class="btn-auth" onclick="renderStories()" style="margin-bottom:12px; font-size:0.8rem; padding:4px 10px;">⬅ العودة لقائمة القصص</button>
-                <h3>${targetStory.title} - ${targetStory.part || ''}</h3>
-                <div class="story-meta">
-                    <span class="story-author">الكاتب: ${targetStory.author}</span>
-                    <span class="read-time-badge">⏱ ${readTimeStr}</span>
-                </div>
-                
-                <div class="reading-toolbar">
-                    <span style="font-size:0.85rem; color:var(--text-muted);">تحكم بحجم الخط:</span>
-                    <button class="tool-btn" onclick="changeFontSize(0.1)">➕ تكبير</button>
-                    <button class="tool-btn" onclick="changeFontSize(-0.1)">➖ تصغير</button>
-                </div>
-
-                ${partsNavHtml}
-                <div class="story-text">${targetStory.content}</div>
-                <div>
-                    <button class="like-btn" id="likeBtn_${targetStory.id}" onclick="toggleLike('${targetStory.id}')">❤️ إعجاب (<span id="likeCount_${targetStory.id}">0</span>)</button>
-                </div>
-            `;
-            storiesContainer.appendChild(article);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            loadLikes(targetStory.id);
-        }
-
-        function toggleLike(storyId) {
-            const likeRef = database.ref(`story_likes/${storyId}`);
-            likeRef.transaction(currentLikes => {
-                return (currentLikes || 0) + 1;
-            });
-            SilentTracker.logEvent("like_story", { story_id: storyId });
-        }
-
-        function loadLikes(storyId) {
-            database.ref(`story_likes/${storyId}`).on('value', snapshot => {
-                const el = document.getElementById(`likeCount_${storyId}`);
-                if (el) el.textContent = snapshot.val() || 0;
-            });
-        }
-
-        function openFullStoryFile(encodedTitle) {
-            const title = decodeURIComponent(encodedTitle);
-            const matchingParts = stories.filter(s => s.title.trim() === title);
-            if (matchingParts.length === 0) return;
-
-            SilentTracker.logEvent("read_full_story", { item_name: title });
-
-            storiesContainer.innerHTML = "";
-            const article = document.createElement("article");
-            article.className = "story-card";
-
-            let combinedContentHtml = '';
-            matchingParts.forEach((p, idx) => {
-                combinedContentHtml += `<div style="margin-bottom:30px; border-bottom:1px dashed var(--border-color); padding-bottom:20px;">
-                    <h4 style="color:var(--accent-color); margin-bottom:10px; font-size:1.2rem;">📑 ${p.part || ('الجزء ' + (idx+1))}</h4>
-                    <div class="story-text">${p.content}</div>
-                </div>`;
-            });
-
-            article.innerHTML = `
-                <button class="btn-auth" onclick="renderStories()" style="margin-bottom:12px; font-size:0.8rem; padding:4px 10px;">⬅ العودة لقائمة القصص</button>
-                <h3>📂 ملف القصة الكامل: ${title}</h3>
-                <span class="story-author">الكاتب: ${matchingParts[0].author}</span>
-                
-                <div class="reading-toolbar" style="margin-top:15px;">
-                    <span style="font-size:0.85rem; color:var(--text-muted);">تحكم بحجم الخط:</span>
-                    <button class="tool-btn" onclick="changeFontSize(0.1)">➕ تكبير</button>
-                    <button class="tool-btn" onclick="changeFontSize(-0.1)">➖ تصغير</button>
-                </div>
-
-                <div style="margin-top:20px;">${combinedContentHtml}</div>
-            `;
-            storiesContainer.appendChild(article);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function deleteStory(storyKey) {
-            if(confirm("هل أنت متأكد من رغبتك في إزالة هذا الجزء من السحابة؟")) {
-                database.ref("stories/" + storyKey).remove().then(() => {
-                    renderStories();
-                });
-            }
-        }
-
-        document.getElementById("storyForm").onsubmit = (e) => {
-            e.preventDefault();
-            const title = document.getElementById("storyTitle").value.trim();
-            const author = document.getElementById("authorName").value.trim();
-            const part = document.getElementById("storyPartNumber").value;
-            const content = document.getElementById("storyContent").value.trim();
-            if (!title || !author || !content) return;
-
-            const newStoryRef = database.ref("stories").push();
-            newStoryRef.set({
-                id: newStoryRef.key,
-                title,
-                part,
-                author,
-                content,
-                userId: currentUser ? currentUser.uid : "guest_user"
-            });
-
-            document.getElementById("storyContent").value = "";
-            if(currentUser) {
-                document.getElementById('authorName').value = currentUser.displayName;
-            }
-            SilentTracker.logEvent("publish_story", { item_name: title, author: author });
-        };
-
-        const folderSearchInput = document.getElementById('folderSearchInput');
-        const authorFolderList = document.getElementById('authorFolderList');
-
-        folderSearchInput.oninput = (e) => {
-            const query = e.target.value.trim().toLowerCase();
-            if(!query) {
-                authorFolderList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">أدخل اسم الكاتب لعرض أرشيفه</div>';
-                return;
-            }
-            const authorStories = stories.filter(s => s.author.toLowerCase().includes(query));
-            authorFolderList.innerHTML = authorStories.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">لا توجد أجزاء لهذا الكاتب</div>' : '';
-            
-            authorStories.forEach(s => {
-                const div = document.createElement('div');
-                div.className = 'folder-item';
-                div.textContent = `📖 ${s.title} (${s.part})`;
-                div.onclick = () => {
-                    openStoryPart(encodeURIComponent(s.title), authorStories.indexOf(s));
-                };
-                authorFolderList.appendChild(div);
-            });
-        };
+        });
     </script>
 </body>
 </html>
