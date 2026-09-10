@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
-    <!-- كود التحقق الخاص بـ Monetag -->
-    <meta name="monetag" content="ضع_الكود_هنا">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,11 +20,6 @@
             --accent-hover: #d97706;
             --border-color: #334155;
             --font-main: 'Cairo', sans-serif;
-            --wa-bg: #111b21;
-            --wa-card: #202c33;
-            --wa-green: #00a884;
-            --wa-bubble-me: #005c4b;
-            --wa-bubble-them: #202c33;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
             --story-font-size: 1.1rem;
@@ -41,10 +34,6 @@
             --accent-color: #d97706;
             --accent-hover: #b45309;
             --border-color: #e2e8f0;
-            --wa-bg: #efeae2;
-            --wa-card: #ffffff;
-            --wa-bubble-me: #d9fdd3;
-            --wa-bubble-them: #ffffff;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
@@ -109,14 +98,6 @@
             gap: 12px;
         }
 
-        .user-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-color);
-            object-fit: cover;
-        }
-
         .btn-auth {
             background-color: var(--accent-color);
             color: #fff;
@@ -131,13 +112,6 @@
 
         .btn-auth:hover {
             background-color: var(--accent-hover);
-        }
-
-        .btn-logout {
-            background-color: #ef4444;
-        }
-        .btn-logout:hover {
-            background-color: #dc2626;
         }
 
         .container {
@@ -275,7 +249,7 @@
             border-color: var(--accent-color);
         }
 
-        /* تنسيق مجمع الأجزاء المباشر */
+        /* حزمة القصة */
         .story-bundle-box {
             background: var(--bg-card);
             border-radius: 16px;
@@ -283,6 +257,7 @@
             margin-bottom: 2rem;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-md);
+            margin-top: 0 !important; /* إلغاء أي هامش علوي مفاجئ */
         }
 
         .bundle-title {
@@ -295,7 +270,7 @@
         .story-card {
             background-color: var(--bg-card);
             border-radius: 12px;
-            padding: 1.5rem 0;
+            padding: 1.5rem 0 0.5rem 0;
             margin-top: 1rem;
             border-top: 1px dashed var(--border-color);
             width: 100%;
@@ -343,7 +318,7 @@
         .story-text {
             font-size: var(--story-font-size);
             line-height: 2.2;
-            color: var(--text-muted);
+            color: var(--text-main);
             white-space: pre-wrap;
             word-break: break-word;
             overflow-wrap: break-word;
@@ -413,231 +388,6 @@
             color: #fff;
         }
 
-        .chat-float-btn {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            width: 65px;
-            height: 65px;
-            background-color: var(--wa-green);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
-            cursor: pointer;
-            z-index: 1000;
-            border: none;
-        }
-
-        .chat-modal {
-            position: fixed;
-            bottom: 105px;
-            left: 30px;
-            width: 400px;
-            height: 580px;
-            background-color: var(--wa-bg);
-            border-radius: 18px;
-            border: 1px solid var(--border-color);
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 1000;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-        }
-
-        .chat-modal.open {
-            display: flex;
-        }
-
-        @media (max-width: 480px) {
-            .chat-modal {
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                border-radius: 0;
-            }
-        }
-
-        .modal-header {
-            background-color: var(--wa-card);
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .modal-header h3 {
-            font-size: 1.1rem;
-            color: var(--text-main);
-        }
-
-        .chat-search-box {
-            padding: 12px;
-            background-color: var(--wa-bg);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .chat-search-box input {
-            width: 100%;
-            padding: 9px 14px;
-            background: var(--wa-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            color: var(--text-main);
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .modal-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .users-list {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .user-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 18px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            cursor: pointer;
-        }
-
-        .user-item:hover {
-            background-color: var(--wa-card);
-        }
-
-        .user-item img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .user-item .name {
-            font-weight: 700;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .user-item .sub {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
-
-        .active-chat {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--wa-bg);
-            display: none;
-            flex-direction: column;
-            z-index: 10;
-        }
-
-        .active-chat.open {
-            display: flex;
-        }
-
-        .chat-sub-header {
-            padding: 12px 18px;
-            background-color: var(--wa-card);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--accent-color);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .messages-area {
-            flex: 1;
-            padding: 18px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .msg-bubble {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 0.92rem;
-            word-break: break-word;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .msg-bubble.me {
-            align-self: flex-start;
-            background-color: var(--wa-bubble-me);
-            color: #fff;
-        }
-
-        .msg-bubble.them {
-            align-self: flex-end;
-            background-color: var(--wa-bubble-them);
-            color: var(--text-main);
-        }
-
-        .msg-bubble img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 6px;
-            display: block;
-        }
-
-        .chat-input-row {
-            padding: 12px 16px;
-            background-color: var(--wa-card);
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .chat-input-row input[type="text"] {
-            flex: 1;
-            padding: 10px 16px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            color: var(--text-main);
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .chat-input-row button[type="submit"] {
-            background: var(--wa-green);
-            color: #fff;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
         footer {
             background-color: var(--bg-card);
             border-top: 1px solid var(--border-color);
@@ -646,16 +396,6 @@
             text-align: center;
             font-size: 0.85rem;
             color: var(--text-muted);
-        }
-
-        .disclaimer-box {
-            max-width: 1000px;
-            margin: 0 auto;
-            line-height: 1.8;
-            background: var(--bg-input);
-            padding: 12px 18px;
-            border-radius: 10px;
-            border: 1px dashed var(--border-color);
         }
     </style>
 </head>
@@ -669,9 +409,6 @@
         <h1 onclick="renderStories()">منصة حكاية</h1>
         <div class="header-actions">
             <button class="btn-auth" id="themeToggle" title="تغيير المظهر">🌙 المظهر</button>
-            <div id="authBox">
-                <button class="btn-auth" onclick="handleLogin()">تسجيل الدخول</button>
-            </div>
         </div>
     </header>
 
@@ -689,7 +426,7 @@
                     <h2 class="section-title">انشر قصتك</h2>
                     <form id="storyForm">
                         <div class="form-group">
-                            <input type="text" id="storyTitle" placeholder="عنوان القصة الرئيسي (مثال: رحلة نحو معرفة الذات)" required>
+                            <input type="text" id="storyTitle" placeholder="عنوان القصة الرئيسي (مثال: رحلة غارلون)" required>
                         </div>
                         <div class="form-group">
                             <input type="text" id="authorName" placeholder="اسم الكاتب" required>
@@ -736,75 +473,24 @@
         </div>
     </div>
 
-    <button class="chat-float-btn" id="chatFloatBtn" onclick="toggleChatModal()" title="المحادثات والأصدقاء">💬</button>
-
-    <div class="chat-modal" id="chatModal">
-        <div class="modal-header">
-            <h3>💬 المحادثات والأصدقاء</h3>
-            <button class="back-btn" onclick="toggleChatModal()">✖</button>
-        </div>
-        <div class="chat-search-box">
-            <input type="text" id="userSearchInput" placeholder="🔍 ابحث عن اسم مستخدم...">
-        </div>
-        <div class="modal-body">
-            <div class="users-list" id="usersList"></div>
-            <div class="active-chat" id="activeChat">
-                <div class="chat-sub-header">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <button class="back-btn" onclick="closeActiveChat()">➡️</button>
-                        <span id="targetUserName" style="font-weight: 700; color: var(--text-main);">المحادثة</span>
-                    </div>
-                    <button style="background:none; border:none; color:var(--wa-green); font-size:1.3rem; cursor:pointer;" onclick="startRealCallLink()" title="بدء مكالمة فيديو">📞</button>
-                </div>
-                <div class="messages-area" id="messagesArea"></div>
-                <form class="chat-input-row" id="chatForm">
-                    <label style="cursor:pointer; font-size:1.3rem; color:var(--text-muted);" title="إرسال صورة">
-                        📷
-                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                    </label>
-                    <input type="text" id="msgInput" placeholder="اكتب رسالة...">
-                    <button type="submit">إرسال</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <footer>
-        <div class="disclaimer-box">
-            <strong>إخلاء مسؤولية بشأن الإعلانات:</strong><br>
-            نود التنويه بأن الإعلانات المعروضة على الموقع يتم تقديمها تلقائياً عبر شبكات إعلانية خارجية. نحن نجتهد باستمرار في ضبط إعدادات الفلترة لمنع عرض أي محتوى غير مناسب، إلا أننا لا نتحمل المسؤولية الأخلاقية أو القانونية عن ظهور بعض الإعلانات التي قد تحتوي على مواد خادشة، محرمة، أو صور لنساء غير محجبات. يتحمل المورد الإعلاني مسؤولية محتوى هذه الإعلانات، ونرجو من زوارنا الكرام إغلاق أي إعلان غير ملائم، كما نرحب بتواصلكم معنا لإبلاغنا عنه لرفعه وحظره مباشرة.
-        </div>
-        <p style="margin-top: 15px;">جميع الحقوق محفوظة © منصة حكاية 2026</p>
+        <p>جميع الحقوق محفوظة © منصة حكاية 2026</p>
     </footer>
 
-    <!-- مكتبات فايربيس -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
-
     <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyBcoMH8sFZmb8hJUOBZvRzMrFasya2JQek",
-          authDomain: "hikaya-5ff25.firebaseapp.com",
-          databaseURL: "https://hikaya-5ff25-default-rtdb.firebaseio.com",
-          projectId: "hikaya-5ff25",
-          storageBucket: "hikaya-5ff25.firebasestorage.app",
-          messagingSenderId: "1031922678593",
-          appId: "1:1031922678593:web:c242a9e36ad40becc9bfc0",
-          measurementId: "G-KR76L2WSZ7"
-        };
+        // إدارة التخزين المحلي بدلاً من السحابي
+        const STORAGE_KEY = 'hikaya_local_stories';
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
-        const analytics = firebase.analytics();
+        function getLocalStories() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        }
 
-        database.goOnline();
+        function saveLocalStories(storiesList) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(storiesList));
+        }
 
-        let currentUser = null, stories = [], selectedUser = null, currentChatId = null, allUsersData = [];
-
-        // التحكم بوضع الليل والنهار
+        // التبديل بين وضع الليل والنهار
         const themeToggleBtn = document.getElementById('themeToggle');
         themeToggleBtn.addEventListener('click', () => {
             const currentTheme = document.body.getAttribute('data-theme');
@@ -817,50 +503,16 @@
             }
         });
 
-        // تسجيل الدخول والكتّاب
-        function handleLogin() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then(() => {
-                analytics.logEvent('login', { method: 'Google' });
-            }).catch(err => alert(err.message));
-        }
+        // ترتيب الأجزاء
+        const partOrder = {
+            'الجزء الأول': 1,
+            'الجزء الثاني': 2,
+            'الجزء الثالث': 3,
+            'الجزء الرابع': 4,
+            'الجزء الخامس': 5,
+            'قصة مستقلة': 6
+        };
 
-        function handleLogout() {
-            auth.signOut();
-        }
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('authBox').innerHTML = `
-                    <img src="${user.photoURL}" class="user-avatar" title="${user.displayName}">
-                    <button class="btn-auth btn-logout" onclick="handleLogout()">خروج</button>
-                `;
-                document.getElementById('authorName').value = user.displayName;
-                database.ref('users/' + user.uid).set({
-                    uid: user.uid,
-                    name: user.displayName,
-                    photo: user.photoURL
-                });
-                loadUsers();
-            } else {
-                currentUser = null;
-                document.getElementById('authBox').innerHTML = `<button class="btn-auth" onclick="handleLogin()">تسجيل الدخول</button>`;
-                document.getElementById('usersList').innerHTML = '<div style="padding:25px; text-align:center; color:var(--text-muted);">سجّل الدخول للتواصل مع المستخدمين 📞</div>';
-            }
-            checkLastBookmark();
-        });
-
-        // جلب القصص من قاعدة البيانات ورسمها
-        database.ref('stories').on('value', snapshot => {
-            stories = [];
-            snapshot.forEach(child => {
-                stories.push({ id: child.key, ...child.val() });
-            });
-            renderStories();
-        });
-
-        // تجميع القصص حسب العنوان والكاتب
         function groupStoriesByTitle(storyList) {
             const groups = {};
             storyList.forEach(item => {
@@ -870,16 +522,6 @@
                 }
                 groups[key].push(item);
             });
-            
-            // ترتيب الأجزاء داخل القصة (الجزء الأول، الجزء الثاني... إلخ)
-            const partOrder = {
-                'الجزء الأول': 1,
-                'الجزء الثاني': 2,
-                'الجزء الثالث': 3,
-                'الجزء الرابع': 4,
-                'الجزء الخامس': 5,
-                'قصة مستقلة': 6
-            };
 
             Object.keys(groups).forEach(key => {
                 groups[key].sort((a, b) => {
@@ -892,27 +534,28 @@
             return groups;
         }
 
-        // عرض القصص وكافة الأجزاء مباشرة وتحت بعضها
+        // عرض القصص والأجزاء مباشرة بدون مشاكل اختفاء
         function renderStories(filterText = '') {
             const container = document.getElementById('stories-container');
             container.innerHTML = '';
 
-            let filtered = stories;
+            let stories = getLocalStories();
+
             if (filterText) {
                 const q = filterText.toLowerCase();
-                filtered = stories.filter(s => 
+                stories = stories.filter(s => 
                     (s.title && s.title.toLowerCase().includes(q)) || 
                     (s.author && s.author.toLowerCase().includes(q)) || 
                     (s.content && s.content.toLowerCase().includes(q))
                 );
             }
 
-            if (filtered.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:30px;">لا توجد قصص لعرضها حالياً.</div>';
+            if (stories.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:30px;">لا توجد قصص لعرضها حالياً. اضف قصتك الأولى!</div>';
                 return;
             }
 
-            const grouped = groupStoriesByTitle(filtered);
+            const grouped = groupStoriesByTitle(stories);
 
             Object.keys(grouped).forEach(groupKey => {
                 const partList = grouped[groupKey];
@@ -925,16 +568,14 @@
                 let html = `<div class="bundle-title">📖 ${mainTitle}</div>`;
                 html += `<div class="story-meta"><span class="story-author">الكاتب: ${authorName}</span></div>`;
 
-                // عرض جميع الأجزاء مباشرة بالتوالي
                 partList.forEach((item) => {
                     const words = item.content ? item.content.trim().split(/\s+/).length : 0;
                     const readMinutes = Math.max(1, Math.ceil(words / 150));
-                    const canDelete = currentUser && (currentUser.uid === item.uid || currentUser.displayName === item.author);
                     const partTitle = item.part ? item.part : '';
 
                     html += `
                         <div class="story-card" id="story-${item.id}">
-                            ${canDelete ? `<button class="btn-delete" onclick="deleteStory('${item.id}')">حذف</button>` : ''}
+                            <button class="btn-delete" onclick="deleteStory('${item.id}')">حذف</button>
                             <h3>${partTitle ? partTitle : mainTitle}</h3>
                             <div class="story-meta">
                                 <span class="read-time-badge">⏱️ وقت القراءة: ${readMinutes} دقيقة</span>
@@ -957,41 +598,52 @@
             });
         }
 
-        // نشر قصة أو جزء جديد
+        // نشر قصة جديدة وحفظها محلياً
         document.getElementById('storyForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const title = document.getElementById('storyTitle').value;
-            const author = document.getElementById('authorName').value;
+            const title = document.getElementById('storyTitle').value.trim();
+            const author = document.getElementById('authorName').value.trim();
             const part = document.getElementById('storyPartNumber').value;
-            const content = document.getElementById('storyContent').value;
+            const content = document.getElementById('storyContent').value.trim();
 
+            const stories = getLocalStories();
             const newStory = {
+                id: 'story_' + Date.now(),
                 title: title,
                 author: author,
                 part: part,
                 content: content,
                 timestamp: Date.now(),
-                likes: 0,
-                uid: currentUser ? currentUser.uid : 'anonymous'
+                likes: 0
             };
 
-            database.ref('stories').push(newStory).then(() => {
-                alert('تم نشر القصة/الجزء بنجاح!');
-                document.getElementById('storyContent').value = '';
-            }).catch(err => alert(err.message));
+            stories.push(newStory);
+            saveLocalStories(stories);
+
+            alert('تم حفظ ونشر القصة بنجاح محلياً!');
+            document.getElementById('storyContent').value = '';
+            renderStories();
         });
 
         // حذف القصة
         function deleteStory(id) {
             if (confirm('هل أنت تأكد من رغبتك في حذف هذا الجزء؟')) {
-                database.ref('stories/' + id).remove();
+                let stories = getLocalStories();
+                stories = stories.filter(s => s.id !== id);
+                saveLocalStories(stories);
+                renderStories();
             }
         }
 
         // الإعجاب بالقصة
         function likeStory(id) {
-            const storyRef = database.ref('stories/' + id + '/likes');
-            storyRef.transaction(currentLikes => (currentLikes || 0) + 1);
+            const stories = getLocalStories();
+            const story = stories.find(s => s.id === id);
+            if (story) {
+                story.likes = (story.likes || 0) + 1;
+                saveLocalStories(stories);
+                renderStories();
+            }
         }
 
         // تغيير حجم الخط
@@ -1051,6 +703,7 @@
                 return;
             }
 
+            const stories = getLocalStories();
             const filteredStories = stories.filter(s => s.author && s.author.toLowerCase().includes(authorQuery));
             if (filteredStories.length === 0) {
                 listDiv.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.85rem; padding: 6px;">لا يوجد أرشيف لهذا الكاتب</div>';
@@ -1068,114 +721,11 @@
             });
         });
 
-        // نُظم الدردشة والمحادثات
-        function toggleChatModal() {
-            const modal = document.getElementById('chatModal');
-            modal.classList.toggle('open');
-        }
-
-        function loadUsers() {
-            database.ref('users').on('value', snapshot => {
-                allUsersData = [];
-                snapshot.forEach(child => {
-                    if (!currentUser || child.key !== currentUser.uid) {
-                        allUsersData.push(child.val());
-                    }
-                });
-                renderUsersList(allUsersData);
-            });
-        }
-
-        function renderUsersList(users) {
-            const container = document.getElementById('usersList');
-            container.innerHTML = '';
-            users.forEach(u => {
-                const item = document.createElement('div');
-                item.className = 'user-item';
-                item.innerHTML = `
-                    <img src="${u.photo || 'https://via.placeholder.com/45'}" alt="${u.name}">
-                    <div>
-                        <div class="name">${u.name}</div>
-                        <div class="sub">انقر لبدء المحادثة</div>
-                    </div>
-                `;
-                item.onclick = () => openChatWith(u);
-                container.appendChild(item);
-            });
-        }
-
-        function openChatWith(user) {
-            selectedUser = user;
-            document.getElementById('targetUserName').textContent = user.name;
-            document.getElementById('activeChat').classList.add('open');
-            
-            const chatId = currentUser.uid < user.uid ? `${currentUser.uid}_${user.uid}` : `${user.uid}_${currentUser.uid}`;
-            currentChatId = chatId;
-
-            database.ref('chats/' + chatId).on('value', snapshot => {
-                const messagesArea = document.getElementById('messagesArea');
-                messagesArea.innerHTML = '';
-                snapshot.forEach(child => {
-                    const msg = child.val();
-                    const bubble = document.createElement('div');
-                    bubble.className = `msg-bubble ${msg.sender === currentUser.uid ? 'me' : 'them'}`;
-                    
-                    let contentHtml = msg.text || '';
-                    if (msg.image) {
-                        contentHtml += `<img src="${msg.image}" alt="صورة مرفقة">`;
-                    }
-                    bubble.innerHTML = contentHtml;
-                    messagesArea.appendChild(bubble);
-                });
-                messagesArea.scrollTop = messagesArea.scrollHeight;
-            });
-        }
-
-        function closeActiveChat() {
-            document.getElementById('activeChat').classList.remove('open');
-            if (currentChatId) database.ref('chats/' + currentChatId).off();
-        }
-
-        document.getElementById('chatForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const textInput = document.getElementById('msgInput');
-            const imageInput = document.getElementById('imageInput');
-            const text = textInput.value.trim();
-
-            if (!text && !imageInput.files[0]) return;
-
-            const sendMsg = (imgData = null) => {
-                database.ref('chats/' + currentChatId).push({
-                    sender: currentUser.uid,
-                    text: text,
-                    image: imgData,
-                    timestamp: Date.now()
-                });
-                textInput.value = '';
-                imageInput.value = '';
-            };
-
-            if (imageInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    sendMsg(evt.target.result);
-                };
-                reader.readAsDataURL(imageInput.files[0]);
-            } else {
-                sendMsg();
-            }
-        });
-
-        function startRealCallLink() {
-            const roomName = "Hikaya_" + currentChatId;
-            const callUrl = `https://meet.jit.si/${roomName}`;
-            database.ref('chats/' + currentChatId).push({
-                sender: currentUser.uid,
-                text: `📞 انضم إلى مكالمة الفيديو: <a href="${callUrl}" target="_blank" style="color:#f59e0b; text-decoration:underline;">اضغط هنا للدخول للمكالمة</a>`,
-                timestamp: Date.now()
-            });
-            window.open(callUrl, '_blank');
-        }
+        // التشغيل المبدئي عند تحميل الصفحة
+        window.onload = function() {
+            checkLastBookmark();
+            renderStories();
+        };
     </script>
 </body>
 </html>
