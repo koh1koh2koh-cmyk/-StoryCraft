@@ -913,19 +913,30 @@
     <!-- JAVASCRIPT LOGIC ENGINE -->
     <script>
         /* ==========================================================================
-           1. CONSTANTS & INITIAL DATASETS (Re-ordered Chronological Story Dataset)
+           1. CONSTANTS & INITIAL DATASETS
            ========================================================================== */
         const STORAGE_KEY = 'hikaya_stories_v3';
         const BOOKMARK_KEY = 'hikaya_bookmark_v3';
         const LIKES_KEY = 'hikaya_likes_v3';
         const FAVORITES_KEY = 'hikaya_favs_v3';
+        const AUTHOR_SESSION_KEY = 'hikaya_current_author_id';
 
-        // Re-ordered Story Dataset according to narrative sequence
+        // Get or generate Unique Device Author ID
+        function getCurrentUserToken() {
+            let userToken = localStorage.getItem(AUTHOR_SESSION_KEY);
+            if (!userToken) {
+                userToken = 'author_token_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem(AUTHOR_SESSION_KEY, userToken);
+            }
+            return userToken;
+        }
+
         const defaultStoryDatabase = [
             {
                 id: 'gar_part_1',
                 title: 'رحلة غارلون ومحمد',
                 author: 'غارلون',
+                ownerToken: 'system_default',
                 part: 'الجزء الأول',
                 cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
                 content: `في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.
@@ -938,6 +949,7 @@
                 id: 'gar_part_2',
                 title: 'رحلة غارلون ومحمد',
                 author: 'غارلون',
+                ownerToken: 'system_default',
                 part: 'الجزء الثاني',
                 cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
                 content: `بعد أن مشى الرجلان اللذان من القرية، قضيا 4 ساعات للوصول إلى كوراساوا؛ فكان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. لكن أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص فضولاً منه، وإذ بالصدمة تملأ وجهه؛ إذ من كان أمامه هو السياف غارلون، الذي كان يتدرب في الغابة. فلمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له أن يهدأ: "لأنني لن أؤذيك". فهمه غارلون وهدأ، وقرر أن يتركه.
@@ -954,6 +966,7 @@
                 id: 'gar_part_3',
                 title: 'رحلة غارلون ومحمد',
                 author: 'غارلون',
+                ownerToken: 'system_default',
                 part: 'الجزء الثالث',
                 cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
                 content: `وقال له غارلون عرفني عن نفسك فقال له رجل القرية اسمي هو محمد وانا من قرية هيوكامارا التي تبعد عن هنا بمسافة 7 كم فقال له غارلون انه من مدينة ميكارليس وهي مدينة بعيده جدا فقال محمد لغارلون ما هو هدفك الذي تسعى إليه ؟ فقال له غارلون اريد ان اجمع المال وات اسعى لتسديد ديوني فقال له محمد لماذا انت مديون فقال له غارلون لأنه كان في الماضي والدي يلعب القمار وكان يستلف النقوظ من العصابات وعندما لم يسدد والدي الديون فقتل ه رجال العصابة والديون اصبحت على عاتقي وقدر هذا الدين هو 500 مليون ين فانصدم محمد من الرقم وقال له بصوت مهزوز من الصدمه الى اين سنذهب يا غارلون فقال له غارلون سنذهب الى رجال العصابة للإنتقام منهم.
@@ -970,6 +983,7 @@
                 id: 'gar_part_4',
                 title: 'رحلة غارلون ومحمد',
                 author: 'غارلون',
+                ownerToken: 'system_default',
                 part: 'الجزء الرابع',
                 cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
                 content: `وبعد ساعة وصلا إلى مدينة كوراساوا، وذهبا إلى تاجر لجلود الحيوانات وباعا له جلد النمر بثمن باهظ وهو 100 ألف ين، وعندما مشى غارلون مع محمد كان متعصباً من شيء ما.
@@ -982,6 +996,7 @@
                 id: 'gar_part_5',
                 title: 'رحلة غارلون ومحمد',
                 author: 'غارلون',
+                ownerToken: 'system_default',
                 part: 'الجزء الخامس',
                 cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
                 content: `بعد بيع محمد للنمر وغضب غارلون المكبوت فقال غارلون لمحمد بصوت هادء: اتعرف من كان التاجر الذي بعنا له النمر ؟ فقال محمد باستغراب : لا من يكون هو فقال غارلون بثوت به بعض الغضب المتسرب من كبته له : انه فرد من العصابة التي قتلت والدي وانا مديون لها فانصدم محمد وغضب وقال لغارلون لماذا لم تقول لي فقال له غارلون لأن قتلك لهم ان فعلت لن يفيدك وايضا لا اريدك ان تتدخل في انتقامي منهم فهدء محمد من نفسه وقررا انهما سيفكران بطريقه لقتله.
@@ -1095,6 +1110,7 @@
             container.innerHTML = '';
 
             let stories = getStoredStories();
+            const currentToken = getCurrentUserToken();
 
             if (filterQuery) {
                 const query = filterQuery.toLowerCase().trim();
@@ -1148,11 +1164,14 @@
                     const isLiked = !!likesMap[partItem.id];
                     const isFaved = !!favsMap[partItem.id];
 
+                    // Check if current user is the publisher of this specific story
+                    const isOwner = partItem.ownerToken && partItem.ownerToken === currentToken;
+
                     bundleHtml += `
                         <div class="story-card" id="story-${partItem.id}">
                             <h3>
                                 <span>${partItem.part || bundleTitle}</span>
-                                <button class="btn-delete-card" onclick="deleteStoryCard('${partItem.id}')">حذف الفصل</button>
+                                ${isOwner ? `<button class="btn-delete-card" onclick="deleteStoryCard('${partItem.id}')">حذف الفصل</button>` : ''}
                             </h3>
 
                             <div class="story-meta">
@@ -1213,6 +1232,7 @@
                 id: 'custom_' + Date.now(),
                 title: title,
                 author: author,
+                ownerToken: getCurrentUserToken(), // Tag story with creator's token
                 part: part,
                 cover: cover,
                 content: content,
@@ -1229,11 +1249,22 @@
         });
 
         function deleteStoryCard(id) {
+            const stories = getStoredStories();
+            const targetStory = stories.find(s => s.id === id);
+            const currentToken = getCurrentUserToken();
+
+            if (!targetStory) return;
+
+            // Security check
+            if (targetStory.ownerToken !== currentToken) {
+                showToast("عفواً، لا يملك صلاحية حذف هذا الفصل سوى الناشر الأصلي!", "danger");
+                return;
+            }
+
             if (confirm("هل أنت متأكد من رغبتك في حذف هذا الفصل؟")) {
-                let stories = getStoredStories();
-                stories = stories.filter(s => s.id !== id);
-                saveStoredStories(stories);
-                showToast("تم حذف الفصل المحدد", "info");
+                const updatedStories = stories.filter(s => s.id !== id);
+                saveStoredStories(updatedStories);
+                showToast("تم حذف الفصل بنجاح", "info");
                 renderStories();
             }
         }
@@ -1431,7 +1462,7 @@
         });
 
         window.onload = function() {
-            saveStoredStories(defaultStoryDatabase);
+            getCurrentUserToken();
             updateBookmarkWidget();
             renderStories();
         };
