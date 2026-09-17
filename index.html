@@ -3,785 +3,2003 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة حكاية - قراءة ونشر القصص</title>
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="منصة حكاية - قراءة ونشر القصص والفصول">
+    <title>حكاية — قراءة ونشر القصص</title>
+
     <style>
         :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-color: #6366f1;
+            --bg: #0b1120;
+            --bg-soft: #111827;
+            --panel: #172033;
+            --panel-2: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: #334155;
+            --accent: #6366f1;
+            --accent-2: #8b5cf6;
             --accent-hover: #4f46e5;
-            --border-color: #334155;
-            --danger-color: #ef4444;
-            --success-color: #10b981;
-            --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --shadow: 0 20px 50px rgba(0, 0, 0, .22);
+            --radius: 16px;
+            --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
         }
 
         [data-theme="light"] {
-            --bg-color: #f8fafc;
-            --panel-bg: #ffffff;
-            --text-color: #0f172a;
-            --text-muted: #64748b;
-            --accent-color: #4f46e5;
+            --bg: #f1f5f9;
+            --bg-soft: #e2e8f0;
+            --panel: #ffffff;
+            --panel-2: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #cbd5e1;
+            --accent: #4f46e5;
+            --accent-2: #7c3aed;
             --accent-hover: #4338ca;
-            --border-color: #e2e8f0;
-            --danger-color: #dc2626;
-            --success-color: #059669;
+            --shadow: 0 20px 50px rgba(15, 23, 42, .12);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: var(--font-family);
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        #readingProgressBar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            height: 4px;
-            background: var(--accent-color);
-            width: 0%;
-            z-index: 1000;
-            transition: width 0.1s;
-        }
-
-        header {
-            background: var(--panel-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 900;
-        }
-
-        .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); }
-
-        .header-actions { display: flex; gap: 1rem; align-items: center; }
-
-        .btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .btn:hover { background: var(--accent-hover); }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-        }
-
-        .btn-outline:hover { background: var(--border-color); }
-
-        .main-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 2rem;
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        @media (max-width: 900px) {
-            .main-layout { grid-template-columns: 1fr; }
-        }
-
-        .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
-
-        .panel-box {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-        }
-
-        .panel-title {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
-        }
-
-        .form-group { margin-bottom: 1rem; }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-color);
-            font-family: inherit;
-        }
-
-        textarea.form-control { resize: vertical; min-height: 120px; }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center; }
-
-        .stat-card {
-            background: var(--bg-color);
-            padding: 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-        }
-
-        .stat-number { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); }
-
-        .story-bundle-box {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .bundle-header {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
-
-        .bundle-cover { width: 90px; height: 120px; object-fit: cover; border-radius: 6px; }
-
-        .bundle-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
-
-        .story-badge {
-            background: var(--bg-color);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .story-card {
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1.25rem;
-            margin-top: 1rem;
-        }
-
-        .story-card h3 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .story-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
-
-        .reading-toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-
-        .tool-btn {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-
-        .tool-btn:hover { border-color: var(--accent-color); }
-
-        .story-text {
-            font-size: 1.05rem;
+            background:
+                radial-gradient(circle at top right, rgba(99, 102, 241, .12), transparent 30%),
+                var(--bg);
+            color: var(--text);
+            font-family: var(--font);
             line-height: 1.8;
-            white-space: pre-line;
-            margin-bottom: 1rem;
+            min-height: 100vh;
+            transition: background .3s, color .3s;
         }
 
-        .card-actions-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border-color);
-            padding-top: 0.75rem;
-        }
-
-        .interaction-group { display: flex; gap: 0.5rem; }
-
-        .like-btn, .fav-btn, .share-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .like-btn.liked { color: var(--danger-color); border-color: var(--danger-color); }
-        .fav-btn.faved { color: #f59e0b; border-color: #f59e0b; }
-
-        .btn-delete-card {
-            background: transparent;
-            color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.75rem;
-        }
-
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 2000;
-        }
-
-        .toast {
-            background: var(--panel-bg);
-            color: var(--text-color);
-            border-right: 4px solid var(--accent-color);
-            padding: 0.75rem 1.25rem;
-            border-radius: 4px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            animation: slideIn 0.3s ease;
-        }
-
-        .toast.success { border-color: var(--success-color); }
-        .toast.danger { border-color: var(--danger-color); }
-
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        body.focus-mode header,
+        body.focus-mode .site-header,
         body.focus-mode .sidebar,
         body.focus-mode .reading-toolbar,
-        body.focus-mode .card-actions-bar {
+        body.focus-mode .actions-bar {
             display: none !important;
         }
 
-        body.focus-mode .main-layout { grid-template-columns: 1fr; max-width: 800px; }
-
-        .folder-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
+        body.focus-mode .layout {
+            grid-template-columns: 1fr;
+            max-width: 900px;
         }
 
-        .folder-item:hover { background: var(--bg-color); }
+        body.focus-mode .story-text {
+            font-size: 1.2rem;
+            line-height: 2.15;
+        }
+
+        #progressBar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: 9999;
+            transition: width .12s linear;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(14px);
+            background: color-mix(in srgb, var(--panel) 90%, transparent);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1450px;
+            margin: auto;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-decoration: none;
+        }
+
+        .logo-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 8px 20px rgba(99, 102, 241, .25);
+        }
+
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        button,
+        input,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+        }
+
+        .btn {
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: transform .15s, background .2s, border-color .2s;
+            font-weight: 700;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--accent-hover), var(--accent-2));
+        }
+
+        .btn-outline {
+            color: var(--text);
+            background: transparent;
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: var(--panel-2);
+        }
+
+        .layout {
+            width: min(1450px, calc(100% - 32px));
+            margin: 26px auto 50px;
+            display: grid;
+            grid-template-columns: 310px minmax(0, 1fr);
+            gap: 22px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-self: start;
+            position: sticky;
+            top: 82px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            padding-left: 2px;
+        }
+
+        .panel {
+            background: linear-gradient(180deg, var(--panel), color-mix(in srgb, var(--panel) 92%, var(--bg)));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .field label {
+            display: block;
+            color: var(--muted);
+            font-size: .86rem;
+            margin-bottom: 6px;
+        }
+
+        .control {
+            width: 100%;
+            color: var(--text);
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            padding: 11px 12px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .14);
+        }
+
+        textarea.control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat {
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 13px;
+            text-align: center;
+        }
+
+        .stat-number {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+        .stat-label {
+            font-size: .78rem;
+            color: var(--muted);
+        }
+
+        .author-results {
+            margin-top: 10px;
+        }
+
+        .author-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .author-item:hover {
+            background: var(--bg-soft);
+        }
+
+        .main {
+            min-width: 0;
+        }
+
+        .hero {
+            padding: 22px;
+            border-radius: var(--radius);
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            background:
+                linear-gradient(135deg, rgba(99, 102, 241, .16), transparent 55%),
+                var(--panel);
+        }
+
+        .hero h1 {
+            font-size: clamp(1.55rem, 3vw, 2.3rem);
+            margin-bottom: 5px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 800px;
+        }
+
+        .story-bundle {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .bundle-header {
+            display: grid;
+            grid-template-columns: 90px 1fr;
+            gap: 16px;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cover {
+            width: 90px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        }
+
+        .bundle-title {
+            font-size: clamp(1.25rem, 2.3vw, 1.7rem);
+            line-height: 1.35;
+            margin-bottom: 8px;
+        }
+
+        .meta-line {
+            color: var(--muted);
+            font-size: .86rem;
+        }
+
+        .story-card {
+            margin-top: 16px;
+            padding: 18px;
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .story-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .part-title {
+            font-size: 1.08rem;
+            font-weight: 800;
+        }
+
+        .delete-btn {
+            color: var(--danger);
+            background: transparent;
+            border: 1px solid var(--danger);
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: .78rem;
+        }
+
+        .story-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 13px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--muted);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 5px 9px;
+            font-size: .78rem;
+        }
+
+        .reading-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 15px;
+        }
+
+        .tool {
+            color: var(--text);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 10px;
+            cursor: pointer;
+            font-size: .8rem;
+        }
+
+        .tool:hover {
+            border-color: var(--accent);
+        }
+
+        .story-text {
+            font-size: 1.04rem;
+            line-height: 2;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+            margin-bottom: 15px;
+        }
+
+        .story-text::first-letter {
+            font-size: 1.25em;
+            font-weight: 800;
+        }
+
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding-top: 13px;
+            border-top: 1px solid var(--border);
+        }
+
+        .actions-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .action {
+            color: var(--text);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 10px;
+            cursor: pointer;
+            font-size: .82rem;
+        }
+
+        .action.liked {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .action.faved {
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: var(--muted);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .resume-box {
+            display: none;
+        }
+
+        .resume-box.active {
+            display: block;
+        }
 
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1500;
-            justify-content: center;
+            inset: 0;
+            background: rgba(0, 0, 0, .72);
+            z-index: 3000;
             align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .modal.active { display: flex; }
+        .modal.active {
+            display: flex;
+        }
 
         .modal-content {
-            background: var(--panel-bg);
-            padding: 2rem;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 90%;
-            border: 1px solid var(--border-color);
+            width: min(520px, 100%);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+        }
+
+        .modal-content p {
+            color: var(--muted);
+            margin-bottom: 15px;
+            font-size: .9rem;
+        }
+
+        .modal-buttons {
+            display: grid;
+            gap: 9px;
+        }
+
+        .toast-container {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            width: min(360px, calc(100% - 36px));
+        }
+
+        .toast {
+            background: var(--panel);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-right: 4px solid var(--accent);
+            border-radius: 10px;
+            padding: 12px 14px;
+            box-shadow: var(--shadow);
+            animation: toastIn .25s ease;
+        }
+
+        .toast.success {
+            border-right-color: var(--success);
+        }
+
+        .toast.danger {
+            border-right-color: var(--danger);
+        }
+
+        .toast.warning {
+            border-right-color: var(--warning);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 980px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                max-height: none;
+                overflow: visible;
+            }
+
+            .publish-panel {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .layout {
+                width: min(100% - 18px, 1450px);
+                margin-top: 12px;
+            }
+
+            .header-inner {
+                padding: 11px 10px;
+                align-items: flex-start;
+            }
+
+            .logo span:last-child {
+                display: none;
+            }
+
+            .header-actions {
+                justify-content: flex-end;
+            }
+
+            .header-actions .btn {
+                padding: 8px 9px;
+                font-size: .76rem;
+            }
+
+            .bundle-header {
+                grid-template-columns: 70px 1fr;
+            }
+
+            .cover {
+                width: 70px;
+                height: 95px;
+            }
+
+            .story-card,
+            .story-bundle,
+            .panel,
+            .hero {
+                padding: 13px;
+            }
+
+            .actions-bar {
+                align-items: stretch;
+                flex-direction: column;
+            }
         }
     </style>
 </head>
+
 <body>
+    <div id="progressBar"></div>
 
-    <div id="readingProgressBar"></div>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="logo" href="#">
+                <span class="logo-mark">📖</span>
+                <span>حكاية</span>
+            </a>
 
-    <header>
-        <div class="logo">📖 حكاية</div>
-        <div class="header-actions">
-            <button class="btn btn-outline" id="themeToggleBtn">☀️ Light Mode</button>
-            <button class="btn btn-outline" onclick="openBackupModal()">💾 Backup</button>
-            <button class="btn" onclick="scrollToPublish()">✍️ نشر قصة</button>
+            <div class="header-actions">
+                <button class="btn btn-outline" id="themeBtn">☀️ الوضع الفاتح</button>
+                <button class="btn btn-outline" id="backupBtn">💾 النسخ الاحتياطي</button>
+                <button class="btn btn-primary" id="publishBtn">✍️ نشر فصل</button>
+            </div>
         </div>
     </header>
 
-    <div class="main-layout">
+    <div class="layout">
         <aside class="sidebar">
-            <div class="panel-box" id="resumeReadingBox" style="display: none;">
+
+            <section class="panel resume-box" id="resumeBox">
                 <h3 class="panel-title">📍 متابعة القراءة</h3>
-                <p id="resumeStoryText" style="font-size:0.85rem; margin-bottom:0.5rem; color:var(--text-muted);"></p>
-                <button class="btn btn-outline" style="width:100%" id="resumeStoryBtn">الانتقال للنقطة الحالية</button>
-            </div>
+                <p id="resumeText" style="color:var(--muted);font-size:.86rem;margin-bottom:10px;"></p>
+                <button class="btn btn-outline" style="width:100%;" id="resumeBtn">
+                    الانتقال إلى آخر موضع
+                </button>
+            </section>
 
-            <div class="panel-box">
+            <section class="panel">
                 <h3 class="panel-title">📊 الإحصائيات</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="statTotalStories">0</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted);">الفصول</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="statTotalAuthors">0</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted);">المؤلفون</div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="panel-box">
-                <h3 class="panel-title">🔍 البحث والتصفية</h3>
-                <div class="form-group">
-                    <input type="text" id="globalSearchInput" class="form-control" placeholder="بحث في عناوين القصص والمحتوى...">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="folderSearchInput" class="form-control" placeholder="تصفية حسب اسم الكاتب...">
-                </div>
-                <div id="authorFolderList"></div>
-                <button class="btn btn-outline" style="width:100%; margin-top:0.5rem;" onclick="resetFilters()">إعادة ضبط البحث</button>
-            </div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number" id="totalStories">0</div>
+                        <div class="stat-label">الفصول</div>
+                    </div>
 
-            <div class="panel-box" id="publishPanel">
+                    <div class="stat">
+                        <div class="stat-number" id="totalAuthors">0</div>
+                        <div class="stat-label">المؤلفون</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-number" id="totalFavorites">0</div>
+                        <div class="stat-label">المفضلة</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-number" id="totalLikes">0</div>
+                        <div class="stat-label">الإعجابات</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h3 class="panel-title">🔎 البحث والتصفية</h3>
+
+                <div class="field">
+                    <label for="searchInput">بحث داخل المنصة</label>
+                    <input
+                        id="searchInput"
+                        class="control"
+                        type="search"
+                        placeholder="العنوان، الكاتب، الفصل، المحتوى..."
+                        autocomplete="off">
+                </div>
+
+                <div class="field">
+                    <label for="authorInput">البحث عن كاتب</label>
+                    <input
+                        id="authorInput"
+                        class="control"
+                        type="search"
+                        placeholder="اكتب اسم الكاتب..."
+                        autocomplete="off">
+                </div>
+
+                <div class="author-results" id="authorResults"></div>
+
+                <button class="btn btn-outline" style="width:100%;margin-top:10px;" id="resetBtn">
+                    إعادة ضبط البحث
+                </button>
+            </section>
+
+            <section class="panel publish-panel" id="publishPanel">
                 <h3 class="panel-title">✍️ نشر فصل جديد</h3>
+
                 <form id="storyForm">
-                    <div class="form-group">
-                        <label>عنوان القصة الرئيسي</label>
-                        <input type="text" id="storyTitle" class="form-control" required placeholder="رحلة نحو معرفة الذات">
+                    <div class="field">
+                        <label for="storyTitle">عنوان القصة الرئيسي</label>
+                        <input
+                            class="control"
+                            id="storyTitle"
+                            required
+                            value="رحلة نحو معرفة الذات">
                     </div>
-                    <div class="form-group">
-                        <label>اسم الكاتب</label>
-                        <input type="text" id="authorName" class="form-control" required placeholder="اسم المؤلف">
+
+                    <div class="field">
+                        <label for="authorName">اسم الكاتب</label>
+                        <input
+                            class="control"
+                            id="authorName"
+                            required
+                            placeholder="اسم المؤلف">
                     </div>
-                    <div class="form-group">
-                        <label>رقم أو اسم الفصل</label>
-                        <input type="text" id="storyPartNumber" class="form-control" required placeholder="الفصل الرابع">
+
+                    <div class="field">
+                        <label for="storyPart">رقم أو اسم الفصل</label>
+                        <input
+                            class="control"
+                            id="storyPart"
+                            required
+                            placeholder="الفصل الأول">
                     </div>
-                    <div class="form-group">
-                        <label>رابط صورة الغلاف (اختياري)</label>
-                        <input type="text" id="coverUrl" class="form-control" placeholder="cover.jpg">
+
+                    <div class="field">
+                        <label for="coverUrl">رابط صورة الغلاف — اختياري</label>
+                        <input
+                            class="control"
+                            id="coverUrl"
+                            placeholder="https://example.com/cover.jpg">
                     </div>
-                    <div class="form-group">
-                        <label>محتوى الفصل</label>
-                        <textarea id="storyContent" class="form-control" required placeholder="اكتب نص الفصل هنا..."></textarea>
+
+                    <div class="field">
+                        <label for="storyContent">محتوى الفصل</label>
+                        <textarea
+                            class="control"
+                            id="storyContent"
+                            required
+                            placeholder="اكتب الفصل هنا..."></textarea>
                     </div>
-                    <button type="submit" class="btn" style="width:100%;">نشر الفصل</button>
+
+                    <button class="btn btn-primary" type="submit" style="width:100%;">
+                        نشر الفصل
+                    </button>
                 </form>
-            </div>
+            </section>
         </aside>
 
-        <main id="stories-container"></main>
+        <main class="main">
+            <section class="hero">
+                <h1>📚 منصة حكاية</h1>
+                <p>
+                    اقرأ القصص، تابع الفصول، احفظ موضعك، وأضف أعمالك الخاصة في مكان واحد.
+                </p>
+            </section>
+
+            <div id="storiesContainer"></div>
+        </main>
     </div>
 
-    <div class="toast-container" id="toast-container"></div>
+    <div class="toast-container" id="toastContainer"></div>
 
     <div class="modal" id="backupModal">
         <div class="modal-content">
-            <h3 class="panel-title">إدارة النسخ الاحتياطي</h3>
-            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">يمكنك تصدير كافة البيانات كملف JSON أو استعادتها من ملف سابق.</p>
-            <div style="display:flex; flex-direction:column; gap:0.75rem;">
-                <button class="btn" onclick="exportDataJSON()">تصدير البيانات (JSON)</button>
-                <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDataJSON()">
-                <button class="btn btn-outline" onclick="document.getElementById('importFileInput').click()">استعادة من ملف JSON</button>
-                <button class="btn btn-outline" style="color:var(--danger-color); border-color:var(--danger-color);" onclick="closeBackupModal()">إغلاق</button>
+            <h3 class="panel-title">💾 إدارة النسخ الاحتياطي</h3>
+
+            <p>
+                يمكنك حفظ قصصك في ملف JSON واستعادتها لاحقاً على نفس المنصة.
+            </p>
+
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="exportBtn">
+                    📤 تصدير البيانات
+                </button>
+
+                <button class="btn btn-outline" id="importBtn">
+                    📥 استعادة البيانات
+                </button>
+
+                <input
+                    type="file"
+                    id="importInput"
+                    accept=".json,application/json"
+                    class="hidden">
+
+                <button class="btn btn-outline" id="closeBackupBtn">
+                    إغلاق
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- استدعاء ملف القصص المباشر قبل محرك التشغيل -->
-    <script src="stories.js"></script>
-
     <script>
-        const STORAGE_KEY = 'hikaya_stories_db';
-        const LIKES_KEY = 'hikaya_likes_db';
-        const FAVORITES_KEY = 'hikaya_favorites_db';
-        const BOOKMARK_KEY = 'hikaya_bookmark_db';
-        const USER_TOKEN_KEY = 'hikaya_user_token';
+        "use strict";
+
+        /* =========================================================
+           إعدادات التخزين
+        ========================================================= */
+
+        const STORAGE_KEY = "hikaya_stories_v2";
+        const LIKES_KEY = "hikaya_likes_v2";
+        const FAVORITES_KEY = "hikaya_favorites_v2";
+        const BOOKMARK_KEY = "hikaya_bookmark_v2";
+        const USER_TOKEN_KEY = "hikaya_user_token_v2";
+        const THEME_KEY = "hikaya_theme_v2";
+
+        /* =========================================================
+           القصة الافتراضية المطلوبة
+        ========================================================= */
+
+        const defaultStories = [
+            {
+                id: "story_001",
+                title: "رحلة نحو معرفة الذات",
+                author: "الكاتب المعجزة",
+                part: "الفصل الأول — في الغابة",
+                cover: "",
+                createdAt: Date.now(),
+                ownerToken: "system",
+                content: `في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح.
+
+فجأة، ظهر نمر يركض خلف رجل غريب، وكانت أصوات خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين.
+
+تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، ثم أكمل طريقه.
+
+في اليوم التالي، جاء رجلان من قرية قريبة من تلك الغابة لجمع فطر عش الغراب.
+
+رأى أحد الرجلين منظر جثة النمر فُصدم، ونادى على زميله وقال له وهو فرح ومبتسم:
+— "هذا رائع! يمكننا بيعه في القرية".
+
+فاستغرب زميله وقال:
+— "لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟"
+
+فقال له الآخر:
+— "إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها".
+
+فقال رجل القرية:
+— "ومن قتل النمر؟"
+
+أجابه زميله:
+— "إنه سياف مشهور يدعى غارلون".
+
+صُدم الرجل مما سمعه، وقررا بيع جلد النمر في مدينة "كوراساوا" التي تبعد عنهما 7 كيلومترات، فأخذا النمر معهما على عربة تجرها الأحصنة وانطلقا في رحلتهما.
+
+قضى الرجلان 4 ساعات للوصول إلى كوراساوا؛ إذ كان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً.
+
+أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص بدافع الفضول.
+
+وما إن وصل حتى ملأت الصدمة وجهه؛ إذ كان أمامه السياف غارلون وهو يتدرب في الغابة.
+
+لمحه السياف وكان سيهاجمه ظناً منه أنه خطر يهدده، لكن الرجل قال له ليهدئه:
+— "اهدأ، فأنا لن أؤذيك".
+
+تفهم غارلون الكلام وهدأ، وقرر أن يتركه.
+
+ولكن قبل أن يبتعد، سمع غارلون صوت حركة خلف رجل القرية، فركض وفوجئ بسياف آخر يهاجم زميل رجل القرية.
+
+فحزن عليه صديقه كثيراً.
+
+انقض غارلون على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملحوظ.
+
+أثناء القتال، ذهب الرجل إلى زميله الذي كان يحتضر وقال له:
+— "أين أُصبت؟"
+
+فقال بصوت مليء بالألم:
+— "أصابني في بطني".
+
+فسأله:
+— "أين بالضبط؟"
+
+أجاب بصوت متألم:
+— "لا أعرف..."
+
+حاول زميله أن يعالجه لكنه فشل، فقال له المحتضر:
+— "هذه نهايتي، لا تتعب نفسك. اذهب مع غارلون فهو سيحميك بدلاً مني، فالقرية بعيدة جداً ولن تستطيع الوصول إليها بمفردك. أريد أن أقول شيئاً كنت أود قوله عند مماتي..."
+
+فسأله زميله:
+— "ما هو؟"
+
+قال الرجل:
+— "ليت الواقع حلم، وليت مماتي لم يكن واقعاً".
+
+ثم فاضت روحه وتوفى.
+
+بكى عليه زميله كثيراً، وعندما نظر إلى غارلون اندهش؛ فقد كان غارلون قد أنهى القتال مع السياف الآخر بمهارة متقنة.
+
+جاء غارلون إليه بخطوات هادئة وقال له:
+— "هل أنت بخير؟"
+
+أجاب الرجل:
+— "نعم، لكن زميلي توفى، وقال لي أن أذهب معك".
+
+رد غارلون:
+— "حسناً، ولكن هل يمكنك أن تشارك معي في رحلتي؟"
+
+فقال رجل القرية:
+— "نعم، بكل سرور".
+
+مشى غارلون مع رجل القرية وقال له:
+— "عرّفني عن نفسك".
+
+قال الرجل:
+— "اسمي محمد، وأنا من قرية هيوكامارا التي تبعد عن هنا مسافة 7 كم".
+
+فقال له غارلون إنه من مدينة "ميكارليس"، وهي مدينة بعيدة جداً.
+
+سأل محمد:
+— "ما هو الهدف الذي تسعى إليه يا غارلون؟"
+
+أجابه غارلون:
+— "أريد أن أجمع المال وأسعى لتسديد ديوني".
+
+فقال محمد مستغرباً:
+— "ولماذا أنت مديون؟"
+
+رد غارلون:
+— "في الماضي، كان والدي يلعب القمار ويستلف النقود من العصابات. وعندما لم يسدد ديونه، قتله رجال العصابة وأصبحت الديون على عاتقي. ويبلغ قيمة هذا الدين 500 مليون ين".
+
+انصدم محمد من الرقم وقال بصوت مهزوز من الصدمة:
+— "إلى أين سنذهب الآن يا غارلون؟"
+
+قال غارلون:
+— "سنذهب إلى رجال العصابة للانتقام منهم".
+
+في اليوم التالي، واصل غارلون ومحمد طريقهما نحو مدينة كوراساوا لبيع النمر.
+
+وفي الطريق واجها العدو اللدود لأي مسافر: الجوع.
+
+طلب غارلون من محمد أن ينتظر لكي يصطاد غزالاً أو أرنباً برياً.
+
+توغل غارلون في الغابة، وبعد 20 دقيقة من البحث وجد أرنباً برياً.
+
+حبس أنفاسه وركز جيداً، ثم سحب سيفه ببطء وانقض عليه مسرعاً بدون صوت، ثم عاد بالصيد.
+
+عاد غارلون، واندهش محمد مما جلبه وقال:
+— "كيف اصطدت هذا الأرنب؟ إنه أمر مذهل!"
+
+أجابه غارلون ببرود:
+— "ليس من شأنك أن تعرف، اجمع الحطب وأنت صامت".
+
+قال محمد:
+— "حاضر".
+
+أثناء تجميع الحطب، قال محمد في نفسه إنه لن يجعل برود غارلون عائقاً، ولن يجعله شخصاً بارداً بل سيعامله بلطف دائماً.
+
+جمع الحطب وأشعل النار لشوي الأرنب وأكلا معاً.
+
+بعد ساعة، وصلا إلى مدينة كوراساوا، وذهبا إلى تاجر لجلود الحيوانات وباعا له جلد النمر بثمن باهظ بلغ 100 ألف ين.
+
+ولكن أثناء سيرهما، كان غارلون ينضب غضباً من شيء ما.
+
+لاحظ محمد غضب غارلون المكبوت، فقال له غارلون بصوت هادئ:
+— "أتلاحظ من كان التاجر الذي بعنا له النمر؟"
+
+قال محمد باستغراب:
+— "لا، من يكون؟"
+
+قال غارلون بصوت يتسرب منه الغضب:
+— "إنه فرد من العصابة التي قتلت والدي وأنا مديون لها".
+
+انصدم محمد وغضب وقال:
+— "لماذا لم تقل لي؟!"
+
+أجابه غارلون:
+— "لأن قتلك لهم الآن لن يفيدك، وأيضاً لا أريدك أن تتدخل في انتقامي منهم".
+
+هدأ محمد، وقررا التفكير في طريقة لمواجهة العصابة.
+
+فكر غارلون في خطة وقال:
+— "سأراقبه في الليل وأنتظر الفرصة المناسبة. سيغضب قائد العصابة عندما يعلم بخبر ما حدث، وسيبدأ بالبحث عني، وحينها سننسحب وننسق سفرنا إلى الدولة التي يعيش فيها مدربي. سيكون الوقت المقدر لبحثهم عني تقريباً شهراً كاملاً، وهو ما يكفي لكي أستعد لهم. وأنت يا محمد ستتدرب معي، فقوتك ضعيفة. إن أردت أن تتطور فتعال معي، وإلا فلن تكون معي في رحلتي".
+
+فكر محمد في خطة غارلون وقرر الموافقة، ثم سأله:
+— "أين تقع دولة مدربك؟"
+
+أجابه غارلون:
+— "في مصر".
+
+بالفعل، انطلقا نحو التاجر في الليل وراقبه غارلون.
+
+كان التاجر يُدعى "بوراينو"، وهو الفرد السابع من عصابة تُدعى "عصابة المونيراف"؛ أشهر عصابة في البلاد والمعروفة بأساليبها الخطيرة للغاية.
+
+ورغم أن عدد أعضائها قليل، 15 فرداً فقط، إلا أنهم من بين أقوى 100 سياف عرفهم التاريخ.
+
+فهل سينتصر عليهم غارلون؟
+
+هذا ما سنعرفه في الجزء القادم...`
+            }
+        ];
+
+        /* =========================================================
+           حالة التطبيق
+        ========================================================= */
 
         let stories = [];
         let likes = {};
         let favorites = [];
+        let activeAuthor = "";
+        let currentSearch = "";
 
-        function getCurrentUserToken() {
+        /* =========================================================
+           أدوات عامة
+        ========================================================= */
+
+        function getUserToken() {
             let token = localStorage.getItem(USER_TOKEN_KEY);
+
             if (!token) {
-                token = 'usr_' + Math.random().toString(36).substr(2, 9);
+                token = "usr_" + cryptoRandom();
                 localStorage.setItem(USER_TOKEN_KEY, token);
             }
+
             return token;
         }
 
-        function initApp() {
-            loadData();
-            setupTheme();
-            setupEventListeners();
-            renderStories();
-            updateStats();
-            checkResumeReading();
+        function cryptoRandom() {
+            if (window.crypto && crypto.getRandomValues) {
+                const bytes = new Uint8Array(12);
+                crypto.getRandomValues(bytes);
+                return [...bytes].map(b => b.toString(16).padStart(2, "0")).join("");
+            }
+
+            return Math.random().toString(36).slice(2) + Date.now().toString(36);
         }
 
-        function loadData() {
-            const storedStories = localStorage.getItem(STORAGE_KEY);
-            stories = storedStories ? JSON.parse(storedStories) : (window.storiesDatabase || []);
-            if (!storedStories && window.storiesDatabase) saveData();
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(stories));
+                localStorage.setItem(LIKES_KEY, JSON.stringify(likes));
+                localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+            } catch {
+                showToast("تعذر حفظ البيانات محلياً.", "danger");
+            }
 
-            likes = JSON.parse(localStorage.getItem(LIKES_KEY)) || {};
-            favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
-        }
-
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(stories));
-            localStorage.setItem(LIKES_KEY, JSON.stringify(likes));
-            localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
             updateStats();
         }
 
-        function showToast(message, type = 'accent') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `<span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        function loadState() {
+            try {
+                const savedStories = localStorage.getItem(STORAGE_KEY);
+
+                if (savedStories) {
+                    const parsed = JSON.parse(savedStories);
+                    stories = Array.isArray(parsed) ? parsed : [...defaultStories];
+                } else {
+                    stories = [...defaultStories];
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(stories));
+                }
+
+                likes = JSON.parse(localStorage.getItem(LIKES_KEY) || "{}") || {};
+                favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]") || [];
+            } catch {
+                stories = [...defaultStories];
+                likes = {};
+                favorites = [];
+                showToast("تم تحميل نسخة آمنة من البيانات.", "warning");
+            }
+        }
+
+        function escapeText(value) {
+            return String(value ?? "");
         }
 
         function calculateReadTime(text) {
-            const words = text.trim().split(/\s+/).length;
-            const minutes = Math.ceil(words / 150);
-            return `${minutes} دقائق قراءة`;
+            const count = String(text || "")
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean)
+                .length;
+
+            return Math.max(1, Math.ceil(count / 150));
         }
 
-        function setupTheme() {
-            const savedTheme = localStorage.getItem('hikaya_theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeButtonText(savedTheme);
-        }
-
-        document.getElementById('themeToggleBtn').addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('hikaya_theme', newTheme);
-            updateThemeButtonText(newTheme);
-        });
-
-        function updateThemeButtonText(theme) {
-            document.getElementById('themeToggleBtn').innerHTML = theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
-        }
-
-        function toggleFocusMode() { document.body.classList.toggle('focus-mode'); }
-
-        function changeFontSize(storyId, delta) {
-            const el = document.getElementById(`text-${storyId}`);
-            if (!el) return;
-            const style = window.getComputedStyle(el);
-            const currentSize = parseFloat(style.fontSize);
-            el.style.fontSize = `${Math.max(14, Math.min(32, currentSize + delta))}px`;
-        }
-
-        function groupStoriesByTitle(storyList) {
-            return storyList.reduce((acc, story) => {
-                if (!acc[story.title]) acc[story.title] = [];
-                acc[story.title].push(story);
-                return acc;
+        function groupByTitle(list) {
+            return list.reduce((groups, story) => {
+                const key = story.title || "بدون عنوان";
+                if (!groups[key]) groups[key] = [];
+                groups[key].push(story);
+                return groups;
             }, {});
         }
 
-        function renderStories(filterAuthor = '', searchQuery = '') {
-            const container = document.getElementById('stories-container');
-            container.innerHTML = '';
+        function showToast(message, type = "") {
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
 
-            let filtered = [...stories];
-            if (filterAuthor) {
-                filtered = filtered.filter(s => s.author.toLowerCase() === filterAuthor.toLowerCase());
-            }
-            if (searchQuery) {
-                const q = searchQuery.toLowerCase();
-                filtered = filtered.filter(s => s.title.toLowerCase().includes(q) || s.content.toLowerCase().includes(q) || s.author.toLowerCase().includes(q));
-            }
+            toast.className = "toast" + (type ? " " + type : "");
+            toast.textContent = message;
 
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="panel-box" style="text-align:center; color:var(--text-muted); padding:3rem;">لم يتم العثور على أي قصص.</div>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3200);
+        }
+
+        /* =========================================================
+           العرض
+        ========================================================= */
+
+        function renderStories() {
+            const container = document.getElementById("storiesContainer");
+
+            const query = currentSearch.trim().toLowerCase();
+            const author = activeAuthor.trim().toLowerCase();
+
+            const filtered = stories.filter(story => {
+                const matchesAuthor =
+                    !author ||
+                    String(story.author || "").toLowerCase() === author;
+
+                const searchable = [
+                    story.title,
+                    story.author,
+                    story.part,
+                    story.content
+                ]
+                    .map(value => String(value || "").toLowerCase())
+                    .join(" ");
+
+                const matchesSearch =
+                    !query || searchable.includes(query);
+
+                return matchesAuthor && matchesSearch;
+            });
+
+            container.innerHTML = "";
+
+            if (!filtered.length) {
+                container.innerHTML = `
+                    <div class="empty">
+                        <div style="font-size:2rem;margin-bottom:8px;">📭</div>
+                        لا توجد قصص مطابقة للبحث الحالي.
+                    </div>
+                `;
                 return;
             }
 
-            const grouped = groupStoriesByTitle(filtered);
-            const currentToken = getCurrentUserToken();
+            const grouped = groupByTitle(filtered);
+            const currentToken = getUserToken();
 
-            Object.keys(grouped).forEach(title => {
-                const bundle = grouped[title];
+            Object.values(grouped).forEach(bundle => {
                 const first = bundle[0];
 
-                const bundleBox = document.createElement('div');
-                bundleBox.className = 'story-bundle-box';
+                const bundleEl = document.createElement("section");
+                bundleEl.className = "story-bundle";
 
-                let bundleHTML = `
-                    <div class="bundle-header">
-                        <img src="${first.cover || 'cover.jpg'}" class="bundle-cover" alt="Cover" onerror="this.src='https://via.placeholder.com/90x120?text=Hikaya'">
-                        <div class="bundle-info">
-                            <h2 class="bundle-title">${first.title}</h2>
-                            <span class="story-badge">الكاتب: ${first.author}</span>
-                        </div>
-                    </div>
-                `;
+                const header = document.createElement("div");
+                header.className = "bundle-header";
 
-                bundle.forEach(story => {
-                    const isOwner = story.ownerToken === currentToken;
-                    const isLiked = likes[story.id] || false;
-                    const isFav = favorites.includes(story.id);
+                const cover = document.createElement("img");
+                cover.className = "cover";
+                cover.alt = "غلاف القصة";
 
-                    bundleHTML += `
-                        <div class="story-card" id="story-card-${story.id}">
-                            <h3>
-                                <span>${story.part}</span>
-                                ${isOwner ? `<button class="btn-delete-card" onclick="deleteStory('${story.id}')">حذف الفصل</button>` : ''}
-                            </h3>
-                            <div class="story-meta">
-                                <span class="read-time-badge">⏱️ ${calculateReadTime(story.content)}</span>
-                            </div>
-                            <div class="reading-toolbar">
-                                <button class="tool-btn" onclick="changeFontSize('${story.id}', 2)">A+</button>
-                                <button class="tool-btn" onclick="changeFontSize('${story.id}', -2)">A-</button>
-                                <button class="tool-btn" onclick="toggleFocusMode()">👁️ وضع التركيز</button>
-                                <button class="tool-btn" onclick="setBookmark('${story.id}', '${story.title}', '${story.part}')">🔖 حفظ نقطة التوقف</button>
-                            </div>
-                            <div class="story-text" id="text-${story.id}">${story.content}</div>
-                            <div class="card-actions-bar">
-                                <div class="interaction-group">
-                                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${story.id}')">
-                                        ❤️ <span>${isLiked ? 'أعجبني' : 'إعجاب'}</span>
-                                    </button>
-                                    <button class="fav-btn ${isFav ? 'faved' : ''}" onclick="toggleFavorite('${story.id}')">
-                                        ⭐ <span>${isFav ? 'مفضلة' : 'حفظ'}</span>
-                                    </button>
-                                </div>
-                                <button class="share-btn" onclick="shareStory('${story.title}', '${story.part}')">🔗 مشاركة</button>
-                            </div>
-                        </div>
-                    `;
-                });
+                if (first.cover) {
+                    cover.src = first.cover;
+                    cover.onerror = () => {
+                        cover.removeAttribute("src");
+                        cover.classList.add("hidden");
+                        header.prepend(createFallbackCover());
+                    };
+                } else {
+                    cover.replaceWith(createFallbackCover());
+                }
 
-                bundleBox.innerHTML = bundleHTML;
-                container.appendChild(bundleBox);
+                const info = document.createElement("div");
+
+                const title = document.createElement("h2");
+                title.className = "bundle-title";
+                title.textContent = first.title;
+
+                const meta = document.createElement("div");
+                meta.className = "meta-line";
+                meta.textContent =
+                    "👤 الكاتب: " + (first.author || "غير معروف") +
+                    " • 📚 " + bundle.length + " فصل";
+
+                info.appendChild(title);
+                info.appendChild(meta);
+
+                header.appendChild(cover);
+                header.appendChild(info);
+                bundleEl.appendChild(header);
+
+                bundle
+                    .sort((a, b) => Number(a.createdAt || 0) - Number(b.createdAt || 0))
+                    .forEach(story => {
+                        bundleEl.appendChild(
+                            createStoryCard(story, currentToken)
+                        );
+                    });
+
+                container.appendChild(bundleEl);
             });
         }
 
-        function setupEventListeners() {
-            document.getElementById('storyForm').addEventListener('submit', handlePublish);
-            
-            document.getElementById('globalSearchInput').addEventListener('input', (e) => {
-                renderStories('', e.target.value);
-            });
+        function createFallbackCover() {
+            const div = document.createElement("div");
 
-            const folderInput = document.getElementById('folderSearchInput');
-            if (folderInput) {
-                folderInput.addEventListener('input', (e) => {
-                    renderAuthorFolder(e.target.value);
+            div.style.width = "90px";
+            div.style.height = "120px";
+            div.style.borderRadius = "12px";
+            div.style.display = "grid";
+            div.style.placeItems = "center";
+            div.style.fontSize = "2rem";
+            div.style.background =
+                "linear-gradient(135deg, var(--accent), var(--accent-2))";
+
+            div.textContent = "📖";
+
+            return div;
+        }
+
+        function createStoryCard(story, currentToken) {
+            const card = document.createElement("article");
+            card.className = "story-card";
+            card.id = "story-card-" + story.id;
+
+            const head = document.createElement("div");
+            head.className = "story-head";
+
+            const part = document.createElement("div");
+            part.className = "part-title";
+            part.textContent = story.part || "فصل";
+
+            head.appendChild(part);
+
+            if (story.ownerToken === currentToken) {
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "delete-btn";
+                deleteBtn.textContent = "حذف الفصل";
+
+                deleteBtn.addEventListener("click", () => {
+                    deleteStory(story.id);
                 });
+
+                head.appendChild(deleteBtn);
             }
 
-            window.addEventListener('scroll', updateProgressBar);
+            card.appendChild(head);
+
+            const meta = document.createElement("div");
+            meta.className = "story-meta";
+
+            const timeBadge = document.createElement("span");
+            timeBadge.className = "badge";
+            timeBadge.textContent =
+                "⏱️ " + calculateReadTime(story.content) + " دقيقة قراءة";
+
+            meta.appendChild(timeBadge);
+
+            const authorBadge = document.createElement("span");
+            authorBadge.className = "badge";
+            authorBadge.textContent = "👤 " + (story.author || "غير معروف");
+
+            meta.appendChild(authorBadge);
+
+            card.appendChild(meta);
+
+            const toolbar = document.createElement("div");
+            toolbar.className = "reading-toolbar";
+
+            toolbar.appendChild(
+                makeTool("A+", () => changeFontSize(story.id, 2))
+            );
+
+            toolbar.appendChild(
+                makeTool("A−", () => changeFontSize(story.id, -2))
+            );
+
+            toolbar.appendChild(
+                makeTool("👁️ وضع التركيز", toggleFocusMode)
+            );
+
+            toolbar.appendChild(
+                makeTool("🔖 حفظ موضع القراءة", () => {
+                    saveBookmark(story.id, story.title, story.part);
+                })
+            );
+
+            card.appendChild(toolbar);
+
+            const storyText = document.createElement("div");
+            storyText.className = "story-text";
+            storyText.id = "text-" + story.id;
+            storyText.textContent = story.content;
+
+            card.appendChild(storyText);
+
+            const actionsBar = document.createElement("div");
+            actionsBar.className = "actions-bar";
+
+            const left = document.createElement("div");
+            left.className = "actions-left";
+
+            const liked = Boolean(likes[story.id]);
+            const faved = favorites.includes(story.id);
+
+            const likeBtn = document.createElement("button");
+            likeBtn.className = "action" + (liked ? " liked" : "");
+            likeBtn.textContent = liked ? "❤️ أعجبني" : "🤍 إعجاب";
+
+            likeBtn.addEventListener("click", () => {
+                toggleLike(story.id);
+            });
+
+            const favoriteBtn = document.createElement("button");
+            favoriteBtn.className = "action" + (faved ? " faved" : "");
+            favoriteBtn.textContent = faved ? "⭐ محفوظة" : "☆ حفظ";
+
+            favoriteBtn.addEventListener("click", () => {
+                toggleFavorite(story.id);
+            });
+
+            left.appendChild(likeBtn);
+            left.appendChild(favoriteBtn);
+
+            const shareBtn = document.createElement("button");
+            shareBtn.className = "action";
+            shareBtn.textContent = "🔗 مشاركة";
+
+            shareBtn.addEventListener("click", () => {
+                shareStory(story);
+            });
+
+            actionsBar.appendChild(left);
+            actionsBar.appendChild(shareBtn);
+
+            card.appendChild(actionsBar);
+
+            return card;
         }
 
-        function handlePublish(e) {
-            e.preventDefault();
-            const title = document.getElementById('storyTitle').value.trim();
-            const author = document.getElementById('authorName').value.trim();
-            const part = document.getElementById('storyPartNumber').value;
-            const cover = document.getElementById('coverUrl').value.trim();
-            const content = document.getElementById('storyContent').value.trim();
+        function makeTool(text, callback) {
+            const btn = document.createElement("button");
+            btn.className = "tool";
+            btn.type = "button";
+            btn.textContent = text;
+            btn.addEventListener("click", callback);
+            return btn;
+        }
+
+        /* =========================================================
+           النشر
+        ========================================================= */
+
+        function publishStory(event) {
+            event.preventDefault();
+
+            const title = document.getElementById("storyTitle").value.trim();
+            const author = document.getElementById("authorName").value.trim();
+            const part = document.getElementById("storyPart").value.trim();
+            const cover = document.getElementById("coverUrl").value.trim();
+            const content = document.getElementById("storyContent").value.trim();
+
+            if (!title || !author || !part || !content) {
+                showToast("يرجى تعبئة الحقول المطلوبة.", "danger");
+                return;
+            }
 
             const newStory = {
-                id: 'story_' + Date.now(),
+                id: "story_" + Date.now() + "_" + cryptoRandom().slice(0, 8),
                 title,
                 author,
-                ownerToken: getCurrentUserToken(),
                 part,
                 cover,
                 content,
+                ownerToken: getUserToken(),
                 createdAt: Date.now()
             };
 
-            stories.unshift(newStory);
-            saveData();
-            renderStories();
-            document.getElementById('storyForm').reset();
-            showToast('تم نشر الفصل بنجاح!', 'success');
+            stories.push(newStory);
+            saveState();
+
+            document.getElementById("storyForm").reset();
+            document.getElementById("storyTitle").value = "رحلة نحو معرفة الذات";
+
+            renderAll();
+            showToast("تم نشر الفصل بنجاح! ✅", "success");
         }
 
         function deleteStory(id) {
-            if (confirm('هل أنت تأكد من رغبتك في حذف هذا الفصل؟')) {
-                stories = stories.filter(s => s.id !== id);
-                saveData();
-                renderStories();
-                showToast('تم حذف الفصل.', 'danger');
-            }
-        }
+            const story = stories.find(item => item.id === id);
 
-        function toggleLike(id) {
-            likes[id] = !likes[id];
-            saveData();
-            renderStories();
-        }
+            if (!story) return;
 
-        function toggleFavorite(id) {
-            const idx = favorites.indexOf(id);
-            if (idx > -1) favorites.splice(idx, 1);
-            else favorites.push(id);
-            saveData();
-            renderStories();
-        }
-
-        function shareStory(title, part) {
-            if (navigator.share) {
-                navigator.share({ title: `${title} - ${part}`, url: window.location.href });
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                showToast('تم نسخ الرابط إلى الحافظة!', 'success');
-            }
-        }
-
-        function setBookmark(id, title, part) {
-            const bookmark = { id, title, part, timestamp: Date.now() };
-            localStorage.setItem(BOOKMARK_KEY, JSON.stringify(bookmark));
-            checkResumeReading();
-            showToast('تم حفظ موضع القراءة بنجاح!', 'success');
-        }
-
-        function checkResumeReading() {
-            const saved = localStorage.getItem(BOOKMARK_KEY);
-            const box = document.getElementById('resumeReadingBox');
-            if (saved) {
-                const data = JSON.parse(saved);
-                document.getElementById('resumeStoryText').textContent = `توقفت عند: ${data.title} (${data.part})`;
-                document.getElementById('resumeStoryBtn').onclick = () => {
-                    const el = document.getElementById(`story-card-${data.id}`);
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    else showToast('لم يتم العثور على الفصل.', 'danger');
-                };
-                box.style.display = 'block';
-            } else {
-                box.style.display = 'none';
-            }
-        }
-
-        function updateProgressBar() {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('readingProgressBar').style.width = scrolled + '%';
-        }
-
-        function renderAuthorFolder(query = '') {
-            const container = document.getElementById('authorFolderList');
-            if (!container) return;
-            
-            if (!query.trim()) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 10px;">اكتب اسم الكاتب لعرض أعماله</div>`;
+            if (story.ownerToken !== getUserToken()) {
+                showToast("لا يمكنك حذف هذا الفصل.", "danger");
                 return;
             }
 
-            const authors = [...new Set(stories.map(s => s.author))].filter(a => a.toLowerCase().includes(query.toLowerCase()));
-            container.innerHTML = '';
+            const confirmed = confirm("هل أنت متأكد من حذف هذا الفصل؟");
 
-            if (authors.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 10px;">لم يتم العثور على الكاتب</div>`;
+            if (!confirmed) return;
+
+            stories = stories.filter(item => item.id !== id);
+
+            delete likes[id];
+            favorites = favorites.filter(item => item !== id);
+
+            saveState();
+            renderAll();
+
+            showToast("تم حذف الفصل.", "danger");
+        }
+
+        /* =========================================================
+           الإعجاب والمفضلة والمشاركة
+        ========================================================= */
+
+        function toggleLike(id) {
+            likes[id] = !likes[id];
+            saveState();
+            renderAll();
+        }
+
+        function toggleFavorite(id) {
+            const index = favorites.indexOf(id);
+
+            if (index >= 0) {
+                favorites.splice(index, 1);
+                showToast("تمت إزالة الفصل من المفضلة.");
+            } else {
+                favorites.push(id);
+                showToast("تم حفظ الفصل في المفضلة ⭐", "success");
+            }
+
+            saveState();
+            renderAll();
+        }
+
+        async function shareStory(story) {
+            const shareData = {
+                title: story.title + " — " + story.part,
+                text: "قراءة: " + story.title + " — " + story.part,
+                url: window.location.href.split("#")[0] + "#" + story.id
+            };
+
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    return;
+                }
+
+                await navigator.clipboard.writeText(
+                    window.location.href.split("#")[0] + "#" + story.id
+                );
+
+                showToast("تم نسخ رابط القصة. 🔗", "success");
+            } catch {
+                showToast("تعذر مشاركة القصة حالياً.", "warning");
+            }
+        }
+
+        /* =========================================================
+           وضع القراءة
+        ========================================================= */
+
+        function changeFontSize(storyId, delta) {
+            const element = document.getElementById("text-" + storyId);
+
+            if (!element) return;
+
+            const current = parseFloat(
+                getComputedStyle(element).fontSize
+            ) || 16;
+
+            const next = Math.min(
+                32,
+                Math.max(14, current + delta)
+            );
+
+            element.style.fontSize = next + "px";
+        }
+
+        function toggleFocusMode() {
+            document.body.classList.toggle("focus-mode");
+        }
+
+        /* =========================================================
+           حفظ موضع القراءة
+        ========================================================= */
+
+        function saveBookmark(id, title, part) {
+            const card = document.getElementById("story-card-" + id);
+
+            const bookmark = {
+                id,
+                title,
+                part,
+                scroll:
+                    card
+                        ? Math.max(
+                            0,
+                            window.scrollY -
+                            card.getBoundingClientRect().top -
+                            window.scrollY
+                        )
+                        : 0,
+                time: Date.now()
+            };
+
+            localStorage.setItem(
+                BOOKMARK_KEY,
+                JSON.stringify(bookmark)
+            );
+
+            updateResumeBox();
+            showToast("تم حفظ موضع القراءة. 🔖", "success");
+        }
+
+        function updateResumeBox() {
+            const box = document.getElementById("resumeBox");
+            const text = document.getElementById("resumeText");
+            const btn = document.getElementById("resumeBtn");
+
+            const raw = localStorage.getItem(BOOKMARK_KEY);
+
+            if (!raw) {
+                box.classList.remove("active");
+                return;
+            }
+
+            let bookmark;
+
+            try {
+                bookmark = JSON.parse(raw);
+            } catch {
+                box.classList.remove("active");
+                return;
+            }
+
+            if (!bookmark || !bookmark.id) {
+                box.classList.remove("active");
+                return;
+            }
+
+            text.textContent =
+                "توقفت عند: " +
+                (bookmark.title || "قصة") +
+                " — " +
+                (bookmark.part || "فصل");
+
+            box.classList.add("active");
+
+            btn.onclick = () => {
+                const target = document.getElementById(
+                    "story-card-" + bookmark.id
+                );
+
+                if (!target) {
+                    showToast("الفصل المحفوظ غير موجود.", "danger");
+                    return;
+                }
+
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            };
+        }
+
+        /* =========================================================
+           البحث والكتاب
+        ========================================================= */
+
+        function renderAuthorResults() {
+            const container = document.getElementById("authorResults");
+            const query =
+                document.getElementById("authorInput").value
+                    .trim()
+                    .toLowerCase();
+
+            container.innerHTML = "";
+
+            if (!query) {
+                return;
+            }
+
+            const authors = [
+                ...new Set(
+                    stories
+                        .map(story => String(story.author || "").trim())
+                        .filter(Boolean)
+                )
+            ].filter(author =>
+                author.toLowerCase().includes(query)
+            );
+
+            if (!authors.length) {
+                const empty = document.createElement("div");
+                empty.style.color = "var(--muted)";
+                empty.style.fontSize = ".82rem";
+                empty.style.padding = "8px";
+                empty.textContent = "لم يتم العثور على الكاتب.";
+                container.appendChild(empty);
                 return;
             }
 
             authors.forEach(author => {
-                const count = stories.filter(s => s.author === author).length;
-                const div = document.createElement('div');
-                div.className = 'folder-item';
-                div.innerHTML = `<span>👤 ${author}</span><strong>${count} فصول</strong>`;
-                div.onclick = () => renderStories(author);
-                container.appendChild(div);
+                const item = document.createElement("div");
+                item.className = "author-item";
+
+                const name = document.createElement("span");
+                name.textContent = "👤 " + author;
+
+                const count = document.createElement("strong");
+                count.textContent =
+                    stories.filter(s => s.author === author).length +
+                    " فصل";
+
+                item.appendChild(name);
+                item.appendChild(count);
+
+                item.addEventListener("click", () => {
+                    activeAuthor = author;
+                    renderAll();
+                    showToast("تم عرض أعمال " + author);
+                });
+
+                container.appendChild(item);
             });
         }
 
-        function updateStats() {
-            document.getElementById('statTotalStories').textContent = stories.length;
-            const uniqueAuthors = new Set(stories.map(s => s.author)).size;
-            document.getElementById('statTotalAuthors').textContent = uniqueAuthors;
-        }
-
         function resetFilters() {
-            document.getElementById('globalSearchInput').value = '';
-            const folderInput = document.getElementById('folderSearchInput');
-            if (folderInput) folderInput.value = '';
-            renderStories();
+            currentSearch = "";
+            activeAuthor = "";
+
+            document.getElementById("searchInput").value = "";
+            document.getElementById("authorInput").value = "";
+
+            renderAll();
         }
 
-        function openBackupModal() { document.getElementById('backupModal').classList.add('active'); }
-        function closeBackupModal() { document.getElementById('backupModal').classList.remove('active'); }
-        function scrollToPublish() { document.getElementById('publishPanel').scrollIntoView({ behavior: 'smooth' }); }
+        /* =========================================================
+           الإحصائيات
+        ========================================================= */
 
-        function exportDataJSON() {
-            const blob = new Blob([JSON.stringify(stories, null, 2)], { type: 'application/json' });
+        function updateStats() {
+            document.getElementById("totalStories").textContent =
+                stories.length;
+
+            document.getElementById("totalAuthors").textContent =
+                new Set(
+                    stories.map(story => story.author).filter(Boolean)
+                ).size;
+
+            document.getElementById("totalFavorites").textContent =
+                favorites.length;
+
+            document.getElementById("totalLikes").textContent =
+                Object.values(likes).filter(Boolean).length;
+        }
+
+        /* =========================================================
+           النسخ الاحتياطي
+        ========================================================= */
+
+        function exportData() {
+            const data = {
+                version: 2,
+                exportedAt: new Date().toISOString(),
+                stories,
+                likes,
+                favorites
+            };
+
+            const blob = new Blob(
+                [JSON.stringify(data, null, 2)],
+                { type: "application/json;charset=utf-8" }
+            );
+
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `hikaya_backup_${Date.now()}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('تم تصدير البيانات بنجاح!', 'success');
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download =
+                "hikaya_backup_" +
+                new Date().toISOString().replace(/[:.]/g, "-") +
+                ".json";
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+            showToast("تم تصدير النسخة الاحتياطية. 💾", "success");
         }
 
-        function importDataJSON() {
-            const input = document.getElementById('importFileInput');
-            const file = input.files[0];
+        function importData(file) {
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+
+            reader.onload = event => {
                 try {
-                    const importedStories = JSON.parse(e.target.result);
-                    if (Array.isArray(importedStories)) {
-                        stories = importedStories;
-                        saveData();
-                        renderStories();
-                        closeBackupModal();
-                        showToast('تمت استعادة البيانات بنجاح!', 'success');
-                    } else {
-                        showToast('الملف غير صالِح.', 'danger');
+                    const parsed = JSON.parse(event.target.result);
+
+                    if (
+                        !parsed ||
+                        typeof parsed !== "object" ||
+                        !Array.isArray(parsed.stories)
+                    ) {
+                        throw new Error("INVALID_BACKUP");
                     }
-                } catch (err) {
-                    showToast('خطأ في قراءة الملف.', 'danger');
+
+                    stories = parsed.stories
+                        .filter(story =>
+                            story &&
+                            typeof story === "object" &&
+                            story.id &&
+                            story.title &&
+                            story.content
+                        )
+                        .map(story => ({
+                            id: String(story.id),
+                            title: String(story.title),
+                            author: String(story.author || "غير معروف"),
+                            part: String(story.part || "فصل"),
+                            cover: String(story.cover || ""),
+                            content: String(story.content),
+                            ownerToken: String(story.ownerToken || "imported"),
+                            createdAt: Number(story.createdAt || Date.now())
+                        }));
+
+                    likes =
+                        parsed.likes &&
+                        typeof parsed.likes === "object"
+                            ? parsed.likes
+                            : {};
+
+                    favorites =
+                        Array.isArray(parsed.favorites)
+                            ? parsed.favorites
+                            : [];
+
+                    saveState();
+                    renderAll();
+                    closeBackupModal();
+
+                    showToast(
+                        "تمت استعادة البيانات بنجاح. ✅",
+                        "success"
+                    );
+                } catch {
+                    showToast(
+                        "ملف النسخة الاحتياطية غير صالح.",
+                        "danger"
+                    );
                 }
             };
-            reader.readAsText(file);
+
+            reader.readAsText(file, "utf-8");
         }
 
-        window.addEventListener('DOMContentLoaded', initApp);
+        /* =========================================================
+           المظهر
+        ========================================================= */
+
+        function setupTheme() {
+            const saved =
+                localStorage.getItem(THEME_KEY) || "dark";
+
+            document.documentElement.dataset.theme = saved;
+            updateThemeButton(saved);
+        }
+
+        function toggleTheme() {
+            const current =
+                document.documentElement.dataset.theme;
+
+            const next =
+                current === "light" ? "dark" : "light";
+
+            document.documentElement.dataset.theme = next;
+            localStorage.setItem(THEME_KEY, next);
+
+            updateThemeButton(next);
+        }
+
+        function updateThemeButton(theme) {
+            document.getElementById("themeBtn").textContent =
+                theme === "light"
+                    ? "🌙 الوضع الداكن"
+                    : "☀️ الوضع الفاتح";
+        }
+
+        /* =========================================================
+           شريط تقدم القراءة
+        ========================================================= */
+
+        function updateProgress() {
+            const scrollTop = window.scrollY || 0;
+            const max =
+                document.documentElement.scrollHeight -
+                window.innerHeight;
+
+            const percent =
+                max > 0
+                    ? Math.min(100, (scrollTop / max) * 100)
+                    : 0;
+
+            document.getElementById("progressBar").style.width =
+                percent + "%";
+        }
+
+        /* =========================================================
+           النسخ الاحتياطي — نافذة
+        ========================================================= */
+
+        function openBackupModal() {
+            document.getElementById("backupModal")
+                .classList.add("active");
+        }
+
+        function closeBackupModal() {
+            document.getElementById("backupModal")
+                .classList.remove("active");
+        }
+
+        /* =========================================================
+           التصيير الكامل
+        ========================================================= */
+
+        function renderAll() {
+            renderStories();
+            renderAuthorResults();
+            updateStats();
+            updateResumeBox();
+        }
+
+        /* =========================================================
+           الأحداث
+        ========================================================= */
+
+        function setupEvents() {
+            document
+                .getElementById("storyForm")
+                .addEventListener("submit", publishStory);
+
+            document
+                .getElementById("themeBtn")
+                .addEventListener("click", toggleTheme);
+
+            document
+                .getElementById("publishBtn")
+                .addEventListener("click", () => {
+                    document
+                        .getElementById("publishPanel")
+                        .scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+
+                    setTimeout(() => {
+                        document
+                            .getElementById("authorName")
+                            .focus();
+                    }, 500);
+                });
+
+            document
+                .getElementById("searchInput")
+                .addEventListener("input", event => {
+                    currentSearch = event.target.value;
+                    renderStories();
+                });
+
+            document
+                .getElementById("authorInput")
+                .addEventListener("input", () => {
+                    renderAuthorResults();
+                });
+
+            document
+                .getElementById("resetBtn")
+                .addEventListener("click", resetFilters);
+
+            document
+                .getElementById("backupBtn")
+                .addEventListener("click", openBackupModal);
+
+            document
+                .getElementById("closeBackupBtn")
+                .addEventListener("click", closeBackupModal);
+
+            document
+                .getElementById("exportBtn")
+                .addEventListener("click", exportData);
+
+            document
+                .getElementById("importBtn")
+                .addEventListener("click", () => {
+                    document
+                        .getElementById("importInput")
+                        .click();
+                });
+
+            document
+                .getElementById("importInput")
+                .addEventListener("change", event => {
+                    importData(event.target.files[0]);
+                    event.target.value = "";
+                });
+
+            document
+                .getElementById("backupModal")
+                .addEventListener("click", event => {
+                    if (event.target.id === "backupModal") {
+                        closeBackupModal();
+                    }
+                });
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape") {
+                    closeBackupModal();
+                    document.body.classList.remove("focus-mode");
+                }
+            });
+
+            window.addEventListener("scroll", updateProgress, {
+                passive: true
+            });
+
+            window.addEventListener("hashchange", () => {
+                const id = location.hash.replace("#", "");
+
+                if (!id) return;
+
+                const target =
+                    document.getElementById("story-card-" + id);
+
+                if (target) {
+                    setTimeout(() => {
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+                    }, 250);
+                }
+            });
+        }
+
+        /* =========================================================
+           التشغيل
+        ========================================================= */
+
+        function init() {
+            getUserToken();
+            loadState();
+            setupTheme();
+            setupEvents();
+            renderAll();
+            updateProgress();
+
+            if (location.hash) {
+                setTimeout(() => {
+                    const id = location.hash.slice(1);
+                    const target =
+                        document.getElementById("story-card-" + id);
+
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+                    }
+                }, 400);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", init);
     </script>
 </body>
 </html>
