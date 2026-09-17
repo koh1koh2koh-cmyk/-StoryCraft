@@ -30,11 +30,7 @@
             --success-color: #059669;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg-color);
@@ -67,17 +63,9 @@
             z-index: 900;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-color);
-        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); }
 
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
+        .header-actions { display: flex; gap: 1rem; align-items: center; }
 
         .btn {
             background: var(--accent-color);
@@ -90,9 +78,7 @@
             transition: background 0.2s;
         }
 
-        .btn:hover {
-            background: var(--accent-hover);
-        }
+        .btn:hover { background: var(--accent-hover); }
 
         .btn-outline {
             background: transparent;
@@ -100,9 +86,7 @@
             color: var(--text-color);
         }
 
-        .btn-outline:hover {
-            background: var(--border-color);
-        }
+        .btn-outline:hover { background: var(--border-color); }
 
         .main-layout {
             display: grid;
@@ -114,16 +98,10 @@
         }
 
         @media (max-width: 900px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
+            .main-layout { grid-template-columns: 1fr; }
         }
 
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+        .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
 
         .panel-box {
             background: var(--panel-bg);
@@ -139,9 +117,7 @@
             padding-bottom: 0.5rem;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
+        .form-group { margin-bottom: 1rem; }
 
         .form-group label {
             display: block;
@@ -160,17 +136,9 @@
             font-family: inherit;
         }
 
-        textarea.form-control {
-            resize: vertical;
-            min-height: 120px;
-        }
+        textarea.form-control { resize: vertical; min-height: 120px; }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            text-align: center;
-        }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center; }
 
         .stat-card {
             background: var(--bg-color);
@@ -179,11 +147,7 @@
             border: 1px solid var(--border-color);
         }
 
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-color);
-        }
+        .stat-number { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); }
 
         .story-bundle-box {
             background: var(--panel-bg);
@@ -201,17 +165,9 @@
             padding-bottom: 1rem;
         }
 
-        .bundle-cover {
-            width: 90px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
+        .bundle-cover { width: 90px; height: 120px; object-fit: cover; border-radius: 6px; }
 
-        .bundle-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
+        .bundle-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
 
         .story-badge {
             background: var(--bg-color);
@@ -237,18 +193,9 @@
             margin-bottom: 0.5rem;
         }
 
-        .story-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
+        .story-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
 
-        .reading-toolbar {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
+        .reading-toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
 
         .tool-btn {
             background: var(--panel-bg);
@@ -260,9 +207,7 @@
             cursor: pointer;
         }
 
-        .tool-btn:hover {
-            border-color: var(--accent-color);
-        }
+        .tool-btn:hover { border-color: var(--accent-color); }
 
         .story-text {
             font-size: 1.05rem;
@@ -279,10 +224,7 @@
             padding-top: 0.75rem;
         }
 
-        .interaction-group {
-            display: flex;
-            gap: 0.5rem;
-        }
+        .interaction-group { display: flex; gap: 0.5rem; }
 
         .like-btn, .fav-btn, .share-btn {
             background: transparent;
@@ -345,10 +287,7 @@
             display: none !important;
         }
 
-        body.focus-mode .main-layout {
-            grid-template-columns: 1fr;
-            max-width: 800px;
-        }
+        body.focus-mode .main-layout { grid-template-columns: 1fr; max-width: 800px; }
 
         .folder-item {
             display: flex;
@@ -358,9 +297,7 @@
             cursor: pointer;
         }
 
-        .folder-item:hover {
-            background: var(--bg-color);
-        }
+        .folder-item:hover { background: var(--bg-color); }
 
         .modal {
             display: none;
@@ -375,9 +312,7 @@
             align-items: center;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-content {
             background: var(--panel-bg);
@@ -449,11 +384,11 @@
                     </div>
                     <div class="form-group">
                         <label>رقم أو اسم الفصل</label>
-                        <input type="text" id="storyPartNumber" class="form-control" required placeholder="مثال: الفصل الأول">
+                        <input type="text" id="storyPartNumber" class="form-control" required placeholder="الفصل الرابع">
                     </div>
                     <div class="form-group">
                         <label>رابط صورة الغلاف (اختياري)</label>
-                        <input type="url" id="coverUrl" class="form-control" placeholder="https://example.com/cover.jpg">
+                        <input type="text" id="coverUrl" class="form-control" placeholder="cover.jpg">
                     </div>
                     <div class="form-group">
                         <label>محتوى الفصل</label>
@@ -464,9 +399,7 @@
             </div>
         </aside>
 
-        <main id="stories-container">
-            <!-- Rendered stories dynamically -->
-        </main>
+        <main id="stories-container"></main>
     </div>
 
     <div class="toast-container" id="toast-container"></div>
@@ -484,15 +417,19 @@
         </div>
     </div>
 
+    <!-- استدعاء ملف القصص المباشر قبل محرك التشغيل -->
+    <script src="stories.js"></script>
+
     <script>
-        /* ==========================================================================
-           1. CONSTANTS & INITIAL DATA
-           ========================================================================== */
         const STORAGE_KEY = 'hikaya_stories_db';
         const LIKES_KEY = 'hikaya_likes_db';
         const FAVORITES_KEY = 'hikaya_favorites_db';
         const BOOKMARK_KEY = 'hikaya_bookmark_db';
         const USER_TOKEN_KEY = 'hikaya_user_token';
+
+        let stories = [];
+        let likes = {};
+        let favorites = [];
 
         function getCurrentUserToken() {
             let token = localStorage.getItem(USER_TOKEN_KEY);
@@ -502,52 +439,6 @@
             }
             return token;
         }
-
-        const defaultStoryDatabase = [
-            {
-                id: 'story_self_1',
-                title: 'رحلة نحو معرفة الذات',
-                author: 'مؤلف حكاية',
-                ownerToken: 'system_default',
-                part: 'الفصل الأول: النداء الداخلي',
-                cover: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300',
-                content: `في قلب الضوضاء التي تغمر العالم، وجد بطلنا نفسه يتساءل عن المعنى الحقيقي لوجوده. لم تكن الأسئلة عابرة، بل كانت تشبه صداءً يتردد في أعماق روحه كل ليلة.
-
-بدأت الرحلة بقرار بسيط: الابتعاد عن صخب الحياة اليومية والبحث عن الإجابات في الصمت. لم تكن الطريق مفروشة بالورد، بل كانت مليئة بالتحديات والمواجهات مع المخاوف القديمة التي دفنها الزمن.`,
-                createdAt: new Date('2026-08-01T10:00:00').getTime()
-            },
-            {
-                id: 'story_self_2',
-                title: 'رحلة نحو معرفة الذات',
-                author: 'مؤلف حكاية',
-                ownerToken: 'system_default',
-                part: 'الفصل الثاني: مواجهة الظلال',
-                cover: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300',
-                content: `عندما قرر بطلنا التوقف عن الهرب من ماضيه، بدأت الحقائق بالظهور. التعرف على الذات لا يعني فقط رؤية الإيجابيات، بل يتطلب تقبل العيوب والانكسارات التي صنعت شخصيته الحالية.
-
-في هذه المرحلة من الرحلة، أدرك أن القوة الحقيقية تكمن في التقُّبل والتصالح مع الذات، وأن كل تجربة مر بها كانت خطوة خطوة نحو إعادة اكتشاف شغفه الحقيقي.`,
-                createdAt: new Date('2026-08-02T10:00:00').getTime()
-            },
-            {
-                id: 'story_self_3',
-                title: 'رحلة نحو معرفة الذات',
-                author: 'مؤلف حكاية',
-                ownerToken: 'system_default',
-                part: 'الفصل الثالث: الإشراق والسلام',
-                cover: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=300',
-                content: `مع انقشاع ضباب الشكوك، انفتحت آفاق جديدة أمام المسافر. لم يكتفِ بفهم ذاته فحسب، بل أدرك كيفية التواصل مع العالم من حوله بصدق وشفافية أكبر.
-
-وصلت الرحلة إلى غايتها الأولى، ليس بفوزٍ في معركة خارجية، بل بتحقيق السلام الداخلي وتأكيد أن رحلة البحث عن الذات هي أغلى وأسمى ما يخوضه الإنسان.`,
-                createdAt: new Date('2026-08-03T10:00:00').getTime()
-            }
-        ];
-
-        /* ==========================================================================
-           2. STATE MANAGEMENT & UTILS
-           ========================================================================== */
-        let stories = [];
-        let likes = {};
-        let favorites = [];
 
         function initApp() {
             loadData();
@@ -560,8 +451,8 @@
 
         function loadData() {
             const storedStories = localStorage.getItem(STORAGE_KEY);
-            stories = storedStories ? JSON.parse(storedStories) : defaultStoryDatabase;
-            if (!storedStories) saveData();
+            stories = storedStories ? JSON.parse(storedStories) : (window.storiesDatabase || []);
+            if (!storedStories && window.storiesDatabase) saveData();
 
             likes = JSON.parse(localStorage.getItem(LIKES_KEY)) || {};
             favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
@@ -589,9 +480,6 @@
             return `${minutes} دقائق قراءة`;
         }
 
-        /* ==========================================================================
-           3. THEME & INTERFACE CONTROLS
-           ========================================================================== */
         function setupTheme() {
             const savedTheme = localStorage.getItem('hikaya_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -610,9 +498,7 @@
             document.getElementById('themeToggleBtn').innerHTML = theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
         }
 
-        function toggleFocusMode() {
-            document.body.classList.toggle('focus-mode');
-        }
+        function toggleFocusMode() { document.body.classList.toggle('focus-mode'); }
 
         function changeFontSize(storyId, delta) {
             const el = document.getElementById(`text-${storyId}`);
@@ -622,9 +508,6 @@
             el.style.fontSize = `${Math.max(14, Math.min(32, currentSize + delta))}px`;
         }
 
-        /* ==========================================================================
-           4. RENDER & FILTER ENGINE
-           ========================================================================== */
         function groupStoriesByTitle(storyList) {
             return storyList.reduce((acc, story) => {
                 if (!acc[story.title]) acc[story.title] = [];
@@ -663,7 +546,7 @@
 
                 let bundleHTML = `
                     <div class="bundle-header">
-                        <img src="${first.cover || 'https://via.placeholder.com/90x120?text=Hikaya'}" class="bundle-cover" alt="Cover" onerror="this.src='https://via.placeholder.com/90x120?text=Hikaya'">
+                        <img src="${first.cover || 'cover.jpg'}" class="bundle-cover" alt="Cover" onerror="this.src='https://via.placeholder.com/90x120?text=Hikaya'">
                         <div class="bundle-info">
                             <h2 class="bundle-title">${first.title}</h2>
                             <span class="story-badge">الكاتب: ${first.author}</span>
@@ -712,9 +595,6 @@
             });
         }
 
-        /* ==========================================================================
-           5. EVENT HANDLERS & ACTIONS
-           ========================================================================== */
         function setupEventListeners() {
             document.getElementById('storyForm').addEventListener('submit', handlePublish);
             
@@ -722,9 +602,12 @@
                 renderStories('', e.target.value);
             });
 
-            document.getElementById('folderSearchInput').addEventListener('input', (e) => {
-                renderAuthorFolder(e.target.value);
-            });
+            const folderInput = document.getElementById('folderSearchInput');
+            if (folderInput) {
+                folderInput.addEventListener('input', (e) => {
+                    renderAuthorFolder(e.target.value);
+                });
+            }
 
             window.addEventListener('scroll', updateProgressBar);
         }
@@ -787,9 +670,6 @@
             }
         }
 
-        /* ==========================================================================
-           6. BOOKMARK & PROGRESS TRACKING
-           ========================================================================== */
         function setBookmark(id, title, part) {
             const bookmark = { id, title, part, timestamp: Date.now() };
             localStorage.setItem(BOOKMARK_KEY, JSON.stringify(bookmark));
@@ -821,11 +701,10 @@
             document.getElementById('readingProgressBar').style.width = scrolled + '%';
         }
 
-        /* ==========================================================================
-           7. ARCHIVE, STATS & BACKUP
-           ========================================================================== */
         function renderAuthorFolder(query = '') {
             const container = document.getElementById('authorFolderList');
+            if (!container) return;
+            
             if (!query.trim()) {
                 container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 10px;">اكتب اسم الكاتب لعرض أعماله</div>`;
                 return;
@@ -857,21 +736,14 @@
 
         function resetFilters() {
             document.getElementById('globalSearchInput').value = '';
-            document.getElementById('folderSearchInput').value = '';
+            const folderInput = document.getElementById('folderSearchInput');
+            if (folderInput) folderInput.value = '';
             renderStories();
         }
 
-        function openBackupModal() {
-            document.getElementById('backupModal').classList.add('active');
-        }
-
-        function closeBackupModal() {
-            document.getElementById('backupModal').classList.remove('active');
-        }
-
-        function scrollToPublish() {
-            document.getElementById('publishPanel').scrollIntoView({ behavior: 'smooth' });
-        }
+        function openBackupModal() { document.getElementById('backupModal').classList.add('active'); }
+        function closeBackupModal() { document.getElementById('backupModal').classList.remove('active'); }
+        function scrollToPublish() { document.getElementById('publishPanel').scrollIntoView({ behavior: 'smooth' }); }
 
         function exportDataJSON() {
             const blob = new Blob([JSON.stringify(stories, null, 2)], { type: 'application/json' });
