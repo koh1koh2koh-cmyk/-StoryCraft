@@ -1,1058 +1,393 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="منصة حكاية - قراءة ونشر القصص">
-    <title>حكاية - قراءة ونشر القصص</title>
-
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --panel-bg-2: #172033;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-color: #6366f1;
-            --accent-hover: #4f46e5;
-            --accent-2: #8b5cf6;
-            --border-color: #334155;
-            --danger-color: #ef4444;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --shadow: 0 15px 40px rgba(0, 0, 0, 0.20);
-            --radius: 14px;
-            --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
-        }
-
-        [data-theme="light"] {
-            --bg-color: #f1f5f9;
-            --panel-bg: #ffffff;
-            --panel-bg-2: #f8fafc;
-            --text-color: #0f172a;
-            --text-muted: #64748b;
-            --accent-color: #4f46e5;
-            --accent-hover: #4338ca;
-            --accent-2: #7c3aed;
-            --border-color: #cbd5e1;
-            --danger-color: #dc2626;
-            --success-color: #059669;
-            --warning-color: #d97706;
-            --shadow: 0 15px 40px rgba(15, 23, 42, 0.10);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background:
-                radial-gradient(circle at top right, rgba(99, 102, 241, 0.10), transparent 32%),
-                var(--bg-color);
-            color: var(--text-color);
-            font-family: var(--font-family);
-            line-height: 1.8;
-            min-height: 100vh;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        button,
-        input,
-        textarea {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        #readingProgressBar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 0%;
-            height: 4px;
-            z-index: 9999;
-            background: linear-gradient(90deg, var(--accent-color), var(--accent-2));
-            transition: width 0.1s linear;
-        }
-
-        /* =========================
-           Header
-        ========================= */
-
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: color-mix(in srgb, var(--panel-bg) 92%, transparent);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .header-inner {
-            max-width: 1450px;
-            margin: 0 auto;
-            padding: 14px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.4rem;
-            font-weight: 900;
-        }
-
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            color: white;
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.22);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        /* =========================
-           Buttons
-        ========================= */
-
-        .btn {
-            border: 0;
-            border-radius: 10px;
-            padding: 9px 13px;
-            font-weight: 700;
-            transition: 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, var(--accent-hover), var(--accent-2));
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-outline:hover {
-            background: var(--panel-bg-2);
-        }
-
-        /* =========================
-           Layout
-        ========================= */
-
-        .main-layout {
-            width: min(1450px, calc(100% - 32px));
-            margin: 25px auto 50px;
-            display: grid;
-            grid-template-columns: 310px minmax(0, 1fr);
-            gap: 22px;
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: sticky;
-            top: 82px;
-            align-self: start;
-            max-height: calc(100vh - 100px);
-            overflow-y: auto;
-        }
-
-        .panel-box {
-            background: linear-gradient(180deg, var(--panel-bg), var(--panel-bg-2));
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 18px;
-            box-shadow: var(--shadow);
-        }
-
-        .panel-title {
-            font-size: 1.03rem;
-            margin-bottom: 14px;
-            padding-bottom: 9px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        /* =========================
-           Hero
-        ========================= */
-
-        .hero {
-            padding: 22px;
-            margin-bottom: 18px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            background:
-                linear-gradient(135deg, rgba(99, 102, 241, 0.15), transparent 58%),
-                var(--panel-bg);
-            box-shadow: var(--shadow);
-        }
-
-        .hero h1 {
-            font-size: clamp(1.6rem, 3vw, 2.3rem);
-            margin-bottom: 4px;
-        }
-
-        .hero p {
-            color: var(--text-muted);
-        }
-
-        /* =========================
-           Form
-        ========================= */
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        .form-group label {
-            display: block;
-            color: var(--text-muted);
-            font-size: 0.86rem;
-            margin-bottom: 6px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 11px 12px;
-            color: var(--text-color);
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        .form-control:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.14);
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        /* =========================
-           Stats
-        ========================= */
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .stat-card {
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .stat-number {
-            color: var(--accent-color);
-            font-size: 1.5rem;
-            font-weight: 900;
-        }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.77rem;
-        }
-
-        /* =========================
-           Author list
-        ========================= */
-
-        .author-results {
-            margin-top: 8px;
-        }
-
-        .author-item {
-            padding: 10px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .author-item:hover {
-            background: var(--bg-color);
-        }
-
-        .author-empty {
-            color: var(--text-muted);
-            font-size: 0.82rem;
-            padding: 8px;
-            text-align: center;
-        }
-
-        /* =========================
-           Resume
-        ========================= */
-
-        #resumeReadingBox {
-            display: none;
-        }
-
-        #resumeReadingBox.active {
-            display: block;
-        }
-
-        #resumeStoryText {
-            color: var(--text-muted);
-            font-size: 0.84rem;
-            margin-bottom: 10px;
-        }
-
-        /* =========================
-           Story Bundle
-        ========================= */
-
-        .story-bundle-box {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 18px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .bundle-header {
-            display: grid;
-            grid-template-columns: 90px 1fr;
-            gap: 16px;
-            align-items: center;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .bundle-cover {
-            width: 90px;
-            height: 120px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
-        }
-
-        .fallback-cover {
-            width: 90px;
-            height: 120px;
-            border-radius: 12px;
-            display: grid;
-            place-items: center;
-            font-size: 2rem;
-            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
-        }
-
-        .bundle-title {
-            font-size: clamp(1.3rem, 2.5vw, 1.75rem);
-            line-height: 1.4;
-            margin-bottom: 7px;
-        }
-
-        .bundle-meta {
-            color: var(--text-muted);
-            font-size: 0.87rem;
-        }
-
-        /* =========================
-           Story Card
-        ========================= */
-
-        .story-card {
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 18px;
-            margin-top: 16px;
-        }
-
-        .story-card h3 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-
-        .story-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            margin-bottom: 14px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            color: var(--text-muted);
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 5px 9px;
-            border-radius: 999px;
-            font-size: 0.78rem;
-        }
-
-        .reading-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            margin-bottom: 14px;
-        }
-
-        .tool-btn {
-            color: var(--text-color);
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 7px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .tool-btn:hover {
-            border-color: var(--accent-color);
-        }
-
-        .story-text {
-            font-size: 1.06rem;
-            line-height: 2;
-            white-space: pre-line;
-            overflow-wrap: anywhere;
-            margin-bottom: 16px;
-        }
-
-        .story-text::first-letter {
-            font-weight: 900;
-            font-size: 1.3em;
-        }
-
-        .actions-bar {
-            border-top: 1px solid var(--border-color);
-            padding-top: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .interaction-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-        }
-
-        .action-btn {
-            background: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 7px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.82rem;
-        }
-
-        .action-btn:hover {
-            border-color: var(--accent-color);
-        }
-
-        .action-btn.liked {
-            color: var(--danger-color);
-            border-color: var(--danger-color);
-        }
-
-        .action-btn.faved {
-            color: var(--warning-color);
-            border-color: var(--warning-color);
-        }
-
-        .btn-delete-card {
-            background: transparent;
-            color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            padding: 5px 9px;
-            border-radius: 7px;
-            font-size: 0.75rem;
-            cursor: pointer;
-        }
-
-        /* =========================
-           Focus Mode
-        ========================= */
-
-        body.focus-mode header,
-        body.focus-mode .sidebar,
-        body.focus-mode .reading-toolbar,
-        body.focus-mode .actions-bar,
-        body.focus-mode .hero {
-            display: none !important;
-        }
-
-        body.focus-mode .main-layout {
-            grid-template-columns: 1fr;
-            max-width: 900px;
-        }
-
-        body.focus-mode .story-text {
-            font-size: 1.2rem;
-            line-height: 2.15;
-        }
-
-        /* =========================
-           Empty
-        ========================= */
-
-        .empty-state {
-            padding: 55px 20px;
-            text-align: center;
-            color: var(--text-muted);
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-        }
-
-        .empty-icon {
-            font-size: 2.4rem;
-            margin-bottom: 8px;
-        }
-
-        /* =========================
-           Toast
-        ========================= */
-
-        .toast-container {
-            position: fixed;
-            right: 18px;
-            bottom: 18px;
-            z-index: 5000;
-            width: min(360px, calc(100% - 36px));
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .toast {
-            background: var(--panel-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-right: 4px solid var(--accent-color);
-            border-radius: 10px;
-            padding: 12px 14px;
-            box-shadow: var(--shadow);
-            animation: toastIn 0.25s ease;
-        }
-
-        .toast.success {
-            border-right-color: var(--success-color);
-        }
-
-        .toast.danger {
-            border-right-color: var(--danger-color);
-        }
-
-        .toast.warning {
-            border-right-color: var(--warning-color);
-        }
-
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* =========================
-           Modal
-        ========================= */
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.72);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            width: min(520px, 100%);
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-        }
-
-        .modal-content p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-
-        .modal-buttons {
-            display: grid;
-            gap: 9px;
-        }
-
-        /* =========================
-           Responsive
-        ========================= */
-
-        @media (max-width: 980px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                position: static;
-                max-height: none;
-                overflow: visible;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .main-layout {
-                width: calc(100% - 16px);
-                margin-top: 12px;
-            }
-
-            .header-inner {
-                padding: 11px 10px;
-                align-items: flex-start;
-            }
-
-            .header-actions .btn {
-                padding: 8px 9px;
-                font-size: 0.76rem;
-            }
-
-            .logo-text {
-                display: none;
-            }
-
-            .bundle-header {
-                grid-template-columns: 70px 1fr;
-            }
-
-            .bundle-cover,
-            .fallback-cover {
-                width: 70px;
-                height: 95px;
-            }
-
-            .story-bundle-box,
-            .story-card,
-            .panel-box,
-            .hero {
-                padding: 13px;
-            }
-
-            .actions-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>حكاية — قراءة ونشر القصص</title>
+
+<style>
+:root{
+--bg:#0b1120;--panel:#111827;--panel2:#172033;--text:#f8fafc;
+--muted:#94a3b8;--accent:#6366f1;--accent2:#818cf8;--border:#263247;
+--danger:#ef4444;--ok:#10b981;--warning:#f59e0b;--shadow:0 12px 35px #0004
+}
+[data-theme="light"]{
+--bg:#f1f5f9;--panel:#fff;--panel2:#f8fafc;--text:#0f172a;
+--muted:#64748b;--accent:#4f46e5;--accent2:#6366f1;--border:#e2e8f0;
+--shadow:0 12px 30px #0f172a12
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+margin:0;background:radial-gradient(circle at 15% 0,#6366f11a,transparent 35%),var(--bg);
+color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
+line-height:1.8
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+#progress{
+position:fixed;top:0;right:0;height:4px;width:0;z-index:9999;
+background:linear-gradient(90deg,var(--accent),var(--accent2))
+}
+
+header{
+position:sticky;top:0;z-index:1000;backdrop-filter:blur(14px);
+background:color-mix(in srgb,var(--panel) 90%,transparent);
+border-bottom:1px solid var(--border);padding:10px 4vw;
+display:flex;align-items:center;justify-content:space-between;gap:15px
+}
+
+.logo img{
+display:block;width:165px;height:68px;object-fit:contain
+}
+
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+
+.btn,.tool{
+border:1px solid var(--border);background:var(--panel2);color:var(--text);
+border-radius:10px;padding:8px 11px;transition:.2s
+}
+
+.btn:hover,.tool:hover{transform:translateY(-1px);border-color:var(--accent)}
+.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.layout{
+width:min(1450px,94vw);margin:22px auto;
+display:grid;grid-template-columns:290px 1fr;gap:18px
+}
+
+.sidebar{
+display:flex;flex-direction:column;gap:14px;
+position:sticky;top:90px;align-self:start
+}
+
+.box,.bundle{
+background:var(--panel);border:1px solid var(--border);
+border-radius:14px;box-shadow:var(--shadow)
+}
+
+.box{padding:15px}
+.box h3{margin:0 0 10px}
+
+.field{
+width:100%;background:var(--bg);color:var(--text);
+border:1px solid var(--border);border-radius:9px;
+padding:9px;margin:0 0 9px;outline:0
+}
+
+.field:focus{
+border-color:var(--accent);
+box-shadow:0 0 0 3px #6366f122
+}
+
+textarea.field{min-height:150px;resize:vertical}
+
+.stats{
+display:grid;grid-template-columns:1fr 1fr;gap:7px
+}
+
+.stat{
+background:var(--panel2);padding:9px;border-radius:9px;text-align:center
+}
+
+.stat b{
+display:block;color:var(--accent2);font-size:1.3rem
+}
+
+.muted{color:var(--muted);font-size:.86rem}
+
+.authors{
+max-height:220px;overflow:auto
+}
+
+.author{
+padding:7px;border-radius:7px;
+display:flex;justify-content:space-between;cursor:pointer
+}
+
+.author:hover,.author.active{
+background:var(--panel2);color:var(--accent2)
+}
+
+#resume{
+display:none
+}
+
+#resume.show{
+display:block
+}
+
+.bundle{
+padding:15px;margin-bottom:16px
+}
+
+.bundle-head{
+display:flex;gap:13px;align-items:center;
+padding-bottom:13px;border-bottom:1px solid var(--border)
+}
+
+.cover{
+width:82px;height:110px;object-fit:cover;
+border-radius:9px;background:var(--panel2)
+}
+
+.bundle h2{margin:0 0 3px;font-size:1.35rem}
+
+.card{
+background:var(--panel2);border:1px solid var(--border);
+border-radius:12px;padding:14px;margin-top:13px
+}
+
+.card-head{
+display:flex;justify-content:space-between;
+gap:8px;align-items:center
+}
+
+.card h3{margin:0;font-size:1.05rem}
+
+.toolbar,.actionsbar{
+display:flex;gap:6px;flex-wrap:wrap;margin:11px 0
+}
+
+.tool{padding:6px 9px;font-size:.8rem}
+
+.story-text{
+font-size:1.05rem;line-height:2;
+white-space:pre-wrap;overflow-wrap:anywhere
+}
+
+.actionsbar{
+border-top:1px solid var(--border);
+padding-top:10px;margin-bottom:0
+}
+
+.danger{color:var(--danger)!important;border-color:var(--danger)!important}
+.liked{color:#ef4444!important;border-color:#ef4444!important}
+.faved{color:#f59e0b!important;border-color:#f59e0b!important}
+
+.empty{
+text-align:center;padding:50px;color:var(--muted)
+}
+
+.toast-wrap{
+position:fixed;left:15px;bottom:15px;z-index:5000;
+display:flex;flex-direction:column;gap:6px
+}
+
+.toast{
+background:var(--panel);border:1px solid var(--border);
+border-right:4px solid var(--accent);
+padding:9px 12px;border-radius:9px;box-shadow:var(--shadow)
+}
+
+.toast.ok{border-right-color:var(--ok)}
+.toast.bad{border-right-color:var(--danger)}
+
+.modal{
+position:fixed;inset:0;background:#0008;
+display:none;place-items:center;z-index:3000;padding:15px
+}
+
+.modal.open{display:grid}
+
+.modal-card{
+width:min(500px,100%);background:var(--panel);
+border:1px solid var(--border);border-radius:15px;
+padding:16px;box-shadow:var(--shadow)
+}
+
+.focus header,
+.focus .sidebar,
+.focus .toolbar,
+.focus .actionsbar{
+display:none!important
+}
+
+.focus .layout{
+display:block;width:min(820px,94vw)
+}
+
+.focus .story-text{
+font-size:1.15rem;line-height:2.15
+}
+
+@media(max-width:900px){
+.layout{grid-template-columns:1fr}
+.sidebar{position:static;order:2}
+.logo img{width:145px;height:58px}
+}
+
+@media(max-width:560px){
+.logo img{width:120px;height:52px}
+.actions .btn{font-size:.75rem;padding:7px}
+.bundle,.box{border-radius:11px}
+.cover{width:65px;height:88px}
+}
+</style>
 </head>
 
 <body>
 
-    <div id="readingProgressBar"></div>
+<div id="progress"></div>
 
-    <!-- =========================
-         Header
-    ========================== -->
-
-    <header>
-        <div class="header-inner">
-
-            <div class="logo">
-                <div class="logo-icon">📖</div>
-                <span class="logo-text">حكاية</span>
-            </div>
-
-            <div class="header-actions">
-                <button class="btn btn-outline" id="themeToggleBtn">
-                    ☀️ الوضع الفاتح
-                </button>
-
-                <button class="btn btn-outline" id="backupBtn">
-                    💾 النسخ الاحتياطي
-                </button>
-
-                <button class="btn btn-primary" id="publishScrollBtn">
-                    ✍️ نشر قصة
-                </button>
-            </div>
-
-        </div>
-    </header>
-
-    <!-- =========================
-         Main Layout
-    ========================== -->
-
-    <div class="main-layout">
-
-        <!-- =========================
-             Sidebar
-        ========================== -->
-
-        <aside class="sidebar">
-
-            <!-- Resume -->
-            <div class="panel-box" id="resumeReadingBox">
-
-                <h3 class="panel-title">
-                    📍 متابعة القراءة
-                </h3>
-
-                <p id="resumeStoryText"></p>
-
-                <button
-                    class="btn btn-outline"
-                    style="width:100%;"
-                    id="resumeStoryBtn">
-                    الانتقال للنقطة الحالية
-                </button>
-
-            </div>
-
-            <!-- Stats -->
-            <div class="panel-box">
-
-                <h3 class="panel-title">
-                    📊 الإحصائيات
-                </h3>
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-                        <div class="stat-number" id="statTotalStories">0</div>
-                        <div class="stat-label">الفصول</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-number" id="statTotalAuthors">0</div>
-                        <div class="stat-label">المؤلفون</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-number" id="statTotalFavorites">0</div>
-                        <div class="stat-label">المفضلة</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-number" id="statTotalLikes">0</div>
-                        <div class="stat-label">الإعجابات</div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Search -->
-            <div class="panel-box">
-
-                <h3 class="panel-title">
-                    🔍 البحث والتصفية
-                </h3>
-
-                <div class="form-group">
-                    <label for="globalSearchInput">
-                        بحث في القصص
-                    </label>
-
-                    <input
-                        type="search"
-                        id="globalSearchInput"
-                        class="form-control"
-                        placeholder="العنوان، الكاتب، الفصل، المحتوى..."
-                        autocomplete="off">
-                </div>
-
-                <div class="form-group">
-                    <label for="folderSearchInput">
-                        البحث حسب الكاتب
-                    </label>
-
-                    <input
-                        type="search"
-                        id="folderSearchInput"
-                        class="form-control"
-                        placeholder="اكتب اسم الكاتب..."
-                        autocomplete="off">
-                </div>
-
-                <div
-                    id="authorFolderList"
-                    class="author-results">
-                </div>
-
-                <button
-                    class="btn btn-outline"
-                    style="width:100%; margin-top:10px;"
-                    id="resetFiltersBtn">
-                    إعادة ضبط البحث
-                </button>
-
-            </div>
-
-            <!-- Publish -->
-            <div class="panel-box" id="publishPanel">
-
-                <h3 class="panel-title">
-                    ✍️ نشر فصل جديد
-                </h3>
-
-                <form id="storyForm">
-
-                    <div class="form-group">
-                        <label for="storyTitle">
-                            عنوان القصة الرئيسي
-                        </label>
-
-                        <input
-                            type="text"
-                            id="storyTitle"
-                            class="form-control"
-                            required
-                            placeholder="عنوان القصة">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="authorName">
-                            اسم الكاتب
-                        </label>
-
-                        <input
-                            type="text"
-                            id="authorName"
-                            class="form-control"
-                            required
-                            placeholder="اسم المؤلف">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="storyPartNumber">
-                            رقم أو اسم الفصل
-                        </label>
-
-                        <input
-                            type="text"
-                            id="storyPartNumber"
-                            class="form-control"
-                            required
-                            placeholder="الفصل الأول">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="coverUrl">
-                            رابط صورة الغلاف - اختياري
-                        </label>
-
-                        <input
-                            type="url"
-                            id="coverUrl"
-                            class="form-control"
-                            placeholder="https://example.com/cover.jpg">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="storyContent">
-                            محتوى الفصل
-                        </label>
-
-                        <textarea
-                            id="storyContent"
-                            class="form-control"
-                            required
-                            placeholder="اكتب نص الفصل هنا..."></textarea>
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                        style="width:100%;">
-                        نشر الفصل
-                    </button>
-
-                </form>
-            </div>
-
-        </aside>
-
-        <!-- =========================
-             Main Content
-        ========================== -->
-
-        <main>
-
-            <section class="hero">
-
-                <h1>
-                    📚 منصة حكاية
-                </h1>
-
-                <p>
-                    اقرأ القصص، تابع الفصول، احفظ موضع القراءة، وانشر قصصك في مكان واحد.
-                </p>
-
-            </section>
-
-            <div id="storiesContainer"></div>
-
-        </main>
-
+<header>
+    <div class="logo">
+        <img
+        alt="شعار حكاية"
+        src="data:image/webp;base64,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">
     </div>
 
-    <!-- Toast -->
-    <div
-        class="toast-container"
-        id="toastContainer">
+    <div class="actions">
+        <button class="btn" id="themeBtn">☀️ الوضع الفاتح</button>
+        <button class="btn" id="backupBtn">💾 النسخ الاحتياطي</button>
+        <button class="btn primary" id="publishBtn">✍️ نشر قصة</button>
     </div>
+</header>
 
-    <!-- =========================
-         Backup Modal
-    ========================== -->
+<div class="layout">
 
-    <div
-        class="modal"
-        id="backupModal">
+<aside class="sidebar">
 
-        <div class="modal-content">
+<div class="box" id="resume">
+    <h3>📍 متابعة القراءة</h3>
+    <div class="muted" id="resumeText"></div>
+    <button class="btn" style="width:100%;margin-top:8px" id="resumeBtn">
+        الانتقال للنقطة الحالية
+    </button>
+</div>
 
-            <h3 class="panel-title">
-                💾 إدارة النسخ الاحتياطي
-            </h3>
-
-            <p>
-                يمكنك تصدير جميع القصص أو استعادتها من ملف JSON.
-            </p>
-
-            <div class="modal-buttons">
-
-                <button
-                    class="btn btn-primary"
-                    id="exportDataBtn">
-                    📤 تصدير البيانات
-                </button>
-
-                <button
-                    class="btn btn-outline"
-                    id="importDataBtn">
-                    📥 استعادة البيانات
-                </button>
-
-                <input
-                    type="file"
-                    id="importFileInput"
-                    accept=".json,application/json"
-                    style="display:none;">
-
-                <button
-                    class="btn btn-outline"
-                    id="closeBackupBtn">
-                    إغلاق
-                </button>
-
-            </div>
-
-        </div>
+<div class="box">
+    <h3>📊 الإحصائيات</h3>
+    <div class="stats">
+        <div class="stat"><b id="totalStories">0</b>الفصول</div>
+        <div class="stat"><b id="totalAuthors">0</b>المؤلفون</div>
+        <div class="stat"><b id="totalFavs">0</b>المفضلة</div>
+        <div class="stat"><b id="totalLikes">0</b>الإعجابات</div>
     </div>
+</div>
 
-    <!-- =========================================================
-         JavaScript
-    ========================================================== -->
+<div class="box">
+    <h3>🔎 البحث والتصفية</h3>
 
-    <script>
-        "use strict";
+    <input
+        class="field"
+        id="searchInput"
+        type="search"
+        placeholder="ابحث في العنوان أو المحتوى...">
 
-        /* =========================================================
-           Storage Keys
-        ========================================================== */
+    <input
+        class="field"
+        id="authorSearch"
+        type="search"
+        placeholder="ابحث عن الكاتب...">
 
-        const STORAGE_KEY = "hikaya_stories_single_file_v1";
-        const LIKES_KEY = "hikaya_likes_single_file_v1";
-        const FAVORITES_KEY = "hikaya_favorites_single_file_v1";
-        const BOOKMARK_KEY = "hikaya_bookmark_single_file_v1";
-        const USER_TOKEN_KEY = "hikaya_user_token_single_file_v1";
-        const THEME_KEY = "hikaya_theme_single_file_v1";
+    <div class="authors" id="authors"></div>
 
-        /* =========================================================
-           Variables
-        ========================================================== */
+    <button class="btn" id="resetBtn" style="width:100%;margin-top:8px">
+        إعادة ضبط
+    </button>
+</div>
 
-        let stories = [];
-        let likes = {};
-        let favorites = [];
+<div class="box" id="publishBox">
+    <h3>✍️ نشر فصل جديد</h3>
 
-        let selectedAuthor = "";
-        let searchQuery = "";
+    <form id="storyForm">
 
-        /* =========================================================
-           القصة المطلوبة
-        ========================================================== */
+        <input
+            class="field"
+            id="storyTitle"
+            required
+            placeholder="عنوان القصة">
 
-        const initialStory = {
-            id: "story-rihlat-nahw-marifat-al-that",
-            title: "رحلة نحو معرفة الذات",
-            author: "غير محدد",
-            part: "الفصل الأول",
-            cover: "",
-            ownerToken: "system",
-            createdAt: 1,
+        <input
+            class="field"
+            id="authorName"
+            required
+            placeholder="اسم الكاتب">
 
-            content: `في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح. فجأة، ظهر نمر يركض خلف رجل غريب، وكانت أصوات خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين.
+        <input
+            class="field"
+            id="storyPart"
+            required
+            placeholder="الفصل الأول">
+
+        <input
+            class="field"
+            id="coverUrl"
+            type="url"
+            placeholder="رابط صورة الغلاف - اختياري">
+
+        <textarea
+            class="field"
+            id="storyContent"
+            required
+            placeholder="اكتب الفصل هنا..."></textarea>
+
+        <button class="btn primary" style="width:100%">
+            نشر الفصل
+        </button>
+
+    </form>
+</div>
+
+</aside>
+
+<main id="storiesContainer"></main>
+
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<div class="modal" id="backupModal">
+<div class="modal-card">
+
+<h3>💾 النسخ الاحتياطي</h3>
+
+<p class="muted">
+يمكنك تصدير جميع القصص أو استعادتها من ملف JSON.
+</p>
+
+<button class="btn" id="exportBtn" style="width:100%;margin:4px 0">
+📤 تصدير البيانات
+</button>
+
+<button class="btn" id="importBtn" style="width:100%;margin:4px 0">
+📥 استعادة البيانات
+</button>
+
+<input
+type="file"
+id="importFile"
+accept=".json,application/json"
+hidden>
+
+<button class="btn" id="closeBackup" style="width:100%;margin-top:4px">
+إغلاق
+</button>
+
+</div>
+</div>
+
+<script>
+
+const STORAGE_KEY="hikaya_stories_single";
+const LIKES_KEY="hikaya_likes_single";
+const FAVS_KEY="hikaya_favs_single";
+const BOOKMARK_KEY="hikaya_bookmark_single";
+const TOKEN_KEY="hikaya_token_single";
+const THEME_KEY="hikaya_theme_single";
+
+const INITIAL_STORY={
+id:"hikaya-rihlat-nahw-marifat-al-that",
+title:"رحلة نحو معرفة الذات",
+author:"غير محدد",
+part:"الفصل الأول",
+cover:"",
+ownerToken:"system",
+createdAt:1,
+content:`في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح. فجأة، ظهر نمر يركض خلف رجل غريب، وكانت أصوات خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين.
 ​
 تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، ثم أكمل طريقه.
 ​
@@ -1187,1883 +522,771 @@
 بالفعل، انطلقا نحو التاجر في الليل وراقبه غارلون. كان التاجر يُدعى "بوراينو"، وهو الفرد السابع من عصابة تُدعى "عصابة المونيراف"؛ أشهر عصابة في البلاد والمعروفة بأساليبها الخطيرة للغاية. ورغم أن عدد أعضائها قليل (15 فرداً فقط)، إلا أنهم من بين أقوى 100 سياف عرفهم التاريخ.
 ​
 فهل سينتصر عليهم غارلون؟ هذا ما سنعرفه في الجزء القادم...`
+};
+
+let stories=[];
+let likes={};
+let favorites=[];
+let authorFilter="";
+let searchQuery="";
+
+const $=id=>document.getElementById(id);
+
+function getToken(){
+    let token=localStorage.getItem(TOKEN_KEY);
+    if(!token){
+        token="usr_"+Math.random().toString(36).slice(2)+Date.now().toString(36);
+        localStorage.setItem(TOKEN_KEY,token);
+    }
+    return token;
+}
+
+function showToast(message,type=""){
+    const toast=document.createElement("div");
+    toast.className="toast "+type;
+    toast.textContent=message;
+    $("toastWrap").appendChild(toast);
+    setTimeout(()=>toast.remove(),2800);
+}
+
+function saveData(){
+    try{
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(stories));
+        localStorage.setItem(LIKES_KEY,JSON.stringify(likes));
+        localStorage.setItem(FAVS_KEY,JSON.stringify(favorites));
+    }catch{
+        showToast("تعذر حفظ البيانات","bad");
+    }
+    updateStats();
+}
+
+function loadData(){
+    try{
+        stories=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+        likes=JSON.parse(localStorage.getItem(LIKES_KEY)||"{}")||{};
+        favorites=JSON.parse(localStorage.getItem(FAVS_KEY)||"[]")||[];
+
+        if(!Array.isArray(stories))stories=[];
+        if(!Array.isArray(favorites))favorites=[];
+
+    }catch{
+        stories=[];
+        likes={};
+        favorites=[];
+    }
+
+    if(!stories.some(s=>s.id===INITIAL_STORY.id)){
+        stories.unshift(INITIAL_STORY);
+    }
+
+    saveData();
+}
+
+function readTime(text){
+    const words=String(text).trim().split(/\s+/).filter(Boolean).length;
+    return Math.max(1,Math.ceil(words/150))+" دقائق قراءة";
+}
+
+function updateStats(){
+    $("totalStories").textContent=stories.length;
+    $("totalAuthors").textContent=new Set(stories.map(s=>s.author).filter(Boolean)).size;
+    $("totalFavs").textContent=favorites.length;
+    $("totalLikes").textContent=Object.values(likes).filter(Boolean).length;
+}
+
+function renderAuthors(){
+    const q=$("authorSearch").value.trim().toLowerCase();
+    const counts={};
+
+    stories.forEach(s=>{
+        counts[s.author]=(counts[s.author]||0)+1;
+    });
+
+    const names=Object.keys(counts)
+        .filter(name=>name.toLowerCase().includes(q))
+        .sort((a,b)=>a.localeCompare(b,"ar"));
+
+    $("authors").innerHTML="";
+
+    if(!names.length){
+        $("authors").innerHTML=
+            '<div class="muted" style="padding:8px">لا يوجد كاتب مطابق.</div>';
+        return;
+    }
+
+    names.forEach(name=>{
+        const item=document.createElement("div");
+        item.className="author "+(authorFilter===name?"active":"");
+        item.dataset.author=name;
+
+        const n=document.createElement("span");
+        n.textContent="👤 "+name;
+
+        const c=document.createElement("b");
+        c.textContent=counts[name];
+
+        item.append(n,c);
+        $("authors").appendChild(item);
+    });
+}
+
+function updateBookmark(){
+    const raw=localStorage.getItem(BOOKMARK_KEY);
+
+    if(!raw){
+        $("resume").classList.remove("show");
+        return;
+    }
+
+    try{
+        const bookmark=JSON.parse(raw);
+
+        $("resume").classList.add("show");
+
+        $("resumeText").textContent=
+            "توقفت عند: "+
+            bookmark.title+
+            " — "+
+            bookmark.part;
+
+        $("resumeBtn").onclick=()=>{
+            const element=document.getElementById(
+                "story-"+bookmark.id
+            );
+
+            if(element){
+                element.scrollIntoView({
+                    behavior:"smooth",
+                    block:"center"
+                });
+            }else{
+                showToast("لم يتم العثور على الفصل","bad");
+            }
         };
 
-        /* =========================================================
-           User Token
-        ========================================================== */
+    }catch{
+        $("resume").classList.remove("show");
+    }
+}
 
-        function getCurrentUserToken() {
-            let token = localStorage.getItem(USER_TOKEN_KEY);
+function renderStories(){
 
-            if (!token) {
-                token =
-                    "usr_" +
-                    Math.random().toString(36).slice(2) +
-                    Date.now().toString(36);
+    const container=$("storiesContainer");
 
-                localStorage.setItem(USER_TOKEN_KEY, token);
-            }
+    let list=stories.filter(story=>{
+        const authorOK=
+            !authorFilter||
+            String(story.author).toLowerCase()===
+            authorFilter.toLowerCase();
 
-            return token;
+        const query=searchQuery.trim().toLowerCase();
+
+        const searchOK=
+            !query||
+            [
+                story.title,
+                story.author,
+                story.part,
+                story.content
+            ].some(value=>
+                String(value||"")
+                .toLowerCase()
+                .includes(query)
+            );
+
+        return authorOK&&searchOK;
+    });
+
+    container.innerHTML="";
+
+    if(!list.length){
+        container.innerHTML=
+            '<div class="box empty">لم يتم العثور على قصص مطابقة.</div>';
+
+        updateStats();
+        renderAuthors();
+        return;
+    }
+
+    const groups={};
+
+    list.forEach(story=>{
+        if(!groups[story.title]){
+            groups[story.title]=[];
         }
+        groups[story.title].push(story);
+    });
 
-        /* =========================================================
-           Storage
-        ========================================================== */
+    Object.values(groups).forEach(bundle=>{
 
-        function loadData() {
-            try {
-                const storedStories =
-                    localStorage.getItem(STORAGE_KEY);
+        const first=bundle[0];
 
-                if (storedStories) {
-                    const parsed = JSON.parse(storedStories);
-                    stories = Array.isArray(parsed) ? parsed : [];
-                } else {
-                    stories = [];
-                }
+        const bundleElement=document.createElement("section");
+        bundleElement.className="bundle";
 
-                likes =
-                    JSON.parse(
-                        localStorage.getItem(LIKES_KEY) || "{}"
-                    ) || {};
+        const header=document.createElement("div");
+        header.className="bundle-head";
 
-                favorites =
-                    JSON.parse(
-                        localStorage.getItem(FAVORITES_KEY) || "[]"
-                    ) || [];
+        if(first.cover){
 
-                /*
-                 * إضافة القصة المطلوبة تلقائياً إن لم تكن موجودة.
-                 * لا يتم حذف أي قصص موجودة بالفعل.
-                 */
-                const exists = stories.some(
-                    story => story.id === initialStory.id
-                );
+            const image=document.createElement("img");
+            image.className="cover";
+            image.src=first.cover;
+            image.alt="غلاف القصة";
 
-                if (!exists) {
-                    stories.unshift(initialStory);
-                }
-
-                saveData(false);
-
-            } catch (error) {
-                console.error(error);
-
-                stories = [initialStory];
-                likes = {};
-                favorites = [];
-
-                saveData(false);
-            }
-        }
-
-        function saveData(showErrorToast = true) {
-            try {
-                localStorage.setItem(
-                    STORAGE_KEY,
-                    JSON.stringify(stories)
-                );
-
-                localStorage.setItem(
-                    LIKES_KEY,
-                    JSON.stringify(likes)
-                );
-
-                localStorage.setItem(
-                    FAVORITES_KEY,
-                    JSON.stringify(favorites)
-                );
-            } catch (error) {
-                console.error(error);
-
-                if (showErrorToast) {
-                    showToast(
-                        "تعذر حفظ البيانات في المتصفح.",
-                        "danger"
-                    );
-                }
-            }
-
-            updateStats();
-        }
-
-        /* =========================================================
-           Helpers
-        ========================================================== */
-
-        function calculateReadTime(text) {
-            const words =
-                String(text || "")
-                    .trim()
-                    .split(/\s+/)
-                    .filter(Boolean)
-                    .length;
-
-            return Math.max(1, Math.ceil(words / 150));
-        }
-
-        function groupStoriesByTitle(storyList) {
-            return storyList.reduce((groups, story) => {
-
-                const title =
-                    story.title || "بدون عنوان";
-
-                if (!groups[title]) {
-                    groups[title] = [];
-                }
-
-                groups[title].push(story);
-
-                return groups;
-
-            }, {});
-        }
-
-        function showToast(message, type = "") {
-
-            const container =
-                document.getElementById("toastContainer");
-
-            const toast =
-                document.createElement("div");
-
-            toast.className =
-                "toast" + (type ? " " + type : "");
-
-            toast.textContent = message;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3200);
-        }
-
-        /* =========================================================
-           Render Stories
-        ========================================================== */
-
-        function renderStories() {
-
-            const container =
-                document.getElementById("storiesContainer");
-
-            container.innerHTML = "";
-
-            const query =
-                searchQuery
-                    .trim()
-                    .toLowerCase();
-
-            const author =
-                selectedAuthor
-                    .trim()
-                    .toLowerCase();
-
-            let filtered =
-                stories.filter(story => {
-
-                    const storyAuthor =
-                        String(story.author || "")
-                            .toLowerCase();
-
-                    const matchesAuthor =
-                        !author ||
-                        storyAuthor === author;
-
-                    const searchable =
-                        [
-                            story.title,
-                            story.author,
-                            story.part,
-                            story.content
-                        ]
-                            .map(
-                                value =>
-                                    String(value || "")
-                                        .toLowerCase()
-                            )
-                            .join(" ");
-
-                    const matchesSearch =
-                        !query ||
-                        searchable.includes(query);
-
-                    return (
-                        matchesAuthor &&
-                        matchesSearch
-                    );
-                });
-
-            if (!filtered.length) {
-
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">📭</div>
-                        لم يتم العثور على أي قصص مطابقة.
-                    </div>
-                `;
-
-                return;
-            }
-
-            const grouped =
-                groupStoriesByTitle(filtered);
-
-            const currentToken =
-                getCurrentUserToken();
-
-            Object.values(grouped).forEach(bundle => {
-
-                bundle.sort(
-                    (a, b) =>
-                        Number(a.createdAt || 0) -
-                        Number(b.createdAt || 0)
-                );
-
-                const first = bundle[0];
-
-                const bundleBox =
-                    document.createElement("section");
-
-                bundleBox.className =
-                    "story-bundle-box";
-
-                /* ---------- Header ---------- */
-
-                const bundleHeader =
-                    document.createElement("div");
-
-                bundleHeader.className =
-                    "bundle-header";
-
-                if (first.cover) {
-
-                    const img =
-                        document.createElement("img");
-
-                    img.className =
-                        "bundle-cover";
-
-                    img.alt = "غلاف القصة";
-
-                    img.src = first.cover;
-
-                    img.onerror = () => {
-
-                        img.remove();
-
-                        const fallback =
-                            createFallbackCover();
-
-                        bundleHeader.prepend(
-                            fallback
-                        );
-                    };
-
-                    bundleHeader.appendChild(img);
-
-                } else {
-
-                    bundleHeader.appendChild(
-                        createFallbackCover()
-                    );
-                }
-
-                const info =
-                    document.createElement("div");
-
-                const title =
-                    document.createElement("h2");
-
-                title.className =
-                    "bundle-title";
-
-                title.textContent =
-                    first.title;
-
-                const meta =
-                    document.createElement("div");
-
-                meta.className =
-                    "bundle-meta";
-
-                meta.textContent =
-                    "👤 الكاتب: " +
-                    (first.author || "غير محدد") +
-                    " • 📚 " +
-                    bundle.length +
-                    " فصل";
-
-                info.appendChild(title);
-                info.appendChild(meta);
-
-                bundleHeader.appendChild(info);
-
-                bundleBox.appendChild(
-                    bundleHeader
-                );
-
-                /* ---------- Chapters ---------- */
-
-                bundle.forEach(story => {
-
-                    const card =
-                        createStoryCard(
-                            story,
-                            currentToken
-                        );
-
-                    bundleBox.appendChild(card);
-                });
-
-                container.appendChild(
-                    bundleBox
-                );
-            });
-        }
-
-        function createFallbackCover() {
-
-            const cover =
-                document.createElement("div");
-
-            cover.className =
-                "fallback-cover";
-
-            cover.textContent = "📖";
-
-            return cover;
-        }
-
-        /* =========================================================
-           Story Card
-        ========================================================== */
-
-        function createStoryCard(
-            story,
-            currentToken
-        ) {
-
-            const card =
-                document.createElement("article");
-
-            card.className =
-                "story-card";
-
-            card.id =
-                "story-card-" + story.id;
-
-            /* ---------- Head ---------- */
-
-            const head =
-                document.createElement("h3");
-
-            const part =
-                document.createElement("span");
-
-            part.textContent =
-                story.part || "الفصل";
-
-            head.appendChild(part);
-
-            if (
-                story.ownerToken ===
-                currentToken
-            ) {
-
-                const deleteBtn =
-                    document.createElement("button");
-
-                deleteBtn.className =
-                    "btn-delete-card";
-
-                deleteBtn.type = "button";
-
-                deleteBtn.textContent =
-                    "حذف الفصل";
-
-                deleteBtn.addEventListener(
-                    "click",
-                    () => deleteStory(story.id)
-                );
-
-                head.appendChild(
-                    deleteBtn
-                );
-            }
-
-            card.appendChild(head);
-
-            /* ---------- Meta ---------- */
-
-            const meta =
-                document.createElement("div");
-
-            meta.className =
-                "story-meta";
-
-            const timeBadge =
-                document.createElement("span");
-
-            timeBadge.className =
-                "badge";
-
-            timeBadge.textContent =
-                "⏱️ " +
-                calculateReadTime(
-                    story.content
-                ) +
-                " دقائق قراءة";
-
-            meta.appendChild(
-                timeBadge
-            );
-
-            const authorBadge =
-                document.createElement("span");
-
-            authorBadge.className =
-                "badge";
-
-            authorBadge.textContent =
-                "👤 " +
-                (story.author || "غير محدد");
-
-            meta.appendChild(
-                authorBadge
-            );
-
-            card.appendChild(meta);
-
-            /* ---------- Toolbar ---------- */
-
-            const toolbar =
-                document.createElement("div");
-
-            toolbar.className =
-                "reading-toolbar";
-
-            toolbar.appendChild(
-                createToolButton(
-                    "A+",
-                    () =>
-                        changeFontSize(
-                            story.id,
-                            2
-                        )
-                )
-            );
-
-            toolbar.appendChild(
-                createToolButton(
-                    "A-",
-                    () =>
-                        changeFontSize(
-                            story.id,
-                            -2
-                        )
-                )
-            );
-
-            toolbar.appendChild(
-                createToolButton(
-                    "👁️ وضع التركيز",
-                    toggleFocusMode
-                )
-            );
-
-            toolbar.appendChild(
-                createToolButton(
-                    "🔖 حفظ نقطة التوقف",
-                    () =>
-                        saveBookmark(
-                            story.id,
-                            story.title,
-                            story.part
-                        )
-                )
-            );
-
-            card.appendChild(
-                toolbar
-            );
-
-            /* ---------- Text ---------- */
-
-            const text =
-                document.createElement("div");
-
-            text.className =
-                "story-text";
-
-            text.id =
-                "text-" + story.id;
-
-            /*
-             * textContent يحافظ على النص كنص عادي
-             * ويمنع تحويل محتوى القصة إلى HTML.
-             */
-            text.textContent =
-                story.content;
-
-            card.appendChild(text);
-
-            /* ---------- Actions ---------- */
-
-            const actions =
-                document.createElement("div");
-
-            actions.className =
-                "actions-bar";
-
-            const interactionGroup =
-                document.createElement("div");
-
-            interactionGroup.className =
-                "interaction-group";
-
-            const liked =
-                Boolean(
-                    likes[story.id]
-                );
-
-            const faved =
-                favorites.includes(
-                    story.id
-                );
-
-            const likeBtn =
-                document.createElement("button");
-
-            likeBtn.type = "button";
-
-            likeBtn.className =
-                "action-btn" +
-                (liked ? " liked" : "");
-
-            likeBtn.textContent =
-                liked
-                    ? "❤️ أعجبني"
-                    : "🤍 إعجاب";
-
-            likeBtn.addEventListener(
-                "click",
-                () =>
-                    toggleLike(
-                        story.id
-                    )
-            );
-
-            const favBtn =
-                document.createElement("button");
-
-            favBtn.type = "button";
-
-            favBtn.className =
-                "action-btn" +
-                (faved ? " faved" : "");
-
-            favBtn.textContent =
-                faved
-                    ? "⭐ محفوظة"
-                    : "☆ حفظ";
-
-            favBtn.addEventListener(
-                "click",
-                () =>
-                    toggleFavorite(
-                        story.id
-                    )
-            );
-
-            interactionGroup.appendChild(
-                likeBtn
-            );
-
-            interactionGroup.appendChild(
-                favBtn
-            );
-
-            const shareBtn =
-                document.createElement("button");
-
-            shareBtn.type = "button";
-
-            shareBtn.className =
-                "action-btn";
-
-            shareBtn.textContent =
-                "🔗 مشاركة";
-
-            shareBtn.addEventListener(
-                "click",
-                () =>
-                    shareStory(story)
-            );
-
-            actions.appendChild(
-                interactionGroup
-            );
-
-            actions.appendChild(
-                shareBtn
-            );
-
-            card.appendChild(actions);
-
-            return card;
-        }
-
-        function createToolButton(
-            text,
-            callback
-        ) {
-
-            const btn =
-                document.createElement("button");
-
-            btn.type = "button";
-
-            btn.className =
-                "tool-btn";
-
-            btn.textContent =
-                text;
-
-            btn.addEventListener(
-                "click",
-                callback
-            );
-
-            return btn;
-        }
-
-        /* =========================================================
-           Publish
-        ========================================================== */
-
-        function handlePublish(event) {
-
-            event.preventDefault();
-
-            const title =
-                document
-                    .getElementById("storyTitle")
-                    .value
-                    .trim();
-
-            const author =
-                document
-                    .getElementById("authorName")
-                    .value
-                    .trim();
-
-            const part =
-                document
-                    .getElementById("storyPartNumber")
-                    .value
-                    .trim();
-
-            const cover =
-                document
-                    .getElementById("coverUrl")
-                    .value
-                    .trim();
-
-            const content =
-                document
-                    .getElementById("storyContent")
-                    .value
-                    .trim();
-
-            if (
-                !title ||
-                !author ||
-                !part ||
-                !content
-            ) {
-
-                showToast(
-                    "يرجى تعبئة جميع الحقول المطلوبة.",
-                    "danger"
-                );
-
-                return;
-            }
-
-            const newStory = {
-
-                id:
-                    "story_" +
-                    Date.now() +
-                    "_" +
-                    Math.random()
-                        .toString(36)
-                        .slice(2, 8),
-
-                title,
-                author,
-                part,
-                cover,
-                content,
-
-                ownerToken:
-                    getCurrentUserToken(),
-
-                createdAt:
-                    Date.now()
+            image.onerror=()=>{
+                image.remove();
             };
 
-            stories.push(
-                newStory
+            header.appendChild(image);
+
+        }else{
+
+            const placeholder=document.createElement("div");
+            placeholder.className="cover";
+            placeholder.style.display="grid";
+            placeholder.style.placeItems="center";
+            placeholder.style.fontSize="2rem";
+            placeholder.textContent="📖";
+
+            header.appendChild(placeholder);
+        }
+
+        const info=document.createElement("div");
+
+        const title=document.createElement("h2");
+        title.textContent=first.title;
+
+        const meta=document.createElement("div");
+        meta.className="muted";
+        meta.textContent=
+            "👤 "+
+            (first.author||"غير محدد")+
+            " · "+
+            bundle.length+
+            " فصل";
+
+        info.append(title,meta);
+        header.appendChild(info);
+        bundleElement.appendChild(header);
+
+        bundle.forEach(story=>{
+            bundleElement.appendChild(
+                createStoryCard(story)
             );
+        });
+
+        container.appendChild(bundleElement);
+    });
+
+    updateStats();
+    renderAuthors();
+    updateBookmark();
+}
+
+function createStoryCard(story){
+
+    const card=document.createElement("article");
+    card.className="card";
+    card.id="story-"+story.id;
+
+    const head=document.createElement("div");
+    head.className="card-head";
+
+    const part=document.createElement("h3");
+    part.textContent=story.part;
+
+    head.appendChild(part);
+
+    if(story.ownerToken===getToken()){
+
+        const deleteButton=document.createElement("button");
+        deleteButton.className="tool danger";
+        deleteButton.textContent="حذف الفصل";
+        deleteButton.dataset.action="delete";
+        deleteButton.dataset.id=story.id;
+
+        head.appendChild(deleteButton);
+    }
+
+    card.appendChild(head);
+
+    const time=document.createElement("div");
+    time.className="muted";
+    time.textContent="⏱️ "+readTime(story.content);
+    card.appendChild(time);
+
+    const toolbar=document.createElement("div");
+    toolbar.className="toolbar";
+
+    toolbar.appendChild(
+        toolButton("A+",()=>changeFont(story.id,2))
+    );
+
+    toolbar.appendChild(
+        toolButton("A-",()=>changeFont(story.id,-2))
+    );
+
+    toolbar.appendChild(
+        toolButton("👁️ وضع التركيز",toggleFocus)
+    );
+
+    toolbar.appendChild(
+        toolButton("🔖 حفظ الموضع",()=>saveBookmark(story))
+    );
+
+    card.appendChild(toolbar);
+
+    const text=document.createElement("div");
+    text.className="story-text";
+    text.id="text-"+story.id;
+    text.textContent=story.content;
+
+    card.appendChild(text);
+
+    const actions=document.createElement("div");
+    actions.className="actionsbar";
+
+    const like=document.createElement("button");
+    like.className="tool "+(likes[story.id]?"liked":"");
+    like.textContent=likes[story.id]?"❤️ أعجبني":"🤍 إعجاب";
+    like.onclick=()=>toggleLike(story.id);
+
+    const favorite=document.createElement("button");
+    const isFavorite=favorites.includes(story.id);
+
+    favorite.className="tool "+(isFavorite?"faved":"");
+    favorite.textContent=isFavorite?"⭐ مفضلة":"☆ حفظ";
+    favorite.onclick=()=>toggleFavorite(story.id);
+
+    const share=document.createElement("button");
+    share.className="tool";
+    share.textContent="🔗 مشاركة";
+    share.onclick=()=>shareStory(story);
+
+    actions.append(like,favorite,share);
+    card.appendChild(actions);
+
+    return card;
+}
+
+function toolButton(text,callback){
+    const button=document.createElement("button");
+    button.className="tool";
+    button.type="button";
+    button.textContent=text;
+    button.onclick=callback;
+    return button;
+}
+
+function changeFont(id,delta){
+    const element=$("text-"+id);
+    if(!element)return;
+
+    const current=parseFloat(
+        getComputedStyle(element).fontSize
+    );
+
+    const next=Math.max(
+        14,
+        Math.min(
+            32,
+            current+delta
+        )
+    );
+
+    element.style.fontSize=next+"px";
+}
+
+function toggleFocus(){
+    document.body.classList.toggle("focus");
+}
+
+function toggleLike(id){
+    likes[id]=!likes[id];
+    saveData();
+    renderStories();
+}
+
+function toggleFavorite(id){
+
+    const index=favorites.indexOf(id);
+
+    if(index>=0){
+        favorites.splice(index,1);
+        showToast("تمت إزالة الفصل من المفضلة");
+    }else{
+        favorites.push(id);
+        showToast("تم حفظ الفصل في المفضلة","ok");
+    }
+
+    saveData();
+    renderStories();
+}
+
+function saveBookmark(story){
+
+    localStorage.setItem(
+        BOOKMARK_KEY,
+        JSON.stringify({
+            id:story.id,
+            title:story.title,
+            part:story.part
+        })
+    );
+
+    updateBookmark();
+    showToast("تم حفظ موضع القراءة","ok");
+}
+
+async function shareStory(story){
+
+    const url=
+        location.href.split("#")[0]+
+        "#story-"+encodeURIComponent(story.id);
+
+    const data={
+        title:story.title+" — "+story.part,
+        text:story.title+" — "+story.part,
+        url
+    };
+
+    try{
+
+        if(navigator.share){
+
+            await navigator.share(data);
+
+        }else{
+
+            await navigator.clipboard.writeText(url);
+
+            showToast("تم نسخ رابط القصة","ok");
+        }
+
+    }catch(error){
+
+        if(error.name!=="AbortError"){
+            showToast("تعذر مشاركة القصة","bad");
+        }
+    }
+}
+
+function deleteStory(id){
+
+    const story=stories.find(item=>item.id===id);
+
+    if(!story)return;
+
+    if(story.ownerToken!==getToken()){
+        showToast("لا يمكنك حذف هذا الفصل","bad");
+        return;
+    }
+
+    if(!confirm("هل تريد حذف هذا الفصل؟"))return;
+
+    stories=stories.filter(
+        item=>item.id!==id
+    );
+
+    delete likes[id];
+
+    favorites=favorites.filter(
+        item=>item!==id
+    );
+
+    saveData();
+    renderStories();
+
+    showToast("تم حذف الفصل","ok");
+}
+
+function publishStory(event){
+
+    event.preventDefault();
+
+    const story={
+        id:
+            "story_"+
+            Date.now()+
+            "_"+
+            Math.random().toString(36).slice(2),
+
+        title:$("storyTitle").value.trim(),
+        author:$("authorName").value.trim(),
+        part:$("storyPart").value.trim(),
+        cover:$("coverUrl").value.trim(),
+        content:$("storyContent").value.trim(),
+
+        ownerToken:getToken(),
+        createdAt:Date.now()
+    };
+
+    if(
+        !story.title||
+        !story.author||
+        !story.part||
+        !story.content
+    ){
+        showToast("يرجى تعبئة الحقول المطلوبة","bad");
+        return;
+    }
+
+    stories.unshift(story);
+
+    saveData();
+
+    event.target.reset();
+
+    renderStories();
+
+    showToast("تم نشر الفصل بنجاح","ok");
+}
+
+function exportData(){
+
+    const data={
+        version:1,
+        exportedAt:new Date().toISOString(),
+        stories,
+        likes,
+        favorites
+    };
+
+    const blob=new Blob(
+        [JSON.stringify(data,null,2)],
+        {type:"application/json"}
+    );
+
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+
+    link.href=url;
+    link.download=
+        "hikaya_backup_"+
+        Date.now()+
+        ".json";
+
+    link.click();
+
+    setTimeout(
+        ()=>URL.revokeObjectURL(url),
+        1000
+    );
+
+    showToast("تم تصدير النسخة الاحتياطية","ok");
+}
+
+function importData(file){
+
+    if(!file)return;
+
+    const reader=new FileReader();
+
+    reader.onload=event=>{
+
+        try{
+
+            const data=
+                JSON.parse(event.target.result);
+
+            const importedStories=
+                Array.isArray(data)
+                    ?data
+                    :data.stories;
+
+            if(!Array.isArray(importedStories)){
+                throw new Error();
+            }
+
+            stories=importedStories;
+            likes=
+                Array.isArray(data)
+                    ?{}
+                    :(data.likes||{});
+
+            favorites=
+                Array.isArray(data)
+                    ?[]
+                    :(data.favorites||[]);
 
             saveData();
-
-            document
-                .getElementById("storyForm")
-                .reset();
-
-            renderAll();
-
-            showToast(
-                "تم نشر الفصل بنجاح! ✅",
-                "success"
-            );
-        }
-
-        /* =========================================================
-           Delete
-        ========================================================== */
-
-        function deleteStory(id) {
-
-            const story =
-                stories.find(
-                    item =>
-                        item.id === id
-                );
-
-            if (!story) {
-                return;
-            }
-
-            if (
-                story.ownerToken !==
-                getCurrentUserToken()
-            ) {
-
-                showToast(
-                    "لا يمكنك حذف هذا الفصل.",
-                    "danger"
-                );
-
-                return;
-            }
-
-            const confirmed =
-                confirm(
-                    "هل أنت متأكد من حذف هذا الفصل؟"
-                );
-
-            if (!confirmed) {
-                return;
-            }
-
-            stories =
-                stories.filter(
-                    item =>
-                        item.id !== id
-                );
-
-            delete likes[id];
-
-            favorites =
-                favorites.filter(
-                    item =>
-                        item !== id
-                );
-
-            saveData();
-            renderAll();
-
-            showToast(
-                "تم حذف الفصل.",
-                "danger"
-            );
-        }
-
-        /* =========================================================
-           Like
-        ========================================================== */
-
-        function toggleLike(id) {
-
-            likes[id] =
-                !likes[id];
-
-            saveData();
-            renderAll();
-        }
-
-        /* =========================================================
-           Favorites
-        ========================================================== */
-
-        function toggleFavorite(id) {
-
-            const index =
-                favorites.indexOf(id);
-
-            if (index !== -1) {
-
-                favorites.splice(
-                    index,
-                    1
-                );
-
-                showToast(
-                    "تمت إزالة الفصل من المفضلة."
-                );
-
-            } else {
-
-                favorites.push(id);
-
-                showToast(
-                    "تم حفظ الفصل في المفضلة ⭐",
-                    "success"
-                );
-            }
-
-            saveData();
-            renderAll();
-        }
-
-        /* =========================================================
-           Share
-        ========================================================== */
-
-        async function shareStory(
-            story
-        ) {
-
-            const url =
-                window.location.href
-                    .split("#")[0] +
-                "#" +
-                story.id;
-
-            try {
-
-                if (
-                    navigator.share
-                ) {
-
-                    await navigator.share({
-                        title:
-                            story.title +
-                            " - " +
-                            story.part,
-
-                        text:
-                            "قراءة قصة " +
-                            story.title +
-                            " - " +
-                            story.part,
-
-                        url
-                    });
-
-                    return;
-                }
-
-                if (
-                    navigator.clipboard
-                ) {
-
-                    await navigator.clipboard.writeText(
-                        url
-                    );
-
-                    showToast(
-                        "تم نسخ رابط القصة! 🔗",
-                        "success"
-                    );
-
-                    return;
-                }
-
-                prompt(
-                    "انسخ الرابط:",
-                    url
-                );
-
-            } catch (error) {
-
-                if (
-                    error &&
-                    error.name ===
-                        "AbortError"
-                ) {
-
-                    return;
-                }
-
-                showToast(
-                    "تعذر مشاركة القصة.",
-                    "warning"
-                );
-            }
-        }
-
-        /* =========================================================
-           Font Size
-        ========================================================== */
-
-        function changeFontSize(
-            storyId,
-            delta
-        ) {
-
-            const element =
-                document.getElementById(
-                    "text-" + storyId
-                );
-
-            if (!element) {
-                return;
-            }
-
-            const current =
-                parseFloat(
-                    getComputedStyle(
-                        element
-                    ).fontSize
-                ) || 16;
-
-            const next =
-                Math.max(
-                    14,
-                    Math.min(
-                        32,
-                        current + delta
-                    )
-                );
-
-            element.style.fontSize =
-                next + "px";
-        }
-
-        /* =========================================================
-           Focus Mode
-        ========================================================== */
-
-        function toggleFocusMode() {
-
-            document.body.classList.toggle(
-                "focus-mode"
-            );
-        }
-
-        /* =========================================================
-           Bookmark
-        ========================================================== */
-
-        function saveBookmark(
-            id,
-            title,
-            part
-        ) {
-
-            const bookmark = {
-                id,
-                title,
-                part,
-                savedAt: Date.now()
-            };
-
-            localStorage.setItem(
-                BOOKMARK_KEY,
-                JSON.stringify(
-                    bookmark
-                )
-            );
-
-            updateResumeReading();
-
-            showToast(
-                "تم حفظ موضع القراءة 🔖",
-                "success"
-            );
-        }
-
-        function updateResumeReading() {
-
-            const box =
-                document.getElementById(
-                    "resumeReadingBox"
-                );
-
-            const text =
-                document.getElementById(
-                    "resumeStoryText"
-                );
-
-            const btn =
-                document.getElementById(
-                    "resumeStoryBtn"
-                );
-
-            const raw =
-                localStorage.getItem(
-                    BOOKMARK_KEY
-                );
-
-            if (!raw) {
-
-                box.classList.remove(
-                    "active"
-                );
-
-                return;
-            }
-
-            let data;
-
-            try {
-                data =
-                    JSON.parse(raw);
-            } catch {
-
-                box.classList.remove(
-                    "active"
-                );
-
-                return;
-            }
-
-            if (!data || !data.id) {
-
-                box.classList.remove(
-                    "active"
-                );
-
-                return;
-            }
-
-            text.textContent =
-                "توقفت عند: " +
-                (data.title || "قصة") +
-                " (" +
-                (data.part || "فصل") +
-                ")";
-
-            box.classList.add(
-                "active"
-            );
-
-            btn.onclick = () => {
-
-                const target =
-                    document.getElementById(
-                        "story-card-" +
-                        data.id
-                    );
-
-                if (!target) {
-
-                    showToast(
-                        "لم يتم العثور على الفصل المحفوظ.",
-                        "danger"
-                    );
-
-                    return;
-                }
-
-                target.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            };
-        }
-
-        /* =========================================================
-           Author Search
-        ========================================================== */
-
-        function renderAuthorFolder(
-            query = ""
-        ) {
-
-            const container =
-                document.getElementById(
-                    "authorFolderList"
-                );
-
-            container.innerHTML = "";
-
-            query =
-                query
-                    .trim()
-                    .toLowerCase();
-
-            if (!query) {
-                return;
-            }
-
-            const authors =
-                [
-                    ...new Set(
-                        stories
-                            .map(
-                                story =>
-                                    String(
-                                        story.author || ""
-                                    ).trim()
-                            )
-                            .filter(Boolean)
-                    )
-                ].filter(
-                    author =>
-                        author
-                            .toLowerCase()
-                            .includes(query)
-                );
-
-            if (!authors.length) {
-
-                const empty =
-                    document.createElement(
-                        "div"
-                    );
-
-                empty.className =
-                    "author-empty";
-
-                empty.textContent =
-                    "لم يتم العثور على الكاتب.";
-
-                container.appendChild(
-                    empty
-                );
-
-                return;
-            }
-
-            authors.forEach(
-                author => {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.className =
-                        "author-item";
-
-                    const name =
-                        document.createElement(
-                            "span"
-                        );
-
-                    name.textContent =
-                        "👤 " + author;
-
-                    const count =
-                        document.createElement(
-                            "strong"
-                        );
-
-                    count.textContent =
-                        stories.filter(
-                            story =>
-                                story.author ===
-                                author
-                        ).length +
-                        " فصل";
-
-                    item.appendChild(
-                        name
-                    );
-
-                    item.appendChild(
-                        count
-                    );
-
-                    item.addEventListener(
-                        "click",
-                        () => {
-
-                            selectedAuthor =
-                                author;
-
-                            renderAll();
-
-                            showToast(
-                                "تم عرض أعمال " +
-                                author
-                            );
-                        }
-                    );
-
-                    container.appendChild(
-                        item
-                    );
-                }
-            );
-        }
-
-        /* =========================================================
-           Stats
-        ========================================================== */
-
-        function updateStats() {
-
-            document.getElementById(
-                "statTotalStories"
-            ).textContent =
-                stories.length;
-
-            document.getElementById(
-                "statTotalAuthors"
-            ).textContent =
-                new Set(
-                    stories
-                        .map(
-                            story =>
-                                story.author
-                        )
-                        .filter(Boolean)
-                ).size;
-
-            document.getElementById(
-                "statTotalFavorites"
-            ).textContent =
-                favorites.length;
-
-            document.getElementById(
-                "statTotalLikes"
-            ).textContent =
-                Object.values(
-                    likes
-                ).filter(Boolean).length;
-        }
-
-        /* =========================================================
-           Reset Filters
-        ========================================================== */
-
-        function resetFilters() {
-
-            searchQuery = "";
-            selectedAuthor = "";
-
-            document.getElementById(
-                "globalSearchInput"
-            ).value = "";
-
-            document.getElementById(
-                "folderSearchInput"
-            ).value = "";
-
-            renderAll();
-        }
-
-        /* =========================================================
-           Theme
-        ========================================================== */
-
-        function setupTheme() {
-
-            const savedTheme =
-                localStorage.getItem(
-                    THEME_KEY
-                ) || "dark";
-
-            document.documentElement
-                .setAttribute(
-                    "data-theme",
-                    savedTheme
-                );
-
-            updateThemeButton(
-                savedTheme
-            );
-        }
-
-        function toggleTheme() {
-
-            const current =
-                document.documentElement
-                    .getAttribute(
-                        "data-theme"
-                    );
-
-            const next =
-                current === "light"
-                    ? "dark"
-                    : "light";
-
-            document.documentElement
-                .setAttribute(
-                    "data-theme",
-                    next
-                );
-
-            localStorage.setItem(
-                THEME_KEY,
-                next
-            );
-
-            updateThemeButton(
-                next
-            );
-        }
-
-        function updateThemeButton(
-            theme
-        ) {
-
-            document.getElementById(
-                "themeToggleBtn"
-            ).textContent =
-                theme === "light"
-                    ? "🌙 الوضع الداكن"
-                    : "☀️ الوضع الفاتح";
-        }
-
-        /* =========================================================
-           Progress Bar
-        ========================================================== */
-
-        function updateProgressBar() {
-
-            const scrollTop =
-                window.scrollY || 0;
-
-            const height =
-                document.documentElement
-                    .scrollHeight -
-                document.documentElement
-                    .clientHeight;
-
-            const percent =
-                height > 0
-                    ? (scrollTop / height) *
-                      100
-                    : 0;
-
-            document.getElementById(
-                "readingProgressBar"
-            ).style.width =
-                percent + "%";
-        }
-
-        /* =========================================================
-           Backup Modal
-        ========================================================== */
-
-        function openBackupModal() {
-
-            document.getElementById(
-                "backupModal"
-            ).classList.add(
-                "active"
-            );
-        }
-
-        function closeBackupModal() {
-
-            document.getElementById(
-                "backupModal"
-            ).classList.remove(
-                "active"
-            );
-        }
-
-        /* =========================================================
-           Export
-        ========================================================== */
-
-        function exportData() {
-
-            const backup = {
-
-                version: 1,
-
-                exportedAt:
-                    new Date().toISOString(),
-
-                stories,
-
-                likes,
-
-                favorites
-            };
-
-            const blob =
-                new Blob(
-                    [
-                        JSON.stringify(
-                            backup,
-                            null,
-                            2
-                        )
-                    ],
-                    {
-                        type:
-                            "application/json;charset=utf-8"
-                    }
-                );
-
-            const url =
-                URL.createObjectURL(
-                    blob
-                );
-
-            const link =
-                document.createElement(
-                    "a"
-                );
-
-            link.href = url;
-
-            link.download =
-                "hikaya_backup_" +
-                Date.now() +
-                ".json";
-
-            document.body.appendChild(
-                link
-            );
-
-            link.click();
-
-            link.remove();
-
-            setTimeout(
-                () =>
-                    URL.revokeObjectURL(
-                        url
-                    ),
-                1000
-            );
-
-            showToast(
-                "تم تصدير النسخة الاحتياطية ✅",
-                "success"
-            );
-        }
-
-        /* =========================================================
-           Import
-        ========================================================== */
-
-        function importData(
-            file
-        ) {
-
-            if (!file) {
-                return;
-            }
-
-            const reader =
-                new FileReader();
-
-            reader.onload =
-                event => {
-
-                    try {
-
-                        const data =
-                            JSON.parse(
-                                event.target.result
-                            );
-
-                        /*
-                         * دعم:
-                         * 1. النسخ الاحتياطية الجديدة
-                         * 2. ملفات JSON القديمة التي تحتوي على Array مباشر
-                         */
-
-                        let importedStories;
-
-                        if (
-                            Array.isArray(
-                                data
-                            )
-                        ) {
-
-                            importedStories =
-                                data;
-
-                            likes = {};
-                            favorites = [];
-
-                        } else if (
-                            data &&
-                            Array.isArray(
-                                data.stories
-                            )
-                        ) {
-
-                            importedStories =
-                                data.stories;
-
-                            likes =
-                                data.likes &&
-                                typeof data.likes ===
-                                    "object"
-                                    ? data.likes
-                                    : {};
-
-                            favorites =
-                                Array.isArray(
-                                    data.favorites
-                                )
-                                    ? data.favorites
-                                    : [];
-
-                        } else {
-
-                            throw new Error(
-                                "INVALID_FILE"
-                            );
-                        }
-
-                        stories =
-                            importedStories
-                                .filter(
-                                    story =>
-                                        story &&
-                                        typeof story ===
-                                            "object" &&
-                                        story.id &&
-                                        story.title &&
-                                        story.content
-                                )
-                                .map(
-                                    story => ({
-                                        id:
-                                            String(
-                                                story.id
-                                            ),
-
-                                        title:
-                                            String(
-                                                story.title
-                                            ),
-
-                                        author:
-                                            String(
-                                                story.author ||
-                                                "غير محدد"
-                                            ),
-
-                                        part:
-                                            String(
-                                                story.part ||
-                                                "الفصل"
-                                            ),
-
-                                        cover:
-                                            String(
-                                                story.cover ||
-                                                ""
-                                            ),
-
-                                        ownerToken:
-                                            String(
-                                                story.ownerToken ||
-                                                "imported"
-                                            ),
-
-                                        content:
-                                            String(
-                                                story.content
-                                            ),
-
-                                        createdAt:
-                                            Number(
-                                                story.createdAt ||
-                                                Date.now()
-                                            )
-                                    })
-                                );
-
-                        saveData();
-                        renderAll();
-                        closeBackupModal();
-
-                        showToast(
-                            "تمت استعادة البيانات بنجاح ✅",
-                            "success"
-                        );
-
-                    } catch (error) {
-
-                        console.error(
-                            error
-                        );
-
-                        showToast(
-                            "ملف JSON غير صالح.",
-                            "danger"
-                        );
-                    }
-                };
-
-            reader.readAsText(
-                file,
-                "utf-8"
-            );
-        }
-
-        /* =========================================================
-           Render All
-        ========================================================== */
-
-        function renderAll() {
-
             renderStories();
 
-            renderAuthorFolder(
-                document.getElementById(
-                    "folderSearchInput"
-                ).value
-            );
+            $("backupModal").classList.remove("open");
 
-            updateStats();
+            showToast("تمت استعادة البيانات بنجاح","ok");
 
-            updateResumeReading();
-        }
+        }catch{
 
-        /* =========================================================
-           Events
-        ========================================================== */
-
-        function setupEventListeners() {
-
-            /* Form */
-            document
-                .getElementById(
-                    "storyForm"
-                )
-                .addEventListener(
-                    "submit",
-                    handlePublish
-                );
-
-            /* Theme */
-            document
-                .getElementById(
-                    "themeToggleBtn"
-                )
-                .addEventListener(
-                    "click",
-                    toggleTheme
-                );
-
-            /* Publish scroll */
-            document
-                .getElementById(
-                    "publishScrollBtn"
-                )
-                .addEventListener(
-                    "click",
-                    () => {
-
-                        document
-                            .getElementById(
-                                "publishPanel"
-                            )
-                            .scrollIntoView({
-                                behavior:
-                                    "smooth",
-                                block:
-                                    "start"
-                            });
-                    }
-                );
-
-            /* Search */
-            document
-                .getElementById(
-                    "globalSearchInput"
-                )
-                .addEventListener(
-                    "input",
-                    event => {
-
-                        searchQuery =
-                            event.target.value;
-
-                        renderStories();
-                    }
-                );
-
-            /* Author search */
-            document
-                .getElementById(
-                    "folderSearchInput"
-                )
-                .addEventListener(
-                    "input",
-                    event => {
-
-                        renderAuthorFolder(
-                            event.target.value
-                        );
-                    }
-                );
-
-            /* Reset */
-            document
-                .getElementById(
-                    "resetFiltersBtn"
-                )
-                .addEventListener(
-                    "click",
-                    resetFilters
-                );
-
-            /* Backup */
-            document
-                .getElementById(
-                    "backupBtn"
-                )
-                .addEventListener(
-                    "click",
-                    openBackupModal
-                );
-
-            document
-                .getElementById(
-                    "closeBackupBtn"
-                )
-                .addEventListener(
-                    "click",
-                    closeBackupModal
-                );
-
-            document
-                .getElementById(
-                    "exportDataBtn"
-                )
-                .addEventListener(
-                    "click",
-                    exportData
-                );
-
-            document
-                .getElementById(
-                    "importDataBtn"
-                )
-                .addEventListener(
-                    "click",
-                    () => {
-
-                        document
-                            .getElementById(
-                                "importFileInput"
-                            )
-                            .click();
-                    }
-                );
-
-            document
-                .getElementById(
-                    "importFileInput"
-                )
-                .addEventListener(
-                    "change",
-                    event => {
-
-                        importData(
-                            event.target
-                                .files[0]
-                        );
-
-                        event.target.value =
-                            "";
-                    }
-                );
-
-            /* Close modal */
-            document
-                .getElementById(
-                    "backupModal"
-                )
-                .addEventListener(
-                    "click",
-                    event => {
-
-                        if (
-                            event.target.id ===
-                            "backupModal"
-                        ) {
-                            closeBackupModal();
-                        }
-                    }
-                );
-
-            /* Escape */
-            document.addEventListener(
-                "keydown",
-                event => {
-
-                    if (
-                        event.key ===
-                        "Escape"
-                    ) {
-
-                        closeBackupModal();
-
-                        document.body.classList.remove(
-                            "focus-mode"
-                        );
-                    }
-                }
-            );
-
-            /* Scroll */
-            window.addEventListener(
-                "scroll",
-                updateProgressBar,
-                {
-                    passive: true
-                }
+            showToast(
+                "ملف JSON غير صالح",
+                "bad"
             );
         }
+    };
 
-        /* =========================================================
-           Start
-        ========================================================== */
+    reader.readAsText(file,"utf-8");
+}
 
-        function initApp() {
+function setupTheme(){
 
-            getCurrentUserToken();
+    const theme=
+        localStorage.getItem(THEME_KEY)||"dark";
 
-            loadData();
+    document.documentElement.dataset.theme=theme;
 
-            setupTheme();
+    updateThemeButton(theme);
+}
 
-            setupEventListeners();
+function updateThemeButton(theme){
 
-            renderAll();
+    $("themeBtn").textContent=
+        theme==="light"
+            ?"🌙 الوضع الداكن"
+            :"☀️ الوضع الفاتح";
+}
 
-            updateProgressBar();
+function toggleTheme(){
+
+    const current=
+        document.documentElement.dataset.theme;
+
+    const next=
+        current==="light"
+            ?"dark"
+            :"light";
+
+    document.documentElement.dataset.theme=next;
+
+    localStorage.setItem(
+        THEME_KEY,
+        next
+    );
+
+    updateThemeButton(next);
+}
+
+function resetFilters(){
+
+    authorFilter="";
+    searchQuery="";
+
+    $("searchInput").value="";
+    $("authorSearch").value="";
+
+    renderStories();
+}
+
+function updateProgress(){
+
+    const max=
+        document.documentElement.scrollHeight-
+        window.innerHeight;
+
+    const percent=
+        max>0
+            ?(window.scrollY/max)*100
+            :0;
+
+    $("progress").style.width=
+        percent+"%";
+}
+
+function init(){
+
+    getToken();
+    loadData();
+    setupTheme();
+
+    $("themeBtn").onclick=toggleTheme;
+
+    $("publishBtn").onclick=()=>{
+        $("publishBox").scrollIntoView({
+            behavior:"smooth"
+        });
+    };
+
+    $("storyForm").onsubmit=publishStory;
+
+    $("searchInput").oninput=event=>{
+        searchQuery=event.target.value;
+        renderStories();
+    };
+
+    $("authorSearch").oninput=()=>{
+        renderAuthors();
+    };
+
+    $("authors").onclick=event=>{
+
+        const item=
+            event.target.closest("[data-author]");
+
+        if(!item)return;
+
+        authorFilter=
+            item.dataset.author;
+
+        renderStories();
+    };
+
+    $("resetBtn").onclick=
+        resetFilters;
+
+    $("backupBtn").onclick=()=>{
+        $("backupModal").classList.add("open");
+    };
+
+    $("closeBackup").onclick=()=>{
+        $("backupModal").classList.remove("open");
+    };
+
+    $("exportBtn").onclick=
+        exportData;
+
+    $("importBtn").onclick=()=>{
+        $("importFile").click();
+    };
+
+    $("importFile").onchange=
+        event=>{
+            importData(event.target.files[0]);
+            event.target.value="";
+        };
+
+    $("backupModal").onclick=event=>{
+        if(event.target.id==="backupModal"){
+            $("backupModal").classList.remove("open");
         }
+    };
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            initApp
-        );
-    </script>
+    document.addEventListener(
+        "keydown",
+        event=>{
+            if(event.key==="Escape"){
+                $("backupModal").classList.remove("open");
+                document.body.classList.remove("focus");
+            }
+        }
+    );
+
+    renderStories();
+    updateProgress();
+}
+
+window.addEventListener(
+    "scroll",
+    updateProgress,
+    {passive:true}
+);
+
+document.addEventListener(
+    "DOMContentLoaded",
+    init
+);
+
+</script>
 
 </body>
 </html>
