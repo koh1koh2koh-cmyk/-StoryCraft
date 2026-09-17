@@ -1,505 +1,202 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة حكاية | التجمع العربي الأكبر للقصص والروايات</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    
+    <title>منصة حكاية - قراءة ونشر القصص</title>
     <style>
-        /* ==========================================================================
-           1. VARIABLES & THEMES
-           ========================================================================== */
         :root {
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --bg-input: #0f172a;
-            --bg-hover: #334155;
-            --text-main: #f8fafc;
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --text-color: #f8fafc;
             --text-muted: #94a3b8;
-            --text-dark: #0f172a;
-            --accent-color: #f59e0b;
-            --accent-hover: #d97706;
-            --accent-light: rgba(245, 158, 11, 0.15);
-            --danger-color: #ef4444;
-            --danger-hover: #dc2626;
-            --success-color: #10b981;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
             --border-color: #334155;
-            --font-main: 'Cairo', sans-serif;
-            --font-story: 'Amiri', serif;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --story-font-size: 1.25rem;
-            --story-line-height: 2.2;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
         [data-theme="light"] {
-            --bg-main: #f8fafc;
-            --bg-card: #ffffff;
-            --bg-input: #f1f5f9;
-            --bg-hover: #e2e8f0;
-            --text-main: #0f172a;
+            --bg-color: #f8fafc;
+            --panel-bg: #ffffff;
+            --text-color: #0f172a;
             --text-muted: #64748b;
-            --text-dark: #ffffff;
-            --accent-color: #d97706;
-            --accent-hover: #b45309;
-            --accent-light: rgba(217, 119, 6, 0.1);
+            --accent-color: #4f46e5;
+            --accent-hover: #4338ca;
+            --border-color: #e2e8f0;
             --danger-color: #dc2626;
-            --danger-hover: #b91c1c;
-            --border-color: #cbd5e1;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --success-color: #059669;
         }
 
-        /* ==========================================================================
-           2. BASE STYLES & RESET
-           ========================================================================== */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-main);
-            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            direction: rtl;
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        button, input, select, textarea {
-            font-family: inherit;
-        }
-
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-main);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-color);
-        }
-
-        /* ==========================================================================
-           3. UI COMPONENTS & PROGRESS BAR
-           ========================================================================== */
-        .reading-progress-container {
+        #readingProgressBar {
             position: fixed;
             top: 0;
-            left: 0;
-            width: 100%;
+            right: 0;
             height: 4px;
-            background: transparent;
-            z-index: 1001;
-        }
-        .reading-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-color), #f59e0b);
+            background: var(--accent-color);
             width: 0%;
-            transition: width 0.1s ease-out;
+            z-index: 1000;
+            transition: width 0.1s;
         }
 
-        /* Toast Notifications */
-        #toast-container {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
-            background: var(--bg-card);
-            color: var(--text-main);
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            border-right: 4px solid var(--accent-color);
-            box-shadow: var(--shadow-lg);
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s forwards, fadeOut 0.3s 2.7s forwards;
-            max-width: 350px;
-        }
-
-        .toast.success { border-right-color: var(--success-color); }
-        .toast.danger { border-right-color: var(--danger-color); }
-
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        /* Modal System */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            max-width: 600px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.8rem;
-        }
-
-        .modal-header h3 {
-            color: var(--accent-color);
-            font-size: 1.2rem;
-        }
-
-        .modal-close {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .modal-close:hover {
-            color: var(--danger-color);
-        }
-
-        /* ==========================================================================
-           4. HEADER & NAVIGATION
-           ========================================================================== */
         header {
-            background-color: var(--bg-card);
-            padding: 0.8rem 2rem;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow-sm);
+            z-index: 900;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--accent-color);
-            color: #fff;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            font-weight: 900;
-            box-shadow: var(--shadow-sm);
-        }
-
-        header h1 {
-            color: var(--accent-color);
+        .logo {
             font-size: 1.5rem;
-            font-weight: 900;
-            letter-spacing: -0.5px;
+            font-weight: bold;
+            color: var(--accent-color);
         }
 
         .header-actions {
             display: flex;
+            gap: 1rem;
             align-items: center;
-            gap: 10px;
         }
 
-        .btn-action {
-            background-color: var(--bg-input);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 0.5rem 0.9rem;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-action:hover {
-            background-color: var(--bg-hover);
-            border-color: var(--accent-color);
-        }
-
-        .btn-accent {
-            background-color: var(--accent-color);
-            color: #fff;
+        .btn {
+            background: var(--accent-color);
+            color: white;
             border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
         }
 
-        .btn-accent:hover {
-            background-color: var(--accent-hover);
+        .btn:hover {
+            background: var(--accent-hover);
         }
 
-        /* ==========================================================================
-           5. LAYOUT & GRID SYSTEM
-           ========================================================================== */
-        .container {
-            max-width: 1400px;
-            margin: 1.5rem auto;
-            padding: 0 1rem;
-            width: 100%;
-            flex: 1;
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--border-color);
         }
 
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 1.5rem;
-            align-items: start;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
-        @media (max-width: 960px) {
+        @media (max-width: 900px) {
             .main-layout {
                 grid-template-columns: 1fr;
             }
         }
 
-        aside {
-            width: 100%;
+        .sidebar {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
-            position: sticky;
-            top: 80px;
+            gap: 1.5rem;
         }
 
-        main {
-            width: 100%;
-            min-width: 0;
-        }
-
-        /* ==========================================================================
-           6. SIDEBAR PANELS & CARDS
-           ========================================================================== */
         .panel-box {
-            background-color: var(--bg-card);
-            padding: 1.2rem;
-            border-radius: var(--radius-lg);
+            background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-md);
+            border-radius: 8px;
+            padding: 1.5rem;
         }
 
-        .section-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            border-right: 4px solid var(--accent-color);
-            padding-right: 10px;
+        .panel-title {
+            font-size: 1.1rem;
             margin-bottom: 1rem;
-            color: var(--text-main);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .resume-reading-box {
-            border-right: 4px solid var(--accent-color);
-            background: linear-gradient(135deg, var(--bg-card), var(--accent-light));
-            display: none;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
         }
 
         .form-group {
-            margin-bottom: 0.9rem;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
         }
 
-        .form-group input, 
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.7rem 0.9rem;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            color: var(--text-main);
-            font-size: 0.9rem;
-            outline: none;
-        }
-
-        .form-group input:focus, 
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px var(--accent-light);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 110px;
-            line-height: 1.6;
-        }
-
-        .btn-full {
+        .form-control {
             width: 100%;
             padding: 0.75rem;
-            background: var(--accent-color);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 800;
-            cursor: pointer;
-            font-size: 0.95rem;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-full:hover {
-            background: var(--accent-hover);
-        }
-
-        .folder-list {
-            max-height: 160px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 6px;
-        }
-
-        .folder-item {
-            background: var(--bg-input);
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            cursor: pointer;
+            background: var(--bg-color);
             border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-radius: 6px;
+            color: var(--text-color);
+            font-family: inherit;
         }
 
-        .folder-item:hover {
-            border-color: var(--accent-color);
-            background: var(--bg-hover);
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .stat-card {
-            background: var(--bg-input);
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
+            gap: 1rem;
             text-align: center;
         }
 
-        .stat-card .val {
-            font-size: 1.3rem;
-            font-weight: 800;
+        .stat-card {
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
             color: var(--accent-color);
         }
 
-        .stat-card .lbl {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        /* ==========================================================================
-           7. STORY DISPLAY & CARD BUNDLES
-           ========================================================================== */
         .story-bundle-box {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-md);
-            position: relative;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .bundle-header {
             display: flex;
-            gap: 1.2rem;
-            align-items: flex-start;
-            margin-bottom: 1rem;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 1rem;
         }
@@ -508,555 +205,636 @@
             width: 90px;
             height: 120px;
             object-fit: cover;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            background: var(--bg-input);
-            flex-shrink: 0;
-        }
-
-        .bundle-info {
-            flex: 1;
+            border-radius: 6px;
         }
 
         .bundle-title {
-            color: var(--accent-color);
             font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 0.4rem;
-            line-height: 1.3;
-        }
-
-        .story-card {
-            background-color: var(--bg-card);
-            border-radius: var(--radius-md);
-            padding: 1.2rem 0;
-            margin-top: 1.2rem;
-            border-top: 1px dashed var(--border-color);
-            width: 100%;
-            position: relative;
-        }
-
-        .story-card:first-of-type {
-            border-top: none;
-            padding-top: 0;
-            margin-top: 0.5rem;
-        }
-
-        .story-card h3 {
-            color: var(--accent-color);
-            margin-bottom: 0.4rem;
-            font-size: 1.25rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .story-meta {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 0.8rem;
-            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
         }
 
         .story-badge {
-            font-size: 0.8rem;
-            color: var(--accent-color);
-            font-weight: 700;
-            background: var(--accent-light);
-            padding: 0.2rem 0.7rem;
-            border-radius: 20px;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        .read-time-badge {
-            font-size: 0.78rem;
+            background: var(--bg-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            background: var(--bg-input);
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
         }
 
-        .story-text {
-            font-family: var(--font-story);
-            font-size: var(--story-font-size);
-            line-height: var(--story-line-height);
-            color: var(--text-main);
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: break-word;
-            width: 100%;
-            margin-top: 12px;
-            padding: 10px 0;
-            text-align: justify;
+        .story-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .story-card h3 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
         }
 
         .reading-toolbar {
             display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 12px;
-            background: var(--bg-input);
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
         }
 
         .tool-btn {
-            background: var(--bg-card);
-            color: var(--text-main);
+            background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            padding: 4px 10px;
-            border-radius: 6px;
+            color: var(--text-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
             cursor: pointer;
-            font-weight: 700;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
         }
 
         .tool-btn:hover {
-            background: var(--bg-hover);
             border-color: var(--accent-color);
         }
 
-        .btn-delete-card {
-            background-color: transparent;
-            color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            padding: 0.3rem 0.7rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        .btn-delete-card:hover {
-            background-color: var(--danger-color);
-            color: white;
+        .story-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            white-space: pre-line;
+            margin-bottom: 1rem;
         }
 
         .card-actions-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 15px;
             border-top: 1px solid var(--border-color);
-            padding-top: 10px;
-            flex-wrap: wrap;
-            gap: 10px;
+            padding-top: 0.75rem;
         }
 
         .interaction-group {
             display: flex;
-            gap: 10px;
+            gap: 0.5rem;
         }
 
         .like-btn, .fav-btn, .share-btn {
-            background: var(--bg-input);
-            color: var(--text-main);
+            background: transparent;
             border: 1px solid var(--border-color);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: 700;
+            color: var(--text-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
             font-size: 0.85rem;
-        }
-
-        .like-btn.liked {
-            background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-            border-color: #ef4444;
-        }
-
-        .fav-btn.faved {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-color);
-            border-color: var(--accent-color);
-        }
-
-        .like-btn:hover, .fav-btn:hover, .share-btn:hover {
-            border-color: var(--accent-color);
-        }
-
-        /* ==========================================================================
-           8. FOOTER
-           ========================================================================== */
-        footer {
-            background-color: var(--bg-card);
-            border-top: 1px solid var(--border-color);
-            padding: 2rem 1rem;
-            margin-top: 4rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .footer-links {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.3rem;
         }
 
-        /* Focus mode / Reader View */
+        .like-btn.liked { color: var(--danger-color); border-color: var(--danger-color); }
+        .fav-btn.faved { color: #f59e0b; border-color: #f59e0b; }
+
+        .btn-delete-card {
+            background: transparent;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 2000;
+        }
+
+        .toast {
+            background: var(--panel-bg);
+            color: var(--text-color);
+            border-right: 4px solid var(--accent-color);
+            padding: 0.75rem 1.25rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success { border-color: var(--success-color); }
+        .toast.danger { border-color: var(--danger-color); }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         body.focus-mode header,
-        body.focus-mode aside,
-        body.focus-mode footer,
-        body.focus-mode .section-title,
+        body.focus-mode .sidebar,
         body.focus-mode .reading-toolbar,
         body.focus-mode .card-actions-bar {
             display: none !important;
         }
 
-        body.focus-mode .container {
-            max-width: 850px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
         body.focus-mode .main-layout {
             grid-template-columns: 1fr;
+            max-width: 800px;
         }
 
-        body.focus-mode .story-bundle-box {
-            border: none;
-            box-shadow: none;
-            background: transparent;
-        }
-
-        .exit-focus-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: none;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-weight: 700;
-            box-shadow: var(--shadow-lg);
+        .folder-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
             cursor: pointer;
         }
 
-        body.focus-mode .exit-focus-btn {
-            display: block;
+        .folder-item:hover {
+            background: var(--bg-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1500;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--panel-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid var(--border-color);
         }
     </style>
 </head>
 <body>
 
-    <!-- Progress Indicator Bar -->
-    <div class="reading-progress-container">
-        <div class="reading-progress-bar" id="readingProgressBar"></div>
-    </div>
+    <div id="readingProgressBar"></div>
 
-    <!-- Toast Notifications Container -->
-    <div id="toast-container"></div>
-
-    <!-- Exit Focus Mode Button -->
-    <button class="exit-focus-btn" onclick="toggleFocusMode()">✕ الخروج من وضع القراءة المركزة</button>
-
-    <!-- Header Bar -->
     <header>
-        <div class="logo-area" onclick="renderStories()">
-            <div class="logo-icon">ح</div>
-            <div>
-                <h1>منصة حكاية</h1>
-            </div>
-        </div>
-
+        <div class="logo">📖 حكاية</div>
         <div class="header-actions">
-            <button class="btn-action" id="themeToggleBtn">🌙 المظهر</button>
-            <button class="btn-action" onclick="openBackupModal()">💾 النسخ الاحتياطي</button>
-            <button class="btn-action btn-accent" onclick="scrollToPublish()">✍️ انشر الان</button>
+            <button class="btn btn-outline" id="themeToggleBtn">☀️ Light Mode</button>
+            <button class="btn btn-outline" onclick="openBackupModal()">💾 Backup</button>
+            <button class="btn" onclick="scrollToPublish()">✍️ نشر قصة</button>
         </div>
     </header>
 
-    <!-- Main Content Layout -->
-    <div class="container">
-        <div class="main-layout">
-            
-            <!-- MAIN DISPLAY AREA FOR STORIES -->
-            <main>
-                <div class="section-title">
-                    <span>أحدث القصص والروايات المنشورة</span>
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <input type="text" id="globalSearchInput" placeholder="🔍 ابحث في العناوين والقصص..." style="padding: 6px 12px; font-size: 0.85rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); outline: none;">
-                        <button class="btn-action" onclick="resetFilters()">عرض الكل</button>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="panel-box" id="resumeReadingBox" style="display: none;">
+                <h3 class="panel-title">📍 متابعة القراءة</h3>
+                <p id="resumeStoryText" style="font-size:0.85rem; margin-bottom:0.5rem; color:var(--text-muted);"></p>
+                <button class="btn btn-outline" style="width:100%" id="resumeStoryBtn">الانتقال للنقطة الحالية</button>
+            </div>
+
+            <div class="panel-box">
+                <h3 class="panel-title">📊 الإحصائيات</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalStories">0</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">الفصول</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalAuthors">0</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted);">المؤلفون</div>
                     </div>
                 </div>
+            </div>
 
-                <div id="stories-container">
-                    <!-- Dynamic Stories Loaded Here -->
+            <div class="panel-box">
+                <h3 class="panel-title">🔍 البحث والتصفية</h3>
+                <div class="form-group">
+                    <input type="text" id="globalSearchInput" class="form-control" placeholder="بحث في عناوين القصص والمحتوى...">
                 </div>
-            </main>
-
-            <!-- SIDEBAR CONTROLS & PUBLISHING -->
-            <aside>
-
-                <!-- Resume Reading Widget -->
-                <div class="panel-box resume-reading-box" id="resumeReadingBox">
-                    <h2 class="section-title" style="font-size: 1rem; border-right-color: var(--accent-color);">🔖 متابعة القراءة</h2>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;" id="resumeStoryText">توقفت عند: -</p>
-                    <button class="btn-full" style="font-size:0.85rem; padding: 8px 12px;" id="resumeStoryBtn">الانتقال للفصل مباشرة</button>
+                <div class="form-group">
+                    <input type="text" id="folderSearchInput" class="form-control" placeholder="تصفية حسب اسم الكاتب...">
                 </div>
+                <div id="authorFolderList"></div>
+                <button class="btn btn-outline" style="width:100%; margin-top:0.5rem;" onclick="resetFilters()">إعادة ضبط البحث</button>
+            </div>
 
-                <!-- Publish Story Widget -->
-                <div class="panel-box" id="publishPanel">
-                    <h2 class="section-title" style="font-size: 1.1rem;">انشر قصتك أو فصلك الجديد</h2>
-                    <form id="storyForm">
-                        <div class="form-group">
-                            <label>عنوان القصة/الرواية الرئيسي</label>
-                            <input type="text" id="storyTitle" placeholder="مثال: رحلة غارلون ومحمد" required>
-                        </div>
-                        <div class="form-group">
-                            <label>اسم الكاتب</label>
-                            <input type="text" id="authorName" placeholder="مثال: غارلون" required>
-                        </div>
-                        <div class="form-group">
-                            <label>تحديد الفصل / الجزء</label>
-                            <select id="storyPartNumber">
-                                <option value="الجزء الأول">الجزء الأول</option>
-                                <option value="الجزء الثاني">الجزء الثاني</option>
-                                <option value="الجزء الثالث">الجزء الثالث</option>
-                                <option value="الجزء الرابع">الجزء الرابع</option>
-                                <option value="الجزء الخامس">الجزء الخامس</option>
-                                <option value="الجزء السادس">الجزء السادس</option>
-                                <option value="الجزء السابع">الجزء السابع</option>
-                                <option value="قصة مستقلة">قصة مستقلة / كاملة</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>رابط غلاف القصة (اختياري)</label>
-                            <input type="url" id="coverUrl" placeholder="https://example.com/cover.jpg">
-                        </div>
-                        <div class="form-group">
-                            <label>محتوى القصة / الفصل</label>
-                            <textarea id="storyContent" placeholder="اكتب أحداث القصة أو الفصل هنا بالتفصيل..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn-full">🚀 نشر القصة الآن</button>
-                    </form>
-                </div>
-
-                <!-- Author Folder Archive -->
-                <div class="panel-box">
-                    <h2 class="section-title" style="font-size: 1rem;">📁 أرشيف الكتاب والمجلدات</h2>
-                    <div class="form-group" style="margin-bottom: 8px;">
-                        <input type="text" id="folderSearchInput" placeholder="ابحث باسم الكاتب...">
+            <div class="panel-box" id="publishPanel">
+                <h3 class="panel-title">✍️ نشر فصل جديد</h3>
+                <form id="storyForm">
+                    <div class="form-group">
+                        <label>عنوان القصة الرئيسي</label>
+                        <input type="text" id="storyTitle" class="form-control" required placeholder="مثال: رحلة غارلون">
                     </div>
-                    <div class="folder-list" id="authorFolderList">
-                        <div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 10px;">أدخل اسم الكاتب لعرض كافة أعماله</div>
+                    <div class="form-group">
+                        <label>اسم الكاتب</label>
+                        <input type="text" id="authorName" class="form-control" required placeholder="اسم المؤلف">
                     </div>
-                </div>
-
-                <!-- Quick Platform Statistics -->
-                <div class="panel-box">
-                    <h2 class="section-title" style="font-size: 1rem;">📊 إحصائيات المنصة</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="val" id="statTotalStories">0</div>
-                            <div class="lbl">فصل منشور</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="val" id="statTotalAuthors">0</div>
-                            <div class="lbl">كاتب</div>
-                        </div>
+                    <div class="form-group">
+                        <label>رقم أو اسم الفصل</label>
+                        <input type="text" id="storyPartNumber" class="form-control" required placeholder="مثال: الجزء الأول">
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label>رابط صورة الغلاف (اختياري)</label>
+                        <input type="url" id="coverUrl" class="form-control" placeholder="https://example.com/cover.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>محتوى الفصل</label>
+                        <textarea id="storyContent" class="form-control" required placeholder="اكتب نص الفصل هنا..."></textarea>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;">نشر الفصل</button>
+                </form>
+            </div>
+        </aside>
 
-            </aside>
-
-        </div>
+        <main id="stories-container">
+            <!-- Rendered stories dynamically -->
+        </main>
     </div>
 
-    <!-- Backup Modal -->
-    <div class="modal-overlay" id="backupModal">
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="modal" id="backupModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3>💾 النسخ الاحتياطي وإدارة البيانات</h3>
-                <button class="modal-close" onclick="closeBackupModal()">✕</button>
-            </div>
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
-                يمكنك تصدير كافة القصص المحفوظة إلى ملف JSON للاحتفاظ بنسخة احتياطية، أو استعادة ملف سابق لضمان عدم فقدان أعمالك الكتابية.
-            </p>
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <button class="btn-full" onclick="exportDataJSON()">📥 تصدير القصص الى ملف (JSON)</button>
-                <div style="border-top: 1px dashed var(--border-color); margin: 5px 0;"></div>
-                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted)">استعادة بيانات من ملف:</label>
-                <input type="file" id="importFileInput" accept=".json" style="padding: 5px; font-size: 0.85rem;">
-                <button class="btn-action btn-accent" onclick="importDataJSON()">📤 استعادة البيانات الآن</button>
+            <h3 class="panel-title">إدارة النسخ الاحتياطي</h3>
+            <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">يمكنك تصدير كافة البيانات كملف JSON أو استعادتها من ملف سابق.</p>
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                <button class="btn" onclick="exportDataJSON()">تصدير البيانات (JSON)</button>
+                <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDataJSON()">
+                <button class="btn btn-outline" onclick="document.getElementById('importFileInput').click()">استعادة من ملف JSON</button>
+                <button class="btn btn-outline" style="color:var(--danger-color); border-color:var(--danger-color);" onclick="closeBackupModal()">إغلاق</button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-links">
-            <a href="#" onclick="renderStories(); return false;">الرئيسية</a>
-            <a href="#" onclick="alert('منصة حكاية هي تجمع للأدباء والقصاصين العرب لنشر الإبداعات الأدبية.'); return false;">عن المنصة</a>
-            <a href="#" onclick="openBackupModal(); return false;">إدارة البيانات</a>
-        </div>
-        <p>جميع الحقوق محفوظة © منصة حكاية 2026 | تطوير وتصميم متكامل</p>
-    </footer>
-
-    <!-- JAVASCRIPT LOGIC ENGINE -->
     <script>
         /* ==========================================================================
-           1. CONSTANTS & INITIAL DATASETS
+           1. CONSTANTS & INITIAL DATA
            ========================================================================== */
-        const STORAGE_KEY = 'hikaya_stories_v3';
-        const BOOKMARK_KEY = 'hikaya_bookmark_v3';
-        const LIKES_KEY = 'hikaya_likes_v3';
-        const FAVORITES_KEY = 'hikaya_favs_v3';
-        const AUTHOR_SESSION_KEY = 'hikaya_current_author_id';
+        const STORAGE_KEY = 'hikaya_stories_db';
+        const LIKES_KEY = 'hikaya_likes_db';
+        const FAVORITES_KEY = 'hikaya_favorites_db';
+        const BOOKMARK_KEY = 'hikaya_bookmark_db';
+        const USER_TOKEN_KEY = 'hikaya_user_token';
 
-        // Get or generate Unique Device Author ID
         function getCurrentUserToken() {
-            let userToken = localStorage.getItem(AUTHOR_SESSION_KEY);
-            if (!userToken) {
-                userToken = 'author_token_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem(AUTHOR_SESSION_KEY, userToken);
+            let token = localStorage.getItem(USER_TOKEN_KEY);
+            if (!token) {
+                token = 'usr_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem(USER_TOKEN_KEY, token);
             }
-            return userToken;
+            return token;
         }
 
         const defaultStoryDatabase = [
             {
-                id: 'gar_part_1',
-                title: 'رحلة غارلون ومحمد',
-                author: 'غارلون',
+                id: 'story_default_1',
+                title: 'رحلة إلى كوراساوا',
+                author: 'كاتب مغامر',
                 ownerToken: 'system_default',
-                part: 'الجزء الأول',
-                cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
-                content: `في غابة مظلمة كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح، ظهر نمر يركض خلف رجل غريب، وكانت صوت خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين. تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، وأكمل الرجل طريقه.
-
-في اليوم الثاني جاء رجلان من قرية قريبة من تلك الغابة، وكانوا يريدون جمع فطر عش الغراب، فجاء رجل القرية ورأى منظر جثة النمر فصُدم ونادى على زميله فقال له وهو فرح ومبتسم: "هذا رائع! يمكننا بيعه في القرية". فاستغرب منه رجل القرية وقال: "لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟"، فقال له زميله: "إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها". فقال رجل القرية: "من قتل النمر؟"، فقال له زميله: "إنه سياف مشهور يدعى غارلون". انصدم الرجل مما سمعه، وقرر أنه سيبيعه في مدينة كوراساوا التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما.`,
-                timestamp: 1773000000000,
-                likes: 18
-            },
-            {
-                id: 'gar_part_2',
-                title: 'رحلة غارلون ومحمد',
-                author: 'غارلون',
-                ownerToken: 'system_default',
-                part: 'الجزء الثاني',
-                cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
-                content: `بعد أن مشى الرجلان اللذان من القرية، قضيا 4 ساعات للوصول إلى كوراساوا؛ فكان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. لكن أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص فضولاً منه، وإذ بالصدمة تملأ وجهه؛ إذ من كان أمامه هو السياف غارلون، الذي كان يتدرب في الغابة. فلمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له أن يهدأ: "لأنني لن أؤذيك". فهمه غارلون وهدأ، وقرر أن يتركه.
-
-ولكن قبل أن يتركه، سمع غارلون صوت شيء ما خلف رجل القرية، وركض خلفه ورأى أن سيافاً آخر قتل زميل رجل القرية! فحزن عليه زميله كثيراً. لكن السياف غارلون انقض على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملحوظ.
-
-وأثناء قتالهما، ذهب الرجل إلى زميله الذي كان يحتضر وقال له: "أين أصبت؟"، فقال له بصوت مليء بالألم: "أصابني في بطني". فقال له زميله: "أين بالضبط؟"، فقال له الرجل من القرية بصوت متألم: "لا أعرف". فحاول زميله أن يعالجه لكنه فشل. وقال له الرجل من القرية: "هذه نهايتي، لا تتعب نفسك، اذهب مع غارلون فهو سيحميك بدلا مني، فالقرية بعيدة جداً ولن تستطيع الوصول أبداً. أريد أن أقول شيئاً كنت أود قوله في مماتي"، فقال له زميله: "ما هو؟"، فقال له الرجل: "ليت الواقع حلم، وليت مماتي لم يكن واقعاً"، وتوفى الرجل.
-
-فبكى عليه زميله، لكن عندما نظر إلى غارلون كان مندهشاً مما رآه. بعد ان انصدم رجل القريه مما رئاه ما انصدم منن كان ان غارلون قد قتل السياف الأخر بمهارة متقنة فجاء غارلون إليه بخطوات هادئه وقال له بصوت هادء هل انت بخير قال له الرجل نعم لكن زميلي توفى وقال لي ان اذهب معك فقال له غارلون حسنا لكن هل يممنك ان تشارك معي في رحلتي فقال له الرجل القرية نعم بكل سرور فمشى غارلون مع رجل القرية.`,
-                timestamp: 1773086400000,
-                likes: 22
-            },
-            {
-                id: 'gar_part_3',
-                title: 'رحلة غارلون ومحمد',
-                author: 'غارلون',
-                ownerToken: 'system_default',
-                part: 'الجزء الثالث',
-                cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
-                content: `وقال له غارلون عرفني عن نفسك فقال له رجل القرية اسمي هو محمد وانا من قرية هيوكامارا التي تبعد عن هنا بمسافة 7 كم فقال له غارلون انه من مدينة ميكارليس وهي مدينة بعيده جدا فقال محمد لغارلون ما هو هدفك الذي تسعى إليه ؟ فقال له غارلون اريد ان اجمع المال وات اسعى لتسديد ديوني فقال له محمد لماذا انت مديون فقال له غارلون لأنه كان في الماضي والدي يلعب القمار وكان يستلف النقوظ من العصابات وعندما لم يسدد والدي الديون فقتل ه رجال العصابة والديون اصبحت على عاتقي وقدر هذا الدين هو 500 مليون ين فانصدم محمد من الرقم وقال له بصوت مهزوز من الصدمه الى اين سنذهب يا غارلون فقال له غارلون سنذهب الى رجال العصابة للإنتقام منهم.
-
-في اليوم التالي مشى غارلون ومحمد في طريقهما نحو مدينة كوراساوا لبيع النمر، وفي طريقهما واجها العدو اللدود لأي شخص وهو الجوع، فقال غارلون لمحمد أن ينتظر لكي يصطاد أي غزال أو أرنب بري، فانتظر محمد وذهب غارلون متعمقاً في الغابة.
-
-وبعد 20 دقيقة من البحث وجد غارلون أرنباً برياً، فحبس أنفاسه وركز جيداً، وأمسك سيفه ساحباً إياه ببطء، وانقض عليه مسرعاً بدون صوت وقتله قتلاً رحيماً. وجاء غارلون من الغابة واندهش محمد مما جلبه غارلون وقال له: "كيف اصطدت هذا الأرنب؟ إنه مذهل!" فأخبره غارلون ببرود: "ليس من شأنك أن تعرف، فالجمع الحطب وأنت صامت!" فقال محمد: "حاضر."
-
-وأثناء تجميع محمد للحطب قال في نفسه إنه لن يجعل برود غارلون عائقاً، وإنه لن تجعله شخصاً بارداً بل سيعامله بلطف دائماً. فجمع محمد الحطب وأشعل النار لشوي الأرنب وأكلا معاً.`,
-                timestamp: 1773172800000,
-                likes: 31
-            },
-            {
-                id: 'gar_part_4',
-                title: 'رحلة غارلون ومحمد',
-                author: 'غارلون',
-                ownerToken: 'system_default',
-                part: 'الجزء الرابع',
-                cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
-                content: `وبعد ساعة وصلا إلى مدينة كوراساوا، وذهبا إلى تاجر لجلود الحيوانات وباعا له جلد النمر بثمن باهظ وهو 100 ألف ين، وعندما مشى غارلون مع محمد كان متعصباً من شيء ما.
-
-كان التاجر يدعى بوراينو وهو الفرد السابع من العصابة التي تدعى عصابة المونيراف اشهر عصابه في البلاد ومعروفه بخطورتها العاليه رغم ان عدد العصابه قليل 15 فرد وهم من اقوى 100 سياف عرفهم التاريخ فهل سينتصر عليهم غارلون ام لا هذا ما سنعرفه في الجزء القادم.`,
-                timestamp: 1773259200000,
-                likes: 27
-            },
-            {
-                id: 'gar_part_5',
-                title: 'رحلة غارلون ومحمد',
-                author: 'غارلون',
-                ownerToken: 'system_default',
-                part: 'الجزء الخامس',
-                cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80',
-                content: `بعد بيع محمد للنمر وغضب غارلون المكبوت فقال غارلون لمحمد بصوت هادء: اتعرف من كان التاجر الذي بعنا له النمر ؟ فقال محمد باستغراب : لا من يكون هو فقال غارلون بثوت به بعض الغضب المتسرب من كبته له : انه فرد من العصابة التي قتلت والدي وانا مديون لها فانصدم محمد وغضب وقال لغارلون لماذا لم تقول لي فقال له غارلون لأن قتلك لهم ان فعلت لن يفيدك وايضا لا اريدك ان تتدخل في انتقامي منهم فهدء محمد من نفسه وقررا انهما سيفكران بطريقه لقتله.
-
-ففكر غارلون بفكره وهي انه سيراقبه في الليل وينتظر الفرصه المناسبه للقضاء عليه فسيغضب القائد العصابه عندما يعرف بخبر موته ويحاول ان يقضي عليه وحينها سنهرب من اليابان الى دولة التي يعيش فيها مدربي وسيكون الوقت اىمقدر للبحث عني هو تقريبا شهر كامل وهو ما يكفي لكي استعد لهم وانت يا محمد ستتدرب معي فقوتك ضعيفه ان اردت ان تتدرب فتعال معي ولو لا فانت لن تكون معي في رحلتي.
-
-ففكر محمد في خطة غارلون وقرر انه سيوافق وقال له اين هي دولة مدربك قال له غارلون في مصر. وبالفعل انتلقى نحو التاجر في الليل وراقبه غارلون...`,
-                timestamp: 1773345600000,
-                likes: 45
+                part: 'الفصل الأول: البداية',
+                cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300',
+                content: `كان غارلون يسير بثبات نحو بوابة المدينة، والريح تداعب غماد سيفيه المعلقين على ظهره. إنه سياف مشهور يدعى غارلون، يعرفه القريب والبعيد ببراعته وحكمته.
+                
+صُدم الرجل مما سمعه، فقد كانت سمعة غارلون تسبقه في كل مكان.`,
+                createdAt: new Date('2026-08-01T10:00:00').getTime()
             }
         ];
 
         /* ==========================================================================
-           2. STATE & STORAGE CONTROLLER
+           2. STATE MANAGEMENT & UTILS
            ========================================================================== */
-        function getStoredStories() {
-            try {
-                const data = localStorage.getItem(STORAGE_KEY);
-                if (!data || JSON.parse(data).length === 0) {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultStoryDatabase));
-                    return defaultStoryDatabase;
-                }
-                return JSON.parse(data);
-            } catch (e) {
-                console.error("Storage Read Error", e);
-                return defaultStoryDatabase;
-            }
+        let stories = [];
+        let likes = {};
+        let favorites = [];
+
+        function initApp() {
+            loadData();
+            setupTheme();
+            setupEventListeners();
+            renderStories();
+            updateStats();
+            checkResumeReading();
         }
 
-        function saveStoredStories(storiesArray) {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(storiesArray));
-                updatePlatformStatistics();
-            } catch (e) {
-                showToast("تعذر حفظ البيانات في الذاكرة المحلية!", "danger");
-            }
+        function loadData() {
+            const storedStories = localStorage.getItem(STORAGE_KEY);
+            stories = storedStories ? JSON.parse(storedStories) : defaultStoryDatabase;
+            if (!storedStories) saveData();
+
+            likes = JSON.parse(localStorage.getItem(LIKES_KEY)) || {};
+            favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
         }
 
-        function getInteractionMap(key) {
-            try {
-                return JSON.parse(localStorage.getItem(key)) || {};
-            } catch (e) { return {}; }
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(stories));
+            localStorage.setItem(LIKES_KEY, JSON.stringify(likes));
+            localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+            updateStats();
         }
 
-        function saveInteractionMap(key, mapObj) {
-            localStorage.setItem(key, JSON.stringify(mapObj));
-        }
-
-        /* ==========================================================================
-           3. TOAST NOTIFICATIONS & MODALS
-           ========================================================================== */
-        function showToast(message, type = 'info') {
+        function showToast(message, type = 'accent') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'danger' ? '⚠️' : 'ℹ️'}</span> ${message}`;
+            toast.innerHTML = `<span>${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => {
-                if (toast.parentNode) toast.parentNode.removeChild(toast);
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function calculateReadTime(text) {
+            const words = text.trim().split(/\s+/).length;
+            const minutes = Math.ceil(words / 150);
+            return `${minutes} دقائق قراءة`;
+        }
+
+        /* ==========================================================================
+           3. THEME & INTERFACE CONTROLS
+           ========================================================================== */
+        function setupTheme() {
+            const savedTheme = localStorage.getItem('hikaya_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButtonText(savedTheme);
+        }
+
+        document.getElementById('themeToggleBtn').addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('hikaya_theme', newTheme);
+            updateThemeButtonText(newTheme);
+        });
+
+        function updateThemeButtonText(theme) {
+            document.getElementById('themeToggleBtn').innerHTML = theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+        }
+
+        function toggleFocusMode() {
+            document.body.classList.toggle('focus-mode');
+        }
+
+        function changeFontSize(storyId, delta) {
+            const el = document.getElementById(`text-${storyId}`);
+            if (!el) return;
+            const style = window.getComputedStyle(el);
+            const currentSize = parseFloat(style.fontSize);
+            el.style.fontSize = `${Math.max(14, Math.min(32, currentSize + delta))}px`;
+        }
+
+        /* ==========================================================================
+           4. RENDER & FILTER ENGINE
+           ========================================================================== */
+        function groupStoriesByTitle(storyList) {
+            return storyList.reduce((acc, story) => {
+                if (!acc[story.title]) acc[story.title] = [];
+                acc[story.title].push(story);
+                return acc;
+            }, {});
+        }
+
+        function renderStories(filterAuthor = '', searchQuery = '') {
+            const container = document.getElementById('stories-container');
+            container.innerHTML = '';
+
+            let filtered = [...stories];
+            if (filterAuthor) {
+                filtered = filtered.filter(s => s.author.toLowerCase() === filterAuthor.toLowerCase());
+            }
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(s => s.title.toLowerCase().includes(q) || s.content.toLowerCase().includes(q) || s.author.toLowerCase().includes(q));
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="panel-box" style="text-align:center; color:var(--text-muted); padding:3rem;">لم يتم العثور على أي قصص.</div>`;
+                return;
+            }
+
+            const grouped = groupStoriesByTitle(filtered);
+            const currentToken = getCurrentUserToken();
+
+            Object.keys(grouped).forEach(title => {
+                const bundle = grouped[title];
+                const first = bundle[0];
+
+                const bundleBox = document.createElement('div');
+                bundleBox.className = 'story-bundle-box';
+
+                let bundleHTML = `
+                    <div class="bundle-header">
+                        <img src="${first.cover || 'https://via.placeholder.com/90x120?text=Hikaya'}" class="bundle-cover" alt="Cover" onerror="this.src='https://via.placeholder.com/90x120?text=Hikaya'">
+                        <div class="bundle-info">
+                            <h2 class="bundle-title">${first.title}</h2>
+                            <span class="story-badge">الكاتب: ${first.author}</span>
+                        </div>
+                    </div>
+                `;
+
+                bundle.forEach(story => {
+                    const isOwner = story.ownerToken === currentToken;
+                    const isLiked = likes[story.id] || false;
+                    const isFav = favorites.includes(story.id);
+
+                    bundleHTML += `
+                        <div class="story-card" id="story-card-${story.id}">
+                            <h3>
+                                <span>${story.part}</span>
+                                ${isOwner ? `<button class="btn-delete-card" onclick="deleteStory('${story.id}')">حذف الفصل</button>` : ''}
+                            </h3>
+                            <div class="story-meta">
+                                <span class="read-time-badge">⏱️ ${calculateReadTime(story.content)}</span>
+                            </div>
+                            <div class="reading-toolbar">
+                                <button class="tool-btn" onclick="changeFontSize('${story.id}', 2)">A+</button>
+                                <button class="tool-btn" onclick="changeFontSize('${story.id}', -2)">A-</button>
+                                <button class="tool-btn" onclick="toggleFocusMode()">👁️ وضع التركيز</button>
+                                <button class="tool-btn" onclick="setBookmark('${story.id}', '${story.title}', '${story.part}')">🔖 حفظ نقطة التوقف</button>
+                            </div>
+                            <div class="story-text" id="text-${story.id}">${story.content}</div>
+                            <div class="card-actions-bar">
+                                <div class="interaction-group">
+                                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${story.id}')">
+                                        ❤️ <span>${isLiked ? 'أعجبني' : 'إعجاب'}</span>
+                                    </button>
+                                    <button class="fav-btn ${isFav ? 'faved' : ''}" onclick="toggleFavorite('${story.id}')">
+                                        ⭐ <span>${isFav ? 'مفضلة' : 'حفظ'}</span>
+                                    </button>
+                                </div>
+                                <button class="share-btn" onclick="shareStory('${story.title}', '${story.part}')">🔗 مشاركة</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                bundleBox.innerHTML = bundleHTML;
+                container.appendChild(bundleBox);
+            });
+        }
+
+        /* ==========================================================================
+           5. EVENT HANDLERS & ACTIONS
+           ========================================================================== */
+        function setupEventListeners() {
+            document.getElementById('storyForm').addEventListener('submit', handlePublish);
+            
+            document.getElementById('globalSearchInput').addEventListener('input', (e) => {
+                renderStories('', e.target.value);
+            });
+
+            document.getElementById('folderSearchInput').addEventListener('input', (e) => {
+                renderAuthorFolder(e.target.value);
+            });
+
+            window.addEventListener('scroll', updateProgressBar);
+        }
+
+        function handlePublish(e) {
+            e.preventDefault();
+            const title = document.getElementById('storyTitle').value.trim();
+            const author = document.getElementById('authorName').value.trim();
+            const part = document.getElementById('storyPartNumber').value;
+            const cover = document.getElementById('coverUrl').value.trim();
+            const content = document.getElementById('storyContent').value.trim();
+
+            const newStory = {
+                id: 'story_' + Date.now(),
+                title,
+                author,
+                ownerToken: getCurrentUserToken(),
+                part,
+                cover,
+                content,
+                createdAt: Date.now()
+            };
+
+            stories.unshift(newStory);
+            saveData();
+            renderStories();
+            document.getElementById('storyForm').reset();
+            showToast('تم نشر الفصل بنجاح!', 'success');
+        }
+
+        function deleteStory(id) {
+            if (confirm('هل أنت تأكد من رغبتك في حذف هذا الفصل؟')) {
+                stories = stories.filter(s => s.id !== id);
+                saveData();
+                renderStories();
+                showToast('تم حذف الفصل.', 'danger');
+            }
+        }
+
+        function toggleLike(id) {
+            likes[id] = !likes[id];
+            saveData();
+            renderStories();
+        }
+
+        function toggleFavorite(id) {
+            const idx = favorites.indexOf(id);
+            if (idx > -1) favorites.splice(idx, 1);
+            else favorites.push(id);
+            saveData();
+            renderStories();
+        }
+
+        function shareStory(title, part) {
+            if (navigator.share) {
+                navigator.share({ title: `${title} - ${part}`, url: window.location.href });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('تم نسخ الرابط إلى الحافظة!', 'success');
+            }
+        }
+
+        /* ==========================================================================
+           6. BOOKMARK & PROGRESS TRACKING
+           ========================================================================== */
+        function setBookmark(id, title, part) {
+            const bookmark = { id, title, part, timestamp: Date.now() };
+            localStorage.setItem(BOOKMARK_KEY, JSON.stringify(bookmark));
+            checkResumeReading();
+            showToast('تم حفظ موضع القراءة بنجاح!', 'success');
+        }
+
+        function checkResumeReading() {
+            const saved = localStorage.getItem(BOOKMARK_KEY);
+            const box = document.getElementById('resumeReadingBox');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('resumeStoryText').textContent = `توقفت عند: ${data.title} (${data.part})`;
+                document.getElementById('resumeStoryBtn').onclick = () => {
+                    const el = document.getElementById(`story-card-${data.id}`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    else showToast('لم يتم العثور على الفصل.', 'danger');
+                };
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+
+        function updateProgressBar() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('readingProgressBar').style.width = scrolled + '%';
+        }
+
+        /* ==========================================================================
+           7. ARCHIVE, STATS & BACKUP
+           ========================================================================== */
+        function renderAuthorFolder(query = '') {
+            const container = document.getElementById('authorFolderList');
+            if (!query.trim()) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 10px;">اكتب اسم الكاتب لعرض أعماله</div>`;
+                return;
+            }
+
+            const authors = [...new Set(stories.map(s => s.author))].filter(a => a.toLowerCase().includes(query.toLowerCase()));
+            container.innerHTML = '';
+
+            if (authors.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 10px;">لم يتم العثور على الكاتب</div>`;
+                return;
+            }
+
+            authors.forEach(author => {
+                const count = stories.filter(s => s.author === author).length;
+                const div = document.createElement('div');
+                div.className = 'folder-item';
+                div.innerHTML = `<span>👤 ${author}</span><strong>${count} فصول</strong>`;
+                div.onclick = () => renderStories(author);
+                container.appendChild(div);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('statTotalStories').textContent = stories.length;
+            const uniqueAuthors = new Set(stories.map(s => s.author)).size;
+            document.getElementById('statTotalAuthors').textContent = uniqueAuthors;
+        }
+
+        function resetFilters() {
+            document.getElementById('globalSearchInput').value = '';
+            document.getElementById('folderSearchInput').value = '';
+            renderStories();
         }
 
         function openBackupModal() {
@@ -1067,405 +845,46 @@
             document.getElementById('backupModal').classList.remove('active');
         }
 
-        /* ==========================================================================
-           4. RENDERING & GROUPING ENGINE
-           ========================================================================== */
-        const partSortOrder = {
-            'الجزء الأول': 1,
-            'الجزء الثاني': 2,
-            'الجزء الثالث': 3,
-            'الجزء الرابع': 4,
-            'الجزء الخامس': 5,
-            'الجزء السادس': 6,
-            'الجزء السابع': 7,
-            'قصة مستقلة': 99
-        };
-
-        function groupStoriesByTitle(storiesList) {
-            const grouped = {};
-            storiesList.forEach(story => {
-                const titleKey = (story.title || 'بدون عنوان').trim().toLowerCase();
-                const authorKey = (story.author || 'مجهول').trim().toLowerCase();
-                const uniqueBundleKey = `${titleKey}___${authorKey}`;
-
-                if (!grouped[uniqueBundleKey]) {
-                    grouped[uniqueBundleKey] = [];
-                }
-                grouped[uniqueBundleKey].push(story);
-            });
-
-            Object.keys(grouped).forEach(key => {
-                grouped[key].sort((a, b) => {
-                    const orderA = partSortOrder[a.part] || 50;
-                    const orderB = partSortOrder[b.part] || 50;
-                    return orderA - orderB;
-                });
-            });
-
-            return grouped;
-        }
-
-        function renderStories(filterQuery = '') {
-            const container = document.getElementById('stories-container');
-            container.innerHTML = '';
-
-            let stories = getStoredStories();
-            const currentToken = getCurrentUserToken();
-
-            if (filterQuery) {
-                const query = filterQuery.toLowerCase().trim();
-                stories = stories.filter(s => 
-                    (s.title && s.title.toLowerCase().includes(query)) ||
-                    (s.author && s.author.toLowerCase().includes(query)) ||
-                    (s.content && s.content.toLowerCase().includes(query))
-                );
-            }
-
-            if (stories.length === 0) {
-                container.innerHTML = `
-                    <div class="panel-box" style="text-align:center; padding: 40px 20px;">
-                        <p style="font-size:1.1rem; color:var(--text-muted);">لا توجد قصص مطابقة للبحث حالياً.</p>
-                        <button class="btn-action btn-accent" onclick="resetFilters()" style="margin-top:15px;">عرض كافة القصص</button>
-                    </div>
-                `;
-                return;
-            }
-
-            const groupedStories = groupStoriesByTitle(stories);
-            const likesMap = getInteractionMap(LIKES_KEY);
-            const favsMap = getInteractionMap(FAVORITES_KEY);
-
-            Object.keys(groupedStories).forEach(bundleKey => {
-                const storyParts = groupedStories[bundleKey];
-                const firstPart = storyParts[0];
-                const bundleTitle = firstPart.title;
-                const authorName = firstPart.author;
-                const coverImage = firstPart.cover || 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=400&q=80';
-
-                const bundleBox = document.createElement('div');
-                bundleBox.className = 'story-bundle-box';
-
-                let bundleHtml = `
-                    <div class="bundle-header">
-                        <img src="${coverImage}" class="bundle-cover" alt="غلاف الرواية" onerror="this.src='https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=400&q=80'">
-                        <div class="bundle-info">
-                            <h2 class="bundle-title">📖 ${bundleTitle}</h2>
-                            <div class="story-meta">
-                                <span class="story-badge">الكاتب: ${authorName}</span>
-                                <span class="read-time-badge">عدد الأجزاء المتاحة: ${storyParts.length}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                storyParts.forEach((partItem) => {
-                    const wordCount = partItem.content ? partItem.content.trim().split(/\s+/).length : 0;
-                    const estimatedMinutes = Math.max(1, Math.ceil(wordCount / 160));
-                    const isLiked = !!likesMap[partItem.id];
-                    const isFaved = !!favsMap[partItem.id];
-
-                    // Check if current user is the publisher of this specific story
-                    const isOwner = partItem.ownerToken && partItem.ownerToken === currentToken;
-
-                    bundleHtml += `
-                        <div class="story-card" id="story-${partItem.id}">
-                            <h3>
-                                <span>${partItem.part || bundleTitle}</span>
-                                ${isOwner ? `<button class="btn-delete-card" onclick="deleteStoryCard('${partItem.id}')">حذف الفصل</button>` : ''}
-                            </h3>
-
-                            <div class="story-meta">
-                                <span class="read-time-badge">⏱️ قراءة: ${estimatedMinutes} دقيقة (${wordCount} كلمة)</span>
-                            </div>
-
-                            <div class="reading-toolbar">
-                                <button class="tool-btn" onclick="adjustTextSize('${partItem.id}', 0.1)">أ+ تكبير الخط</button>
-                                <button class="tool-btn" onclick="adjustTextSize('${partItem.id}', -0.1)">أ- تصغير الخط</button>
-                                <button class="tool-btn" onclick="saveBookmark('${partItem.id}', '${partItem.title}', '${partItem.part}')">🔖 حفظ إشارة مرجعية</button>
-                                <button class="tool-btn" onclick="toggleFocusMode()">👁️ قراءة مركزة</button>
-                            </div>
-
-                            <div class="story-text" id="text-${partItem.id}">${partItem.content}</div>
-
-                            <div class="card-actions-bar">
-                                <div class="interaction-group">
-                                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${partItem.id}')">
-                                        ❤️ ${isLiked ? 'تم الإعجاب' : 'إعجاب'} (${partItem.likes || 0})
-                                    </button>
-                                    <button class="fav-btn ${isFaved ? 'faved' : ''}" onclick="toggleFavorite('${partItem.id}')">
-                                        ⭐ ${isFaved ? 'في المفضلة' : 'إضافة للمفضلة'}
-                                    </button>
-                                    <button class="share-btn" onclick="shareStory('${partItem.id}')">
-                                        🔗 مشاركة
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                bundleBox.innerHTML = bundleHtml;
-                container.appendChild(bundleBox);
-            });
-
-            updatePlatformStatistics();
-        }
-
-        /* ==========================================================================
-           5. EVENT HANDLERS & ACTIONS
-           ========================================================================== */
-        document.getElementById('storyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const title = document.getElementById('storyTitle').value.trim();
-            const author = document.getElementById('authorName').value.trim();
-            const part = document.getElementById('storyPartNumber').value;
-            const cover = document.getElementById('coverUrl').value.trim();
-            const content = document.getElementById('storyContent').value.trim();
-
-            if (!title || !author || !content) {
-                showToast("يرجى ملء كافة الحقول المطلوبة للنشر", "danger");
-                return;
-            }
-
-            const stories = getStoredStories();
-            const newEntry = {
-                id: 'custom_' + Date.now(),
-                title: title,
-                author: author,
-                ownerToken: getCurrentUserToken(), // Tag story with creator's token
-                part: part,
-                cover: cover,
-                content: content,
-                timestamp: Date.now(),
-                likes: 0
-            };
-
-            stories.push(newEntry);
-            saveStoredStories(stories);
-
-            showToast("تم نشر الفصل الجديد بنجاح!", "success");
-            document.getElementById('storyContent').value = '';
-            renderStories();
-        });
-
-        function deleteStoryCard(id) {
-            const stories = getStoredStories();
-            const targetStory = stories.find(s => s.id === id);
-            const currentToken = getCurrentUserToken();
-
-            if (!targetStory) return;
-
-            // Security check
-            if (targetStory.ownerToken !== currentToken) {
-                showToast("عفواً، لا يملك صلاحية حذف هذا الفصل سوى الناشر الأصلي!", "danger");
-                return;
-            }
-
-            if (confirm("هل أنت متأكد من رغبتك في حذف هذا الفصل؟")) {
-                const updatedStories = stories.filter(s => s.id !== id);
-                saveStoredStories(updatedStories);
-                showToast("تم حذف الفصل بنجاح", "info");
-                renderStories();
-            }
-        }
-
-        function toggleLike(id) {
-            const stories = getStoredStories();
-            const story = stories.find(s => s.id === id);
-            const likesMap = getInteractionMap(LIKES_KEY);
-
-            if (story) {
-                if (likesMap[id]) {
-                    delete likesMap[id];
-                    story.likes = Math.max(0, (story.likes || 1) - 1);
-                    showToast("تم إلغاء الإعجاب", "info");
-                } else {
-                    likesMap[id] = true;
-                    story.likes = (story.likes || 0) + 1;
-                    showToast("شكراً لإعجابك بالقارئ!", "success");
-                }
-                saveInteractionMap(LIKES_KEY, likesMap);
-                saveStoredStories(stories);
-                renderStories();
-            }
-        }
-
-        function toggleFavorite(id) {
-            const favsMap = getInteractionMap(FAVORITES_KEY);
-            if (favsMap[id]) {
-                delete favsMap[id];
-                showToast("تمت الإزالة من المفضلة", "info");
-            } else {
-                favsMap[id] = true;
-                showToast("تمت الإضافة إلى مفضلتك الشخصية", "success");
-            }
-            saveInteractionMap(FAVORITES_KEY, favsMap);
-            renderStories();
-        }
-
-        function shareStory(id) {
-            const url = window.location.origin + window.location.pathname + '#story-' + id;
-            navigator.clipboard.writeText(url).then(() => {
-                showToast("تم نسخ رابط الفصل إلى الحافظة!", "success");
-            }).catch(() => {
-                showToast("تعذر نسخ الرابط تلقائياً", "danger");
-            });
-        }
-
-        function adjustTextSize(id, delta) {
-            const elem = document.getElementById('text-' + id);
-            if (elem) {
-                const current = parseFloat(window.getComputedStyle(elem).fontSize);
-                elem.style.fontSize = (current + (delta * 10)) + 'px';
-            }
-        }
-
-        function saveBookmark(id, title, part) {
-            const bookmarkData = { id, title, part, time: Date.now() };
-            localStorage.setItem(BOOKMARK_KEY, JSON.stringify(bookmarkData));
-            updateBookmarkWidget();
-            showToast("تم حفظ موضع القراءة بنجاح!", "success");
-        }
-
-        function updateBookmarkWidget() {
-            const raw = localStorage.getItem(BOOKMARK_KEY);
-            const box = document.getElementById('resumeReadingBox');
-            if (raw) {
-                const data = JSON.parse(raw);
-                document.getElementById('resumeStoryText').textContent = `توقفت عند: ${data.title} - (${data.part || 'فصل'})`;
-                document.getElementById('resumeStoryBtn').onclick = () => {
-                    const targetEl = document.getElementById('story-' + data.id);
-                    if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                        showToast("لم يتم العثور على الفصل في القائمة الحالية", "danger");
-                    }
-                };
-                box.style.display = 'block';
-            } else {
-                box.style.display = 'none';
-            }
-        }
-
-        function toggleFocusMode() {
-            document.body.classList.toggle('focus-mode');
-        }
-
-        function resetFilters() {
-            document.getElementById('globalSearchInput').value = '';
-            renderStories();
-        }
-
         function scrollToPublish() {
             document.getElementById('publishPanel').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function updatePlatformStatistics() {
-            const stories = getStoredStories();
-            document.getElementById('statTotalStories').textContent = stories.length;
-            const authorsSet = new Set(stories.map(s => (s.author || '').trim().toLowerCase()));
-            document.getElementById('statTotalAuthors').textContent = authorsSet.size;
-        }
-
-        /* ==========================================================================
-           6. EXPORT / IMPORT BACKUP CONTROLLER
-           ========================================================================== */
         function exportDataJSON() {
-            const stories = getStoredStories();
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(stories, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `hikaya_backup_${Date.now()}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast("تم تصدير ملف البيانات بنجاح", "success");
+            const blob = new Blob([JSON.stringify(stories, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `hikaya_backup_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         function importDataJSON() {
-            const fileInput = document.getElementById('importFileInput');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                showToast("يرجى اختيار ملف JSON أولاً", "danger");
-                return;
-            }
+            const input = document.getElementById('importFileInput');
+            if (!input.files || !input.files[0]) return showToast('يرجى اختيار ملف JSON أولاً.', 'danger');
 
-            const file = fileInput.files[0];
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = (e) => {
                 try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (Array.isArray(importedData)) {
-                        saveStoredStories(importedData);
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        stories = imported;
+                        saveData();
                         renderStories();
                         closeBackupModal();
-                        showToast("تمت استعادة البيانات بنجاح!", "success");
+                        showToast('تمت استعادة البيانات بنجاح!', 'success');
                     } else {
-                        showToast("تنسيق الملف غير صالح", "danger");
+                        throw new Error();
                     }
                 } catch (err) {
-                    showToast("فشل في قراءة ملف JSON", "danger");
+                    showToast('ملف النسخ الاحتياطي غير صالحة بنيته.', 'danger');
                 }
             };
-            reader.readAsText(file);
+            reader.readAsText(input.files[0]);
         }
 
-        /* ==========================================================================
-           7. INITIALIZATION & SCROLL TRACKING
-           ========================================================================== */
-        document.getElementById('themeToggleBtn').addEventListener('click', () => {
-            const currentTheme = document.body.getAttribute('data-theme');
-            if (currentTheme === 'light') {
-                document.body.removeAttribute('data-theme');
-                document.getElementById('themeToggleBtn').textContent = '🌙 المظهر';
-            } else {
-                document.body.setAttribute('data-theme', 'light');
-                document.getElementById('themeToggleBtn').textContent = '☀️ المظهر';
-            }
-        });
-
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('readingProgressBar').style.width = scrolled + '%';
-        });
-
-        document.getElementById('globalSearchInput').addEventListener('input', function(e) {
-            renderStories(e.target.value);
-        });
-
-        document.getElementById('folderSearchInput').addEventListener('input', function(e) {
-            const query = e.target.value.trim().toLowerCase();
-            const folderList = document.getElementById('authorFolderList');
-            folderList.innerHTML = '';
-
-            if (!query) {
-                folderList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 10px;">أدخل اسم الكاتب لعرض كافة أعماله</div>';
-                return;
-            }
-
-            const stories = getStoredStories();
-            const matched = stories.filter(s => s.author && s.author.toLowerCase().includes(query));
-
-            if (matched.length === 0) {
-                folderList.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding: 10px;">لا يوجد أرشيف لهذا الكاتب</div>';
-                return;
-            }
-
-            matched.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'folder-item';
-                div.innerHTML = `<span>${item.title}</span> <strong>${item.part || ''}</strong>`;
-                div.onclick = () => { renderStories(item.title); };
-                folderList.appendChild(div);
-            });
-        });
-
-        window.onload = function() {
-            getCurrentUserToken();
-            updateBookmarkWidget();
-            renderStories();
-        };
+        /* Initialize application */
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
