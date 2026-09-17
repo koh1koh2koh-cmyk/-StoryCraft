@@ -4,41 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="منصة حكاية - قراءة ونشر القصص والفصول">
-    <title>حكاية — قراءة ونشر القصص</title>
+    <meta name="description" content="منصة حكاية - قراءة ونشر القصص">
+    <title>حكاية - قراءة ونشر القصص</title>
 
     <style>
         :root {
-            --bg: #0b1120;
-            --bg-soft: #111827;
-            --panel: #172033;
-            --panel-2: #1e293b;
-            --text: #f8fafc;
-            --muted: #94a3b8;
-            --border: #334155;
-            --accent: #6366f1;
-            --accent-2: #8b5cf6;
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --panel-bg-2: #172033;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #6366f1;
             --accent-hover: #4f46e5;
-            --danger: #ef4444;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --shadow: 0 20px 50px rgba(0, 0, 0, .22);
-            --radius: 16px;
-            --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+            --accent-2: #8b5cf6;
+            --border-color: #334155;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --shadow: 0 15px 40px rgba(0, 0, 0, 0.20);
+            --radius: 14px;
+            --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
         }
 
         [data-theme="light"] {
-            --bg: #f1f5f9;
-            --bg-soft: #e2e8f0;
-            --panel: #ffffff;
-            --panel-2: #f8fafc;
-            --text: #0f172a;
-            --muted: #64748b;
-            --border: #cbd5e1;
-            --accent: #4f46e5;
-            --accent-2: #7c3aed;
+            --bg-color: #f1f5f9;
+            --panel-bg: #ffffff;
+            --panel-bg-2: #f8fafc;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --accent-color: #4f46e5;
             --accent-hover: #4338ca;
-            --shadow: 0 20px 50px rgba(15, 23, 42, .12);
+            --accent-2: #7c3aed;
+            --border-color: #cbd5e1;
+            --danger-color: #dc2626;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --shadow: 0 15px 40px rgba(15, 23, 42, 0.10);
         }
 
         * {
@@ -53,86 +54,13 @@
 
         body {
             background:
-                radial-gradient(circle at top right, rgba(99, 102, 241, .12), transparent 30%),
-                var(--bg);
-            color: var(--text);
-            font-family: var(--font);
+                radial-gradient(circle at top right, rgba(99, 102, 241, 0.10), transparent 32%),
+                var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
             line-height: 1.8;
             min-height: 100vh;
-            transition: background .3s, color .3s;
-        }
-
-        body.focus-mode .site-header,
-        body.focus-mode .sidebar,
-        body.focus-mode .reading-toolbar,
-        body.focus-mode .actions-bar {
-            display: none !important;
-        }
-
-        body.focus-mode .layout {
-            grid-template-columns: 1fr;
-            max-width: 900px;
-        }
-
-        body.focus-mode .story-text {
-            font-size: 1.2rem;
-            line-height: 2.15;
-        }
-
-        #progressBar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            z-index: 9999;
-            transition: width .12s linear;
-        }
-
-        .site-header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(14px);
-            background: color-mix(in srgb, var(--panel) 90%, transparent);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header-inner {
-            max-width: 1450px;
-            margin: auto;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text);
-            font-size: 1.4rem;
-            font-weight: 900;
-            text-decoration: none;
-        }
-
-        .logo-mark {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            box-shadow: 0 8px 20px rgba(99, 102, 241, .25);
-        }
-
-        .header-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         button,
@@ -142,15 +70,78 @@
         }
 
         button {
-            border: 0;
+            cursor: pointer;
         }
 
+        #readingProgressBar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 0%;
+            height: 4px;
+            z-index: 9999;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-2));
+            transition: width 0.1s linear;
+        }
+
+        /* =========================
+           Header
+        ========================= */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: color-mix(in srgb, var(--panel-bg) 92%, transparent);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-inner {
+            max-width: 1450px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 900;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            color: white;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.22);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* =========================
+           Buttons
+        ========================= */
+
         .btn {
+            border: 0;
             border-radius: 10px;
-            padding: 10px 14px;
-            cursor: pointer;
-            transition: transform .15s, background .2s, border-color .2s;
+            padding: 9px 13px;
             font-weight: 700;
+            transition: 0.2s;
         }
 
         .btn:hover {
@@ -158,8 +149,8 @@
         }
 
         .btn-primary {
-            color: #fff;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
+            color: white;
         }
 
         .btn-primary:hover {
@@ -167,18 +158,22 @@
         }
 
         .btn-outline {
-            color: var(--text);
             background: transparent;
-            border: 1px solid var(--border);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
         }
 
         .btn-outline:hover {
-            background: var(--panel-2);
+            background: var(--panel-bg-2);
         }
 
-        .layout {
+        /* =========================
+           Layout
+        ========================= */
+
+        .main-layout {
             width: min(1450px, calc(100% - 32px));
-            margin: 26px auto 50px;
+            margin: 25px auto 50px;
             display: grid;
             grid-template-columns: 310px minmax(0, 1fr);
             gap: 22px;
@@ -188,136 +183,172 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            align-self: start;
             position: sticky;
             top: 82px;
+            align-self: start;
             max-height: calc(100vh - 100px);
             overflow-y: auto;
-            padding-left: 2px;
         }
 
-        .panel {
-            background: linear-gradient(180deg, var(--panel), color-mix(in srgb, var(--panel) 92%, var(--bg)));
-            border: 1px solid var(--border);
+        .panel-box {
+            background: linear-gradient(180deg, var(--panel-bg), var(--panel-bg-2));
+            border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 18px;
             box-shadow: var(--shadow);
         }
 
         .panel-title {
-            font-size: 1rem;
+            font-size: 1.03rem;
             margin-bottom: 14px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
+            padding-bottom: 9px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .field {
+        /* =========================
+           Hero
+        ========================= */
+
+        .hero {
+            padding: 22px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background:
+                linear-gradient(135deg, rgba(99, 102, 241, 0.15), transparent 58%),
+                var(--panel-bg);
+            box-shadow: var(--shadow);
+        }
+
+        .hero h1 {
+            font-size: clamp(1.6rem, 3vw, 2.3rem);
+            margin-bottom: 4px;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+        }
+
+        /* =========================
+           Form
+        ========================= */
+
+        .form-group {
             margin-bottom: 14px;
         }
 
-        .field:last-child {
-            margin-bottom: 0;
-        }
-
-        .field label {
+        .form-group label {
             display: block;
-            color: var(--muted);
-            font-size: .86rem;
+            color: var(--text-muted);
+            font-size: 0.86rem;
             margin-bottom: 6px;
         }
 
-        .control {
+        .form-control {
             width: 100%;
-            color: var(--text);
-            background: var(--bg-soft);
-            border: 1px solid var(--border);
+            padding: 11px 12px;
+            color: var(--text-color);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             outline: none;
-            padding: 11px 12px;
-            transition: border-color .2s, box-shadow .2s;
+            transition: 0.2s;
         }
 
-        .control:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, .14);
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.14);
         }
 
-        textarea.control {
+        textarea.form-control {
             min-height: 150px;
             resize: vertical;
         }
 
-        .stats {
+        /* =========================
+           Stats
+        ========================= */
+
+        .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
-        .stat {
-            background: var(--bg-soft);
-            border: 1px solid var(--border);
+        .stat-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 13px;
+            padding: 12px;
             text-align: center;
         }
 
         .stat-number {
-            color: var(--accent);
+            color: var(--accent-color);
             font-size: 1.5rem;
             font-weight: 900;
         }
 
         .stat-label {
-            font-size: .78rem;
-            color: var(--muted);
+            color: var(--text-muted);
+            font-size: 0.77rem;
         }
 
+        /* =========================
+           Author list
+        ========================= */
+
         .author-results {
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .author-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
             padding: 10px;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
             border-radius: 8px;
+            cursor: pointer;
         }
 
         .author-item:hover {
-            background: var(--bg-soft);
+            background: var(--bg-color);
         }
 
-        .main {
-            min-width: 0;
+        .author-empty {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            padding: 8px;
+            text-align: center;
         }
 
-        .hero {
-            padding: 22px;
-            border-radius: var(--radius);
-            margin-bottom: 18px;
-            border: 1px solid var(--border);
-            background:
-                linear-gradient(135deg, rgba(99, 102, 241, .16), transparent 55%),
-                var(--panel);
+        /* =========================
+           Resume
+        ========================= */
+
+        #resumeReadingBox {
+            display: none;
         }
 
-        .hero h1 {
-            font-size: clamp(1.55rem, 3vw, 2.3rem);
-            margin-bottom: 5px;
+        #resumeReadingBox.active {
+            display: block;
         }
 
-        .hero p {
-            color: var(--muted);
-            max-width: 800px;
+        #resumeStoryText {
+            color: var(--text-muted);
+            font-size: 0.84rem;
+            margin-bottom: 10px;
         }
 
-        .story-bundle {
-            background: var(--panel);
-            border: 1px solid var(--border);
+        /* =========================
+           Story Bundle
+        ========================= */
+
+        .story-bundle-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius);
             padding: 18px;
             margin-bottom: 20px;
@@ -330,169 +361,259 @@
             gap: 16px;
             align-items: center;
             padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .cover {
+        .bundle-cover {
             width: 90px;
             height: 120px;
             border-radius: 12px;
             object-fit: cover;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
+        }
+
+        .fallback-cover {
+            width: 90px;
+            height: 120px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-2));
         }
 
         .bundle-title {
-            font-size: clamp(1.25rem, 2.3vw, 1.7rem);
-            line-height: 1.35;
-            margin-bottom: 8px;
+            font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+            line-height: 1.4;
+            margin-bottom: 7px;
         }
 
-        .meta-line {
-            color: var(--muted);
-            font-size: .86rem;
+        .bundle-meta {
+            color: var(--text-muted);
+            font-size: 0.87rem;
         }
+
+        /* =========================
+           Story Card
+        ========================= */
 
         .story-card {
-            margin-top: 16px;
-            padding: 18px;
-            background: var(--bg-soft);
-            border: 1px solid var(--border);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
             border-radius: 14px;
+            padding: 18px;
+            margin-top: 16px;
         }
 
-        .story-head {
+        .story-card h3 {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 10px;
-        }
-
-        .part-title {
-            font-size: 1.08rem;
-            font-weight: 800;
-        }
-
-        .delete-btn {
-            color: var(--danger);
-            background: transparent;
-            border: 1px solid var(--danger);
-            border-radius: 8px;
-            padding: 6px 10px;
-            cursor: pointer;
-            font-size: .78rem;
+            font-size: 1.1rem;
         }
 
         .story-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 13px;
+            gap: 7px;
+            margin-bottom: 14px;
         }
 
         .badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            color: var(--muted);
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 999px;
+            color: var(--text-muted);
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             padding: 5px 9px;
-            font-size: .78rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
         }
 
         .reading-toolbar {
             display: flex;
             flex-wrap: wrap;
             gap: 7px;
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
 
-        .tool {
-            color: var(--text);
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        .tool-btn {
+            color: var(--text-color);
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             padding: 7px 10px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: .8rem;
+            font-size: 0.8rem;
         }
 
-        .tool:hover {
-            border-color: var(--accent);
+        .tool-btn:hover {
+            border-color: var(--accent-color);
         }
 
         .story-text {
-            font-size: 1.04rem;
+            font-size: 1.06rem;
             line-height: 2;
             white-space: pre-line;
             overflow-wrap: anywhere;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .story-text::first-letter {
-            font-size: 1.25em;
-            font-weight: 800;
+            font-weight: 900;
+            font-size: 1.3em;
         }
 
         .actions-bar {
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 10px;
-            padding-top: 13px;
-            border-top: 1px solid var(--border);
         }
 
-        .actions-left {
+        .interaction-group {
             display: flex;
             flex-wrap: wrap;
             gap: 7px;
         }
 
-        .action {
-            color: var(--text);
+        .action-btn {
             background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 8px;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
             padding: 7px 10px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: .82rem;
+            font-size: 0.82rem;
         }
 
-        .action.liked {
-            color: var(--danger);
-            border-color: var(--danger);
+        .action-btn:hover {
+            border-color: var(--accent-color);
         }
 
-        .action.faved {
-            color: var(--warning);
-            border-color: var(--warning);
+        .action-btn.liked {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
         }
 
-        .empty {
-            padding: 50px 20px;
+        .action-btn.faved {
+            color: var(--warning-color);
+            border-color: var(--warning-color);
+        }
+
+        .btn-delete-card {
+            background: transparent;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            padding: 5px 9px;
+            border-radius: 7px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* =========================
+           Focus Mode
+        ========================= */
+
+        body.focus-mode header,
+        body.focus-mode .sidebar,
+        body.focus-mode .reading-toolbar,
+        body.focus-mode .actions-bar,
+        body.focus-mode .hero {
+            display: none !important;
+        }
+
+        body.focus-mode .main-layout {
+            grid-template-columns: 1fr;
+            max-width: 900px;
+        }
+
+        body.focus-mode .story-text {
+            font-size: 1.2rem;
+            line-height: 2.15;
+        }
+
+        /* =========================
+           Empty
+        ========================= */
+
+        .empty-state {
+            padding: 55px 20px;
             text-align: center;
-            color: var(--muted);
-            background: var(--panel);
-            border: 1px solid var(--border);
+            color: var(--text-muted);
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius);
         }
 
-        .resume-box {
-            display: none;
+        .empty-icon {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
         }
 
-        .resume-box.active {
-            display: block;
+        /* =========================
+           Toast
+        ========================= */
+
+        .toast-container {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 5000;
+            width: min(360px, calc(100% - 36px));
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
         }
+
+        .toast {
+            background: var(--panel-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-right: 4px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 12px 14px;
+            box-shadow: var(--shadow);
+            animation: toastIn 0.25s ease;
+        }
+
+        .toast.success {
+            border-right-color: var(--success-color);
+        }
+
+        .toast.danger {
+            border-right-color: var(--danger-color);
+        }
+
+        .toast.warning {
+            border-right-color: var(--warning-color);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================
+           Modal
+        ========================= */
 
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, .72);
+            background: rgba(0, 0, 0, 0.72);
             z-index: 3000;
             align-items: center;
             justify-content: center;
@@ -505,17 +626,17 @@
 
         .modal-content {
             width: min(520px, 100%);
-            background: var(--panel);
-            border: 1px solid var(--border);
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
             border-radius: 18px;
             padding: 20px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
         }
 
         .modal-content p {
-            color: var(--muted);
+            color: var(--text-muted);
+            font-size: 0.9rem;
             margin-bottom: 15px;
-            font-size: .9rem;
         }
 
         .modal-buttons {
@@ -523,57 +644,12 @@
             gap: 9px;
         }
 
-        .toast-container {
-            position: fixed;
-            right: 18px;
-            bottom: 18px;
-            z-index: 5000;
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-            width: min(360px, calc(100% - 36px));
-        }
-
-        .toast {
-            background: var(--panel);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-right: 4px solid var(--accent);
-            border-radius: 10px;
-            padding: 12px 14px;
-            box-shadow: var(--shadow);
-            animation: toastIn .25s ease;
-        }
-
-        .toast.success {
-            border-right-color: var(--success);
-        }
-
-        .toast.danger {
-            border-right-color: var(--danger);
-        }
-
-        .toast.warning {
-            border-right-color: var(--warning);
-        }
-
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        /* =========================
+           Responsive
+        ========================= */
 
         @media (max-width: 980px) {
-            .layout {
+            .main-layout {
                 grid-template-columns: 1fr;
             }
 
@@ -582,15 +658,11 @@
                 max-height: none;
                 overflow: visible;
             }
-
-            .publish-panel {
-                order: 2;
-            }
         }
 
         @media (max-width: 600px) {
-            .layout {
-                width: min(100% - 18px, 1450px);
+            .main-layout {
+                width: calc(100% - 16px);
                 margin-top: 12px;
             }
 
@@ -599,521 +671,667 @@
                 align-items: flex-start;
             }
 
-            .logo span:last-child {
-                display: none;
-            }
-
-            .header-actions {
-                justify-content: flex-end;
-            }
-
             .header-actions .btn {
                 padding: 8px 9px;
-                font-size: .76rem;
+                font-size: 0.76rem;
+            }
+
+            .logo-text {
+                display: none;
             }
 
             .bundle-header {
                 grid-template-columns: 70px 1fr;
             }
 
-            .cover {
+            .bundle-cover,
+            .fallback-cover {
                 width: 70px;
                 height: 95px;
             }
 
+            .story-bundle-box,
             .story-card,
-            .story-bundle,
-            .panel,
+            .panel-box,
             .hero {
                 padding: 13px;
             }
 
             .actions-bar {
-                align-items: stretch;
                 flex-direction: column;
+                align-items: stretch;
             }
         }
     </style>
 </head>
 
 <body>
-    <div id="progressBar"></div>
 
-    <header class="site-header">
+    <div id="readingProgressBar"></div>
+
+    <!-- =========================
+         Header
+    ========================== -->
+
+    <header>
         <div class="header-inner">
-            <a class="logo" href="#">
-                <span class="logo-mark">📖</span>
-                <span>حكاية</span>
-            </a>
+
+            <div class="logo">
+                <div class="logo-icon">📖</div>
+                <span class="logo-text">حكاية</span>
+            </div>
 
             <div class="header-actions">
-                <button class="btn btn-outline" id="themeBtn">☀️ الوضع الفاتح</button>
-                <button class="btn btn-outline" id="backupBtn">💾 النسخ الاحتياطي</button>
-                <button class="btn btn-primary" id="publishBtn">✍️ نشر فصل</button>
+                <button class="btn btn-outline" id="themeToggleBtn">
+                    ☀️ الوضع الفاتح
+                </button>
+
+                <button class="btn btn-outline" id="backupBtn">
+                    💾 النسخ الاحتياطي
+                </button>
+
+                <button class="btn btn-primary" id="publishScrollBtn">
+                    ✍️ نشر قصة
+                </button>
             </div>
+
         </div>
     </header>
 
-    <div class="layout">
+    <!-- =========================
+         Main Layout
+    ========================== -->
+
+    <div class="main-layout">
+
+        <!-- =========================
+             Sidebar
+        ========================== -->
+
         <aside class="sidebar">
 
-            <section class="panel resume-box" id="resumeBox">
-                <h3 class="panel-title">📍 متابعة القراءة</h3>
-                <p id="resumeText" style="color:var(--muted);font-size:.86rem;margin-bottom:10px;"></p>
-                <button class="btn btn-outline" style="width:100%;" id="resumeBtn">
-                    الانتقال إلى آخر موضع
+            <!-- Resume -->
+            <div class="panel-box" id="resumeReadingBox">
+
+                <h3 class="panel-title">
+                    📍 متابعة القراءة
+                </h3>
+
+                <p id="resumeStoryText"></p>
+
+                <button
+                    class="btn btn-outline"
+                    style="width:100%;"
+                    id="resumeStoryBtn">
+                    الانتقال للنقطة الحالية
                 </button>
-            </section>
 
-            <section class="panel">
-                <h3 class="panel-title">📊 الإحصائيات</h3>
+            </div>
 
-                <div class="stats">
-                    <div class="stat">
-                        <div class="stat-number" id="totalStories">0</div>
+            <!-- Stats -->
+            <div class="panel-box">
+
+                <h3 class="panel-title">
+                    📊 الإحصائيات
+                </h3>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalStories">0</div>
                         <div class="stat-label">الفصول</div>
                     </div>
 
-                    <div class="stat">
-                        <div class="stat-number" id="totalAuthors">0</div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalAuthors">0</div>
                         <div class="stat-label">المؤلفون</div>
                     </div>
 
-                    <div class="stat">
-                        <div class="stat-number" id="totalFavorites">0</div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalFavorites">0</div>
                         <div class="stat-label">المفضلة</div>
                     </div>
 
-                    <div class="stat">
-                        <div class="stat-number" id="totalLikes">0</div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalLikes">0</div>
                         <div class="stat-label">الإعجابات</div>
                     </div>
+
                 </div>
-            </section>
+            </div>
 
-            <section class="panel">
-                <h3 class="panel-title">🔎 البحث والتصفية</h3>
+            <!-- Search -->
+            <div class="panel-box">
 
-                <div class="field">
-                    <label for="searchInput">بحث داخل المنصة</label>
+                <h3 class="panel-title">
+                    🔍 البحث والتصفية
+                </h3>
+
+                <div class="form-group">
+                    <label for="globalSearchInput">
+                        بحث في القصص
+                    </label>
+
                     <input
-                        id="searchInput"
-                        class="control"
                         type="search"
+                        id="globalSearchInput"
+                        class="form-control"
                         placeholder="العنوان، الكاتب، الفصل، المحتوى..."
                         autocomplete="off">
                 </div>
 
-                <div class="field">
-                    <label for="authorInput">البحث عن كاتب</label>
+                <div class="form-group">
+                    <label for="folderSearchInput">
+                        البحث حسب الكاتب
+                    </label>
+
                     <input
-                        id="authorInput"
-                        class="control"
                         type="search"
+                        id="folderSearchInput"
+                        class="form-control"
                         placeholder="اكتب اسم الكاتب..."
                         autocomplete="off">
                 </div>
 
-                <div class="author-results" id="authorResults"></div>
+                <div
+                    id="authorFolderList"
+                    class="author-results">
+                </div>
 
-                <button class="btn btn-outline" style="width:100%;margin-top:10px;" id="resetBtn">
+                <button
+                    class="btn btn-outline"
+                    style="width:100%; margin-top:10px;"
+                    id="resetFiltersBtn">
                     إعادة ضبط البحث
                 </button>
-            </section>
 
-            <section class="panel publish-panel" id="publishPanel">
-                <h3 class="panel-title">✍️ نشر فصل جديد</h3>
+            </div>
+
+            <!-- Publish -->
+            <div class="panel-box" id="publishPanel">
+
+                <h3 class="panel-title">
+                    ✍️ نشر فصل جديد
+                </h3>
 
                 <form id="storyForm">
-                    <div class="field">
-                        <label for="storyTitle">عنوان القصة الرئيسي</label>
+
+                    <div class="form-group">
+                        <label for="storyTitle">
+                            عنوان القصة الرئيسي
+                        </label>
+
                         <input
-                            class="control"
+                            type="text"
                             id="storyTitle"
+                            class="form-control"
                             required
-                            value="رحلة نحو معرفة الذات">
+                            placeholder="عنوان القصة">
                     </div>
 
-                    <div class="field">
-                        <label for="authorName">اسم الكاتب</label>
+                    <div class="form-group">
+                        <label for="authorName">
+                            اسم الكاتب
+                        </label>
+
                         <input
-                            class="control"
+                            type="text"
                             id="authorName"
+                            class="form-control"
                             required
                             placeholder="اسم المؤلف">
                     </div>
 
-                    <div class="field">
-                        <label for="storyPart">رقم أو اسم الفصل</label>
+                    <div class="form-group">
+                        <label for="storyPartNumber">
+                            رقم أو اسم الفصل
+                        </label>
+
                         <input
-                            class="control"
-                            id="storyPart"
+                            type="text"
+                            id="storyPartNumber"
+                            class="form-control"
                             required
                             placeholder="الفصل الأول">
                     </div>
 
-                    <div class="field">
-                        <label for="coverUrl">رابط صورة الغلاف — اختياري</label>
+                    <div class="form-group">
+                        <label for="coverUrl">
+                            رابط صورة الغلاف - اختياري
+                        </label>
+
                         <input
-                            class="control"
+                            type="url"
                             id="coverUrl"
+                            class="form-control"
                             placeholder="https://example.com/cover.jpg">
                     </div>
 
-                    <div class="field">
-                        <label for="storyContent">محتوى الفصل</label>
+                    <div class="form-group">
+                        <label for="storyContent">
+                            محتوى الفصل
+                        </label>
+
                         <textarea
-                            class="control"
                             id="storyContent"
+                            class="form-control"
                             required
-                            placeholder="اكتب الفصل هنا..."></textarea>
+                            placeholder="اكتب نص الفصل هنا..."></textarea>
                     </div>
 
-                    <button class="btn btn-primary" type="submit" style="width:100%;">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        style="width:100%;">
                         نشر الفصل
                     </button>
+
                 </form>
-            </section>
+            </div>
+
         </aside>
 
-        <main class="main">
+        <!-- =========================
+             Main Content
+        ========================== -->
+
+        <main>
+
             <section class="hero">
-                <h1>📚 منصة حكاية</h1>
+
+                <h1>
+                    📚 منصة حكاية
+                </h1>
+
                 <p>
-                    اقرأ القصص، تابع الفصول، احفظ موضعك، وأضف أعمالك الخاصة في مكان واحد.
+                    اقرأ القصص، تابع الفصول، احفظ موضع القراءة، وانشر قصصك في مكان واحد.
                 </p>
+
             </section>
 
             <div id="storiesContainer"></div>
+
         </main>
+
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- Toast -->
+    <div
+        class="toast-container"
+        id="toastContainer">
+    </div>
 
-    <div class="modal" id="backupModal">
+    <!-- =========================
+         Backup Modal
+    ========================== -->
+
+    <div
+        class="modal"
+        id="backupModal">
+
         <div class="modal-content">
-            <h3 class="panel-title">💾 إدارة النسخ الاحتياطي</h3>
+
+            <h3 class="panel-title">
+                💾 إدارة النسخ الاحتياطي
+            </h3>
 
             <p>
-                يمكنك حفظ قصصك في ملف JSON واستعادتها لاحقاً على نفس المنصة.
+                يمكنك تصدير جميع القصص أو استعادتها من ملف JSON.
             </p>
 
             <div class="modal-buttons">
-                <button class="btn btn-primary" id="exportBtn">
+
+                <button
+                    class="btn btn-primary"
+                    id="exportDataBtn">
                     📤 تصدير البيانات
                 </button>
 
-                <button class="btn btn-outline" id="importBtn">
+                <button
+                    class="btn btn-outline"
+                    id="importDataBtn">
                     📥 استعادة البيانات
                 </button>
 
                 <input
                     type="file"
-                    id="importInput"
+                    id="importFileInput"
                     accept=".json,application/json"
-                    class="hidden">
+                    style="display:none;">
 
-                <button class="btn btn-outline" id="closeBackupBtn">
+                <button
+                    class="btn btn-outline"
+                    id="closeBackupBtn">
                     إغلاق
                 </button>
+
             </div>
+
         </div>
     </div>
+
+    <!-- =========================================================
+         JavaScript
+    ========================================================== -->
 
     <script>
         "use strict";
 
         /* =========================================================
-           إعدادات التخزين
-        ========================================================= */
+           Storage Keys
+        ========================================================== */
 
-        const STORAGE_KEY = "hikaya_stories_v2";
-        const LIKES_KEY = "hikaya_likes_v2";
-        const FAVORITES_KEY = "hikaya_favorites_v2";
-        const BOOKMARK_KEY = "hikaya_bookmark_v2";
-        const USER_TOKEN_KEY = "hikaya_user_token_v2";
-        const THEME_KEY = "hikaya_theme_v2";
+        const STORAGE_KEY = "hikaya_stories_single_file_v1";
+        const LIKES_KEY = "hikaya_likes_single_file_v1";
+        const FAVORITES_KEY = "hikaya_favorites_single_file_v1";
+        const BOOKMARK_KEY = "hikaya_bookmark_single_file_v1";
+        const USER_TOKEN_KEY = "hikaya_user_token_single_file_v1";
+        const THEME_KEY = "hikaya_theme_single_file_v1";
 
         /* =========================================================
-           القصة الافتراضية المطلوبة
-        ========================================================= */
-
-        const defaultStories = [
-            {
-                id: "story_001",
-                title: "رحلة نحو معرفة الذات",
-                author: "الكاتب المعجزة",
-                part: "الفصل الأول — في الغابة",
-                cover: "",
-                createdAt: Date.now(),
-                ownerToken: "system",
-                content: `في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح.
-
-فجأة، ظهر نمر يركض خلف رجل غريب، وكانت أصوات خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين.
-
-تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، ثم أكمل طريقه.
-
-في اليوم التالي، جاء رجلان من قرية قريبة من تلك الغابة لجمع فطر عش الغراب.
-
-رأى أحد الرجلين منظر جثة النمر فُصدم، ونادى على زميله وقال له وهو فرح ومبتسم:
-— "هذا رائع! يمكننا بيعه في القرية".
-
-فاستغرب زميله وقال:
-— "لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟"
-
-فقال له الآخر:
-— "إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها".
-
-فقال رجل القرية:
-— "ومن قتل النمر؟"
-
-أجابه زميله:
-— "إنه سياف مشهور يدعى غارلون".
-
-صُدم الرجل مما سمعه، وقررا بيع جلد النمر في مدينة "كوراساوا" التي تبعد عنهما 7 كيلومترات، فأخذا النمر معهما على عربة تجرها الأحصنة وانطلقا في رحلتهما.
-
-قضى الرجلان 4 ساعات للوصول إلى كوراساوا؛ إذ كان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً.
-
-أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص بدافع الفضول.
-
-وما إن وصل حتى ملأت الصدمة وجهه؛ إذ كان أمامه السياف غارلون وهو يتدرب في الغابة.
-
-لمحه السياف وكان سيهاجمه ظناً منه أنه خطر يهدده، لكن الرجل قال له ليهدئه:
-— "اهدأ، فأنا لن أؤذيك".
-
-تفهم غارلون الكلام وهدأ، وقرر أن يتركه.
-
-ولكن قبل أن يبتعد، سمع غارلون صوت حركة خلف رجل القرية، فركض وفوجئ بسياف آخر يهاجم زميل رجل القرية.
-
-فحزن عليه صديقه كثيراً.
-
-انقض غارلون على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملحوظ.
-
-أثناء القتال، ذهب الرجل إلى زميله الذي كان يحتضر وقال له:
-— "أين أُصبت؟"
-
-فقال بصوت مليء بالألم:
-— "أصابني في بطني".
-
-فسأله:
-— "أين بالضبط؟"
-
-أجاب بصوت متألم:
-— "لا أعرف..."
-
-حاول زميله أن يعالجه لكنه فشل، فقال له المحتضر:
-— "هذه نهايتي، لا تتعب نفسك. اذهب مع غارلون فهو سيحميك بدلاً مني، فالقرية بعيدة جداً ولن تستطيع الوصول إليها بمفردك. أريد أن أقول شيئاً كنت أود قوله عند مماتي..."
-
-فسأله زميله:
-— "ما هو؟"
-
-قال الرجل:
-— "ليت الواقع حلم، وليت مماتي لم يكن واقعاً".
-
-ثم فاضت روحه وتوفى.
-
-بكى عليه زميله كثيراً، وعندما نظر إلى غارلون اندهش؛ فقد كان غارلون قد أنهى القتال مع السياف الآخر بمهارة متقنة.
-
-جاء غارلون إليه بخطوات هادئة وقال له:
-— "هل أنت بخير؟"
-
-أجاب الرجل:
-— "نعم، لكن زميلي توفى، وقال لي أن أذهب معك".
-
-رد غارلون:
-— "حسناً، ولكن هل يمكنك أن تشارك معي في رحلتي؟"
-
-فقال رجل القرية:
-— "نعم، بكل سرور".
-
-مشى غارلون مع رجل القرية وقال له:
-— "عرّفني عن نفسك".
-
-قال الرجل:
-— "اسمي محمد، وأنا من قرية هيوكامارا التي تبعد عن هنا مسافة 7 كم".
-
-فقال له غارلون إنه من مدينة "ميكارليس"، وهي مدينة بعيدة جداً.
-
-سأل محمد:
-— "ما هو الهدف الذي تسعى إليه يا غارلون؟"
-
-أجابه غارلون:
-— "أريد أن أجمع المال وأسعى لتسديد ديوني".
-
-فقال محمد مستغرباً:
-— "ولماذا أنت مديون؟"
-
-رد غارلون:
-— "في الماضي، كان والدي يلعب القمار ويستلف النقود من العصابات. وعندما لم يسدد ديونه، قتله رجال العصابة وأصبحت الديون على عاتقي. ويبلغ قيمة هذا الدين 500 مليون ين".
-
-انصدم محمد من الرقم وقال بصوت مهزوز من الصدمة:
-— "إلى أين سنذهب الآن يا غارلون؟"
-
-قال غارلون:
-— "سنذهب إلى رجال العصابة للانتقام منهم".
-
-في اليوم التالي، واصل غارلون ومحمد طريقهما نحو مدينة كوراساوا لبيع النمر.
-
-وفي الطريق واجها العدو اللدود لأي مسافر: الجوع.
-
-طلب غارلون من محمد أن ينتظر لكي يصطاد غزالاً أو أرنباً برياً.
-
-توغل غارلون في الغابة، وبعد 20 دقيقة من البحث وجد أرنباً برياً.
-
-حبس أنفاسه وركز جيداً، ثم سحب سيفه ببطء وانقض عليه مسرعاً بدون صوت، ثم عاد بالصيد.
-
-عاد غارلون، واندهش محمد مما جلبه وقال:
-— "كيف اصطدت هذا الأرنب؟ إنه أمر مذهل!"
-
-أجابه غارلون ببرود:
-— "ليس من شأنك أن تعرف، اجمع الحطب وأنت صامت".
-
-قال محمد:
-— "حاضر".
-
-أثناء تجميع الحطب، قال محمد في نفسه إنه لن يجعل برود غارلون عائقاً، ولن يجعله شخصاً بارداً بل سيعامله بلطف دائماً.
-
-جمع الحطب وأشعل النار لشوي الأرنب وأكلا معاً.
-
-بعد ساعة، وصلا إلى مدينة كوراساوا، وذهبا إلى تاجر لجلود الحيوانات وباعا له جلد النمر بثمن باهظ بلغ 100 ألف ين.
-
-ولكن أثناء سيرهما، كان غارلون ينضب غضباً من شيء ما.
-
-لاحظ محمد غضب غارلون المكبوت، فقال له غارلون بصوت هادئ:
-— "أتلاحظ من كان التاجر الذي بعنا له النمر؟"
-
-قال محمد باستغراب:
-— "لا، من يكون؟"
-
-قال غارلون بصوت يتسرب منه الغضب:
-— "إنه فرد من العصابة التي قتلت والدي وأنا مديون لها".
-
-انصدم محمد وغضب وقال:
-— "لماذا لم تقل لي؟!"
-
-أجابه غارلون:
-— "لأن قتلك لهم الآن لن يفيدك، وأيضاً لا أريدك أن تتدخل في انتقامي منهم".
-
-هدأ محمد، وقررا التفكير في طريقة لمواجهة العصابة.
-
-فكر غارلون في خطة وقال:
-— "سأراقبه في الليل وأنتظر الفرصة المناسبة. سيغضب قائد العصابة عندما يعلم بخبر ما حدث، وسيبدأ بالبحث عني، وحينها سننسحب وننسق سفرنا إلى الدولة التي يعيش فيها مدربي. سيكون الوقت المقدر لبحثهم عني تقريباً شهراً كاملاً، وهو ما يكفي لكي أستعد لهم. وأنت يا محمد ستتدرب معي، فقوتك ضعيفة. إن أردت أن تتطور فتعال معي، وإلا فلن تكون معي في رحلتي".
-
-فكر محمد في خطة غارلون وقرر الموافقة، ثم سأله:
-— "أين تقع دولة مدربك؟"
-
-أجابه غارلون:
-— "في مصر".
-
-بالفعل، انطلقا نحو التاجر في الليل وراقبه غارلون.
-
-كان التاجر يُدعى "بوراينو"، وهو الفرد السابع من عصابة تُدعى "عصابة المونيراف"؛ أشهر عصابة في البلاد والمعروفة بأساليبها الخطيرة للغاية.
-
-ورغم أن عدد أعضائها قليل، 15 فرداً فقط، إلا أنهم من بين أقوى 100 سياف عرفهم التاريخ.
-
-فهل سينتصر عليهم غارلون؟
-
-هذا ما سنعرفه في الجزء القادم...`
-            }
-        ];
-
-        /* =========================================================
-           حالة التطبيق
-        ========================================================= */
+           Variables
+        ========================================================== */
 
         let stories = [];
         let likes = {};
         let favorites = [];
-        let activeAuthor = "";
-        let currentSearch = "";
+
+        let selectedAuthor = "";
+        let searchQuery = "";
 
         /* =========================================================
-           أدوات عامة
-        ========================================================= */
+           القصة المطلوبة
+        ========================================================== */
 
-        function getUserToken() {
+        const initialStory = {
+            id: "story-rihlat-nahw-marifat-al-that",
+            title: "رحلة نحو معرفة الذات",
+            author: "غير محدد",
+            part: "الفصل الأول",
+            cover: "",
+            ownerToken: "system",
+            createdAt: 1,
+
+            content: `في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح. فجأة، ظهر نمر يركض خلف رجل غريب، وكانت أصوات خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين.
+​
+تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، ثم أكمل طريقه.
+​
+في اليوم التالي، جاء رجلان من قرية قريبة من تلك الغابة لجمع فطر عش الغراب. رأى أحد الرجلين منظر جثة النمر فصُدم، ونادى على زميله وقال له وهو فرح ومبتسم:
+— "هذا رائع! يمكننا بيعه في القرية".
+​
+فاستغرب زميله وقال:
+— "لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟"
+​
+فقال له الآخر:
+— "إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها".
+​
+فقال رجل القرية:
+— "ومن قتل النمر؟"
+​
+أجابه زميله:
+— "إنه سياف مشهور يدعى غارلون".
+​
+صُدم الرجل مما سمعه، وقررا بيعه في مدينة "كوراساوا" التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما.
+​
+قضى الرجلان 4 ساعات للوصول إلى كوراساوا؛ إذ كان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص بدافع الفضول. وما إن وصل حتى ملأت الصدمة وجهه؛ إذ كان أمامه السياف غارلون وهو يتدرب في الغابة.
+​
+لمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له ليهدئه:
+— "اهدأ، فأنا لن أؤذيك".
+​
+تفهم غارلون الكلام وهدأ، وقرر أن يتركه. ولكن قبل أن يبتعد، سمع غارلون صوت حركة خلف رجل القرية، فركض وفوجئ بسياف آخر يقتل زميل رجل القرية!
+​
+فحزن عليه صديقه كثيراً. انقض غارلون على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملحوظ.
+​
+أثناء القتال، ذهب الرجل إلى زميله الذي كان يحتضر وقال له:
+— "أين أصبت؟"
+​
+فقال بصوت مليء بالألم:
+— "أصابني في بطني".
+​
+فسأله:
+— "أين بالضبط؟"
+​
+أجاب بصوت متألم:
+— "لا أعرف..."
+​
+حاول زميله أن يعالجه لكنه فشل، فقال له المحتضر:
+— "هذه نهايتي، لا تتعب نفسك. اذهب مع غارلون فهو سيحميك بدلاً مني، فالقرية بعيدة جداً ولن تستطيع الوصول إليها بمفردك. أريد أن أقول شيئاً كنت أود قوله عند مماتي..."
+​
+فسأله زميله:
+— "ما هو؟"
+​
+قال الرجل:
+— "ليت الواقع حلم، وليت مماتي لم يكن واقعاً".
+​
+ثم فاضت روحه وتوفى.
+​
+بكى عليه زميله كثيراً، وعندما نظر إلى غارلون اندهش؛ فقد كان غارلون قد أنهى حياة السياف الآخر بمهارة متقنة. جاء غارلون إليه بخطوات هادئة وقال له:
+— "هل أنت بخير؟"
+​
+أجاب الرجل:
+— "نعم، لكن زميلي توفى، وقال لي أن أذهب معك".
+​
+رد غارلون:
+— "حسناً، ولكن هل يمكنك أن تشارك معي في رحلتي؟"
+​
+فقال رجل القرية:
+— "نعم، بكل سرور".
+​
+مشى غارلون مع رجل القرية وقال له:
+— "عرّفني عن نفسك".
+​
+قال الرجل:
+— "اسمي محمد، وأنا من قرية 'هيوكامارا' التي تبعد عن هنا مسافة 7 كم".
+​
+فقال له غارلون إنه من مدينة "ميكارليس"، وهي مدينة بعيدة جداً.
+​
+سأل محمد:
+— "ما هو الهدف الذي تسعى إليه يا غارلون؟"
+​
+أجابه غارلون:
+— "أريد أن أجمع المال وأسعى لتسديد ديوني".
+​
+فقال محمد مستغرباً:
+— "ولماذا أنت مديون؟"
+​
+رد غارلون:
+— "في الماضي، كان والدي يلعب القمار ويستلف النقود من العصابات. وعندما لم يسدد ديونه، قتله رجال العصابة وأصبحت الديون على عاتقي. ويبلغ قيمة هذا الدين 500 مليون ين".
+​
+انصدم محمد من الرقم وقال بصوت مهزوز من الصدمة:
+— "إلى أين سنذهب الآن يا غارلون؟"
+​
+قال غارلون:
+— "سنذهب إلى رجال العصابة للانتقام منهم".
+​
+في اليوم التالي، واصل غارلون ومحمد طريقهما نحو مدينة كوراساوا لبيع النمر. وفي الطريق مواجها العدو اللدود لأي مسافر: الجوع.
+​
+طلب غارلون من محمد أن ينتظر لكي يصطاد غزالاً أو أرنباً برياً. توغل غارلون في الغابة، وبعد 20 دقيقة من البحث وجد أرنباً برياً. حبس أنفاسه وركز جيدا، ثم سحب سيفه ببطء وانقض عليه مسرعاً بدون صوت وقضى عليه قتلاً رحيماً.
+​
+عاد غارلون، واندهش محمد مما جلبه وقال:
+— "كيف اصطدت هذا الأرنب؟ إنه أمر مذهل!"
+​
+أجابه غارلون ببرود:
+— "ليس من شأنك أن تعرف، اجمع الحطب وأنت صامت".
+​
+قال محمد:
+— "حاضر".
+​
+أثناء تجميع الحطب، قال محمد في نفسه إنه لن يجعل برود غارلون عائقاً، ولن يجعله شخصاً بارداً بل سيعامله بلطف دائماً. جمع الحطب وأشعل النار لشوي الأرنب وأكلا معا.
+​
+بعد ساعة، وصلوا إلى مدينة كوراساوا، وذهبوا إلى تاجر لجلود الحيوانات وباعوا له جلد النمر بثمن باهظ بلغ 100 ألف ين. ولكن أثناء سيرهما، كان غارلون ينضب غضباً من شيء ما.
+​
+لاحظ محمد غضب غارلون المكبوت، فقال له غارلون بصوت هادئ:
+— "أتلاحظ من كان التاجر الذي بعنا له النمر؟"
+​
+قال محمد باستغراب:
+— "لا، من يكون؟"
+​
+قال غارلون بصوت يتسرب منه الغضب:
+— "إنه فرد من العصابة التي قتلت والدي وأنا مديون لها".
+​
+انصدم محمد وغضب وقال:
+— "لماذا لم تقل لي؟!"
+​
+أجابه غارلون:
+— "لأن قتلك لهم الآن لن يفيدك، وأيضاً لا أريدك أن تتدخل في انتقامي منهم".
+​
+هدأ محمد، وقررا التفكير في طريقة للقضاء عليه. فكر غارلون في خطة وقال:
+— "سأراقبه في الليل وأنتظر الفرصة المناسبة للقضاء عليه. سيغضب قائد العصابة عندما يعلم بخبر موته وسيحاول القضاء عليّ، وحينها سننسحب وننسق سفرنا إلى الدولة التي يعيش فيها مدربي. سيكون الوقت المقدر لبحثهم عني تقريباً شهراً كاملاً، وهو ما يكفي لكي أستعد لهم. وأنت يا محمد ستتدرب معي، فقوتك ضعيفة. إن أردت أن تتطور فتعال معي، وإلا فلن تكون معي في رحلتي".
+​
+فكر محمد في خطة غارلون وقرر الموافقة، ثم سأله:
+— "أين تقع دولة مدربك؟"
+​
+أجابه غارلون:
+— "في مصر".
+​
+بالفعل، انطلقا نحو التاجر في الليل وراقبه غارلون. كان التاجر يُدعى "بوراينو"، وهو الفرد السابع من عصابة تُدعى "عصابة المونيراف"؛ أشهر عصابة في البلاد والمعروفة بأساليبها الخطيرة للغاية. ورغم أن عدد أعضائها قليل (15 فرداً فقط)، إلا أنهم من بين أقوى 100 سياف عرفهم التاريخ.
+​
+فهل سينتصر عليهم غارلون؟ هذا ما سنعرفه في الجزء القادم...`
+        };
+
+        /* =========================================================
+           User Token
+        ========================================================== */
+
+        function getCurrentUserToken() {
             let token = localStorage.getItem(USER_TOKEN_KEY);
 
             if (!token) {
-                token = "usr_" + cryptoRandom();
+                token =
+                    "usr_" +
+                    Math.random().toString(36).slice(2) +
+                    Date.now().toString(36);
+
                 localStorage.setItem(USER_TOKEN_KEY, token);
             }
 
             return token;
         }
 
-        function cryptoRandom() {
-            if (window.crypto && crypto.getRandomValues) {
-                const bytes = new Uint8Array(12);
-                crypto.getRandomValues(bytes);
-                return [...bytes].map(b => b.toString(16).padStart(2, "0")).join("");
-            }
+        /* =========================================================
+           Storage
+        ========================================================== */
 
-            return Math.random().toString(36).slice(2) + Date.now().toString(36);
+        function loadData() {
+            try {
+                const storedStories =
+                    localStorage.getItem(STORAGE_KEY);
+
+                if (storedStories) {
+                    const parsed = JSON.parse(storedStories);
+                    stories = Array.isArray(parsed) ? parsed : [];
+                } else {
+                    stories = [];
+                }
+
+                likes =
+                    JSON.parse(
+                        localStorage.getItem(LIKES_KEY) || "{}"
+                    ) || {};
+
+                favorites =
+                    JSON.parse(
+                        localStorage.getItem(FAVORITES_KEY) || "[]"
+                    ) || [];
+
+                /*
+                 * إضافة القصة المطلوبة تلقائياً إن لم تكن موجودة.
+                 * لا يتم حذف أي قصص موجودة بالفعل.
+                 */
+                const exists = stories.some(
+                    story => story.id === initialStory.id
+                );
+
+                if (!exists) {
+                    stories.unshift(initialStory);
+                }
+
+                saveData(false);
+
+            } catch (error) {
+                console.error(error);
+
+                stories = [initialStory];
+                likes = {};
+                favorites = [];
+
+                saveData(false);
+            }
         }
 
-        function saveState() {
+        function saveData(showErrorToast = true) {
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(stories));
-                localStorage.setItem(LIKES_KEY, JSON.stringify(likes));
-                localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-            } catch {
-                showToast("تعذر حفظ البيانات محلياً.", "danger");
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify(stories)
+                );
+
+                localStorage.setItem(
+                    LIKES_KEY,
+                    JSON.stringify(likes)
+                );
+
+                localStorage.setItem(
+                    FAVORITES_KEY,
+                    JSON.stringify(favorites)
+                );
+            } catch (error) {
+                console.error(error);
+
+                if (showErrorToast) {
+                    showToast(
+                        "تعذر حفظ البيانات في المتصفح.",
+                        "danger"
+                    );
+                }
             }
 
             updateStats();
         }
 
-        function loadState() {
-            try {
-                const savedStories = localStorage.getItem(STORAGE_KEY);
-
-                if (savedStories) {
-                    const parsed = JSON.parse(savedStories);
-                    stories = Array.isArray(parsed) ? parsed : [...defaultStories];
-                } else {
-                    stories = [...defaultStories];
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(stories));
-                }
-
-                likes = JSON.parse(localStorage.getItem(LIKES_KEY) || "{}") || {};
-                favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]") || [];
-            } catch {
-                stories = [...defaultStories];
-                likes = {};
-                favorites = [];
-                showToast("تم تحميل نسخة آمنة من البيانات.", "warning");
-            }
-        }
-
-        function escapeText(value) {
-            return String(value ?? "");
-        }
+        /* =========================================================
+           Helpers
+        ========================================================== */
 
         function calculateReadTime(text) {
-            const count = String(text || "")
-                .trim()
-                .split(/\s+/)
-                .filter(Boolean)
-                .length;
+            const words =
+                String(text || "")
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .length;
 
-            return Math.max(1, Math.ceil(count / 150));
+            return Math.max(1, Math.ceil(words / 150));
         }
 
-        function groupByTitle(list) {
-            return list.reduce((groups, story) => {
-                const key = story.title || "بدون عنوان";
-                if (!groups[key]) groups[key] = [];
-                groups[key].push(story);
+        function groupStoriesByTitle(storyList) {
+            return storyList.reduce((groups, story) => {
+
+                const title =
+                    story.title || "بدون عنوان";
+
+                if (!groups[title]) {
+                    groups[title] = [];
+                }
+
+                groups[title].push(story);
+
                 return groups;
+
             }, {});
         }
 
         function showToast(message, type = "") {
-            const container = document.getElementById("toastContainer");
-            const toast = document.createElement("div");
 
-            toast.className = "toast" + (type ? " " + type : "");
+            const container =
+                document.getElementById("toastContainer");
+
+            const toast =
+                document.createElement("div");
+
+            toast.className =
+                "toast" + (type ? " " + type : "");
+
             toast.textContent = message;
 
             container.appendChild(toast);
@@ -1124,461 +1342,945 @@
         }
 
         /* =========================================================
-           العرض
-        ========================================================= */
+           Render Stories
+        ========================================================== */
 
         function renderStories() {
-            const container = document.getElementById("storiesContainer");
 
-            const query = currentSearch.trim().toLowerCase();
-            const author = activeAuthor.trim().toLowerCase();
-
-            const filtered = stories.filter(story => {
-                const matchesAuthor =
-                    !author ||
-                    String(story.author || "").toLowerCase() === author;
-
-                const searchable = [
-                    story.title,
-                    story.author,
-                    story.part,
-                    story.content
-                ]
-                    .map(value => String(value || "").toLowerCase())
-                    .join(" ");
-
-                const matchesSearch =
-                    !query || searchable.includes(query);
-
-                return matchesAuthor && matchesSearch;
-            });
+            const container =
+                document.getElementById("storiesContainer");
 
             container.innerHTML = "";
 
+            const query =
+                searchQuery
+                    .trim()
+                    .toLowerCase();
+
+            const author =
+                selectedAuthor
+                    .trim()
+                    .toLowerCase();
+
+            let filtered =
+                stories.filter(story => {
+
+                    const storyAuthor =
+                        String(story.author || "")
+                            .toLowerCase();
+
+                    const matchesAuthor =
+                        !author ||
+                        storyAuthor === author;
+
+                    const searchable =
+                        [
+                            story.title,
+                            story.author,
+                            story.part,
+                            story.content
+                        ]
+                            .map(
+                                value =>
+                                    String(value || "")
+                                        .toLowerCase()
+                            )
+                            .join(" ");
+
+                    const matchesSearch =
+                        !query ||
+                        searchable.includes(query);
+
+                    return (
+                        matchesAuthor &&
+                        matchesSearch
+                    );
+                });
+
             if (!filtered.length) {
+
                 container.innerHTML = `
-                    <div class="empty">
-                        <div style="font-size:2rem;margin-bottom:8px;">📭</div>
-                        لا توجد قصص مطابقة للبحث الحالي.
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        لم يتم العثور على أي قصص مطابقة.
                     </div>
                 `;
+
                 return;
             }
 
-            const grouped = groupByTitle(filtered);
-            const currentToken = getUserToken();
+            const grouped =
+                groupStoriesByTitle(filtered);
+
+            const currentToken =
+                getCurrentUserToken();
 
             Object.values(grouped).forEach(bundle => {
+
+                bundle.sort(
+                    (a, b) =>
+                        Number(a.createdAt || 0) -
+                        Number(b.createdAt || 0)
+                );
+
                 const first = bundle[0];
 
-                const bundleEl = document.createElement("section");
-                bundleEl.className = "story-bundle";
+                const bundleBox =
+                    document.createElement("section");
 
-                const header = document.createElement("div");
-                header.className = "bundle-header";
+                bundleBox.className =
+                    "story-bundle-box";
 
-                const cover = document.createElement("img");
-                cover.className = "cover";
-                cover.alt = "غلاف القصة";
+                /* ---------- Header ---------- */
+
+                const bundleHeader =
+                    document.createElement("div");
+
+                bundleHeader.className =
+                    "bundle-header";
 
                 if (first.cover) {
-                    cover.src = first.cover;
-                    cover.onerror = () => {
-                        cover.removeAttribute("src");
-                        cover.classList.add("hidden");
-                        header.prepend(createFallbackCover());
+
+                    const img =
+                        document.createElement("img");
+
+                    img.className =
+                        "bundle-cover";
+
+                    img.alt = "غلاف القصة";
+
+                    img.src = first.cover;
+
+                    img.onerror = () => {
+
+                        img.remove();
+
+                        const fallback =
+                            createFallbackCover();
+
+                        bundleHeader.prepend(
+                            fallback
+                        );
                     };
+
+                    bundleHeader.appendChild(img);
+
                 } else {
-                    cover.replaceWith(createFallbackCover());
+
+                    bundleHeader.appendChild(
+                        createFallbackCover()
+                    );
                 }
 
-                const info = document.createElement("div");
+                const info =
+                    document.createElement("div");
 
-                const title = document.createElement("h2");
-                title.className = "bundle-title";
-                title.textContent = first.title;
+                const title =
+                    document.createElement("h2");
 
-                const meta = document.createElement("div");
-                meta.className = "meta-line";
+                title.className =
+                    "bundle-title";
+
+                title.textContent =
+                    first.title;
+
+                const meta =
+                    document.createElement("div");
+
+                meta.className =
+                    "bundle-meta";
+
                 meta.textContent =
-                    "👤 الكاتب: " + (first.author || "غير معروف") +
-                    " • 📚 " + bundle.length + " فصل";
+                    "👤 الكاتب: " +
+                    (first.author || "غير محدد") +
+                    " • 📚 " +
+                    bundle.length +
+                    " فصل";
 
                 info.appendChild(title);
                 info.appendChild(meta);
 
-                header.appendChild(cover);
-                header.appendChild(info);
-                bundleEl.appendChild(header);
+                bundleHeader.appendChild(info);
 
-                bundle
-                    .sort((a, b) => Number(a.createdAt || 0) - Number(b.createdAt || 0))
-                    .forEach(story => {
-                        bundleEl.appendChild(
-                            createStoryCard(story, currentToken)
+                bundleBox.appendChild(
+                    bundleHeader
+                );
+
+                /* ---------- Chapters ---------- */
+
+                bundle.forEach(story => {
+
+                    const card =
+                        createStoryCard(
+                            story,
+                            currentToken
                         );
-                    });
 
-                container.appendChild(bundleEl);
+                    bundleBox.appendChild(card);
+                });
+
+                container.appendChild(
+                    bundleBox
+                );
             });
         }
 
         function createFallbackCover() {
-            const div = document.createElement("div");
 
-            div.style.width = "90px";
-            div.style.height = "120px";
-            div.style.borderRadius = "12px";
-            div.style.display = "grid";
-            div.style.placeItems = "center";
-            div.style.fontSize = "2rem";
-            div.style.background =
-                "linear-gradient(135deg, var(--accent), var(--accent-2))";
+            const cover =
+                document.createElement("div");
 
-            div.textContent = "📖";
+            cover.className =
+                "fallback-cover";
 
-            return div;
+            cover.textContent = "📖";
+
+            return cover;
         }
 
-        function createStoryCard(story, currentToken) {
-            const card = document.createElement("article");
-            card.className = "story-card";
-            card.id = "story-card-" + story.id;
+        /* =========================================================
+           Story Card
+        ========================================================== */
 
-            const head = document.createElement("div");
-            head.className = "story-head";
+        function createStoryCard(
+            story,
+            currentToken
+        ) {
 
-            const part = document.createElement("div");
-            part.className = "part-title";
-            part.textContent = story.part || "فصل";
+            const card =
+                document.createElement("article");
+
+            card.className =
+                "story-card";
+
+            card.id =
+                "story-card-" + story.id;
+
+            /* ---------- Head ---------- */
+
+            const head =
+                document.createElement("h3");
+
+            const part =
+                document.createElement("span");
+
+            part.textContent =
+                story.part || "الفصل";
 
             head.appendChild(part);
 
-            if (story.ownerToken === currentToken) {
-                const deleteBtn = document.createElement("button");
-                deleteBtn.className = "delete-btn";
-                deleteBtn.textContent = "حذف الفصل";
+            if (
+                story.ownerToken ===
+                currentToken
+            ) {
 
-                deleteBtn.addEventListener("click", () => {
-                    deleteStory(story.id);
-                });
+                const deleteBtn =
+                    document.createElement("button");
 
-                head.appendChild(deleteBtn);
+                deleteBtn.className =
+                    "btn-delete-card";
+
+                deleteBtn.type = "button";
+
+                deleteBtn.textContent =
+                    "حذف الفصل";
+
+                deleteBtn.addEventListener(
+                    "click",
+                    () => deleteStory(story.id)
+                );
+
+                head.appendChild(
+                    deleteBtn
+                );
             }
 
             card.appendChild(head);
 
-            const meta = document.createElement("div");
-            meta.className = "story-meta";
+            /* ---------- Meta ---------- */
 
-            const timeBadge = document.createElement("span");
-            timeBadge.className = "badge";
+            const meta =
+                document.createElement("div");
+
+            meta.className =
+                "story-meta";
+
+            const timeBadge =
+                document.createElement("span");
+
+            timeBadge.className =
+                "badge";
+
             timeBadge.textContent =
-                "⏱️ " + calculateReadTime(story.content) + " دقيقة قراءة";
+                "⏱️ " +
+                calculateReadTime(
+                    story.content
+                ) +
+                " دقائق قراءة";
 
-            meta.appendChild(timeBadge);
+            meta.appendChild(
+                timeBadge
+            );
 
-            const authorBadge = document.createElement("span");
-            authorBadge.className = "badge";
-            authorBadge.textContent = "👤 " + (story.author || "غير معروف");
+            const authorBadge =
+                document.createElement("span");
 
-            meta.appendChild(authorBadge);
+            authorBadge.className =
+                "badge";
+
+            authorBadge.textContent =
+                "👤 " +
+                (story.author || "غير محدد");
+
+            meta.appendChild(
+                authorBadge
+            );
 
             card.appendChild(meta);
 
-            const toolbar = document.createElement("div");
-            toolbar.className = "reading-toolbar";
+            /* ---------- Toolbar ---------- */
+
+            const toolbar =
+                document.createElement("div");
+
+            toolbar.className =
+                "reading-toolbar";
 
             toolbar.appendChild(
-                makeTool("A+", () => changeFontSize(story.id, 2))
+                createToolButton(
+                    "A+",
+                    () =>
+                        changeFontSize(
+                            story.id,
+                            2
+                        )
+                )
             );
 
             toolbar.appendChild(
-                makeTool("A−", () => changeFontSize(story.id, -2))
+                createToolButton(
+                    "A-",
+                    () =>
+                        changeFontSize(
+                            story.id,
+                            -2
+                        )
+                )
             );
 
             toolbar.appendChild(
-                makeTool("👁️ وضع التركيز", toggleFocusMode)
+                createToolButton(
+                    "👁️ وضع التركيز",
+                    toggleFocusMode
+                )
             );
 
             toolbar.appendChild(
-                makeTool("🔖 حفظ موضع القراءة", () => {
-                    saveBookmark(story.id, story.title, story.part);
-                })
+                createToolButton(
+                    "🔖 حفظ نقطة التوقف",
+                    () =>
+                        saveBookmark(
+                            story.id,
+                            story.title,
+                            story.part
+                        )
+                )
             );
 
-            card.appendChild(toolbar);
+            card.appendChild(
+                toolbar
+            );
 
-            const storyText = document.createElement("div");
-            storyText.className = "story-text";
-            storyText.id = "text-" + story.id;
-            storyText.textContent = story.content;
+            /* ---------- Text ---------- */
 
-            card.appendChild(storyText);
+            const text =
+                document.createElement("div");
 
-            const actionsBar = document.createElement("div");
-            actionsBar.className = "actions-bar";
+            text.className =
+                "story-text";
 
-            const left = document.createElement("div");
-            left.className = "actions-left";
+            text.id =
+                "text-" + story.id;
 
-            const liked = Boolean(likes[story.id]);
-            const faved = favorites.includes(story.id);
+            /*
+             * textContent يحافظ على النص كنص عادي
+             * ويمنع تحويل محتوى القصة إلى HTML.
+             */
+            text.textContent =
+                story.content;
 
-            const likeBtn = document.createElement("button");
-            likeBtn.className = "action" + (liked ? " liked" : "");
-            likeBtn.textContent = liked ? "❤️ أعجبني" : "🤍 إعجاب";
+            card.appendChild(text);
 
-            likeBtn.addEventListener("click", () => {
-                toggleLike(story.id);
-            });
+            /* ---------- Actions ---------- */
 
-            const favoriteBtn = document.createElement("button");
-            favoriteBtn.className = "action" + (faved ? " faved" : "");
-            favoriteBtn.textContent = faved ? "⭐ محفوظة" : "☆ حفظ";
+            const actions =
+                document.createElement("div");
 
-            favoriteBtn.addEventListener("click", () => {
-                toggleFavorite(story.id);
-            });
+            actions.className =
+                "actions-bar";
 
-            left.appendChild(likeBtn);
-            left.appendChild(favoriteBtn);
+            const interactionGroup =
+                document.createElement("div");
 
-            const shareBtn = document.createElement("button");
-            shareBtn.className = "action";
-            shareBtn.textContent = "🔗 مشاركة";
+            interactionGroup.className =
+                "interaction-group";
 
-            shareBtn.addEventListener("click", () => {
-                shareStory(story);
-            });
+            const liked =
+                Boolean(
+                    likes[story.id]
+                );
 
-            actionsBar.appendChild(left);
-            actionsBar.appendChild(shareBtn);
+            const faved =
+                favorites.includes(
+                    story.id
+                );
 
-            card.appendChild(actionsBar);
+            const likeBtn =
+                document.createElement("button");
+
+            likeBtn.type = "button";
+
+            likeBtn.className =
+                "action-btn" +
+                (liked ? " liked" : "");
+
+            likeBtn.textContent =
+                liked
+                    ? "❤️ أعجبني"
+                    : "🤍 إعجاب";
+
+            likeBtn.addEventListener(
+                "click",
+                () =>
+                    toggleLike(
+                        story.id
+                    )
+            );
+
+            const favBtn =
+                document.createElement("button");
+
+            favBtn.type = "button";
+
+            favBtn.className =
+                "action-btn" +
+                (faved ? " faved" : "");
+
+            favBtn.textContent =
+                faved
+                    ? "⭐ محفوظة"
+                    : "☆ حفظ";
+
+            favBtn.addEventListener(
+                "click",
+                () =>
+                    toggleFavorite(
+                        story.id
+                    )
+            );
+
+            interactionGroup.appendChild(
+                likeBtn
+            );
+
+            interactionGroup.appendChild(
+                favBtn
+            );
+
+            const shareBtn =
+                document.createElement("button");
+
+            shareBtn.type = "button";
+
+            shareBtn.className =
+                "action-btn";
+
+            shareBtn.textContent =
+                "🔗 مشاركة";
+
+            shareBtn.addEventListener(
+                "click",
+                () =>
+                    shareStory(story)
+            );
+
+            actions.appendChild(
+                interactionGroup
+            );
+
+            actions.appendChild(
+                shareBtn
+            );
+
+            card.appendChild(actions);
 
             return card;
         }
 
-        function makeTool(text, callback) {
-            const btn = document.createElement("button");
-            btn.className = "tool";
+        function createToolButton(
+            text,
+            callback
+        ) {
+
+            const btn =
+                document.createElement("button");
+
             btn.type = "button";
-            btn.textContent = text;
-            btn.addEventListener("click", callback);
+
+            btn.className =
+                "tool-btn";
+
+            btn.textContent =
+                text;
+
+            btn.addEventListener(
+                "click",
+                callback
+            );
+
             return btn;
         }
 
         /* =========================================================
-           النشر
-        ========================================================= */
+           Publish
+        ========================================================== */
 
-        function publishStory(event) {
+        function handlePublish(event) {
+
             event.preventDefault();
 
-            const title = document.getElementById("storyTitle").value.trim();
-            const author = document.getElementById("authorName").value.trim();
-            const part = document.getElementById("storyPart").value.trim();
-            const cover = document.getElementById("coverUrl").value.trim();
-            const content = document.getElementById("storyContent").value.trim();
+            const title =
+                document
+                    .getElementById("storyTitle")
+                    .value
+                    .trim();
 
-            if (!title || !author || !part || !content) {
-                showToast("يرجى تعبئة الحقول المطلوبة.", "danger");
+            const author =
+                document
+                    .getElementById("authorName")
+                    .value
+                    .trim();
+
+            const part =
+                document
+                    .getElementById("storyPartNumber")
+                    .value
+                    .trim();
+
+            const cover =
+                document
+                    .getElementById("coverUrl")
+                    .value
+                    .trim();
+
+            const content =
+                document
+                    .getElementById("storyContent")
+                    .value
+                    .trim();
+
+            if (
+                !title ||
+                !author ||
+                !part ||
+                !content
+            ) {
+
+                showToast(
+                    "يرجى تعبئة جميع الحقول المطلوبة.",
+                    "danger"
+                );
+
                 return;
             }
 
             const newStory = {
-                id: "story_" + Date.now() + "_" + cryptoRandom().slice(0, 8),
+
+                id:
+                    "story_" +
+                    Date.now() +
+                    "_" +
+                    Math.random()
+                        .toString(36)
+                        .slice(2, 8),
+
                 title,
                 author,
                 part,
                 cover,
                 content,
-                ownerToken: getUserToken(),
-                createdAt: Date.now()
+
+                ownerToken:
+                    getCurrentUserToken(),
+
+                createdAt:
+                    Date.now()
             };
 
-            stories.push(newStory);
-            saveState();
+            stories.push(
+                newStory
+            );
 
-            document.getElementById("storyForm").reset();
-            document.getElementById("storyTitle").value = "رحلة نحو معرفة الذات";
+            saveData();
+
+            document
+                .getElementById("storyForm")
+                .reset();
 
             renderAll();
-            showToast("تم نشر الفصل بنجاح! ✅", "success");
+
+            showToast(
+                "تم نشر الفصل بنجاح! ✅",
+                "success"
+            );
         }
 
+        /* =========================================================
+           Delete
+        ========================================================== */
+
         function deleteStory(id) {
-            const story = stories.find(item => item.id === id);
 
-            if (!story) return;
+            const story =
+                stories.find(
+                    item =>
+                        item.id === id
+                );
 
-            if (story.ownerToken !== getUserToken()) {
-                showToast("لا يمكنك حذف هذا الفصل.", "danger");
+            if (!story) {
                 return;
             }
 
-            const confirmed = confirm("هل أنت متأكد من حذف هذا الفصل؟");
+            if (
+                story.ownerToken !==
+                getCurrentUserToken()
+            ) {
 
-            if (!confirmed) return;
+                showToast(
+                    "لا يمكنك حذف هذا الفصل.",
+                    "danger"
+                );
 
-            stories = stories.filter(item => item.id !== id);
+                return;
+            }
+
+            const confirmed =
+                confirm(
+                    "هل أنت متأكد من حذف هذا الفصل؟"
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+            stories =
+                stories.filter(
+                    item =>
+                        item.id !== id
+                );
 
             delete likes[id];
-            favorites = favorites.filter(item => item !== id);
 
-            saveState();
+            favorites =
+                favorites.filter(
+                    item =>
+                        item !== id
+                );
+
+            saveData();
             renderAll();
 
-            showToast("تم حذف الفصل.", "danger");
+            showToast(
+                "تم حذف الفصل.",
+                "danger"
+            );
         }
 
         /* =========================================================
-           الإعجاب والمفضلة والمشاركة
-        ========================================================= */
+           Like
+        ========================================================== */
 
         function toggleLike(id) {
-            likes[id] = !likes[id];
-            saveState();
+
+            likes[id] =
+                !likes[id];
+
+            saveData();
             renderAll();
         }
+
+        /* =========================================================
+           Favorites
+        ========================================================== */
 
         function toggleFavorite(id) {
-            const index = favorites.indexOf(id);
 
-            if (index >= 0) {
-                favorites.splice(index, 1);
-                showToast("تمت إزالة الفصل من المفضلة.");
+            const index =
+                favorites.indexOf(id);
+
+            if (index !== -1) {
+
+                favorites.splice(
+                    index,
+                    1
+                );
+
+                showToast(
+                    "تمت إزالة الفصل من المفضلة."
+                );
+
             } else {
+
                 favorites.push(id);
-                showToast("تم حفظ الفصل في المفضلة ⭐", "success");
+
+                showToast(
+                    "تم حفظ الفصل في المفضلة ⭐",
+                    "success"
+                );
             }
 
-            saveState();
+            saveData();
             renderAll();
         }
 
-        async function shareStory(story) {
-            const shareData = {
-                title: story.title + " — " + story.part,
-                text: "قراءة: " + story.title + " — " + story.part,
-                url: window.location.href.split("#")[0] + "#" + story.id
-            };
+        /* =========================================================
+           Share
+        ========================================================== */
+
+        async function shareStory(
+            story
+        ) {
+
+            const url =
+                window.location.href
+                    .split("#")[0] +
+                "#" +
+                story.id;
 
             try {
-                if (navigator.share) {
-                    await navigator.share(shareData);
+
+                if (
+                    navigator.share
+                ) {
+
+                    await navigator.share({
+                        title:
+                            story.title +
+                            " - " +
+                            story.part,
+
+                        text:
+                            "قراءة قصة " +
+                            story.title +
+                            " - " +
+                            story.part,
+
+                        url
+                    });
+
                     return;
                 }
 
-                await navigator.clipboard.writeText(
-                    window.location.href.split("#")[0] + "#" + story.id
+                if (
+                    navigator.clipboard
+                ) {
+
+                    await navigator.clipboard.writeText(
+                        url
+                    );
+
+                    showToast(
+                        "تم نسخ رابط القصة! 🔗",
+                        "success"
+                    );
+
+                    return;
+                }
+
+                prompt(
+                    "انسخ الرابط:",
+                    url
                 );
 
-                showToast("تم نسخ رابط القصة. 🔗", "success");
-            } catch {
-                showToast("تعذر مشاركة القصة حالياً.", "warning");
+            } catch (error) {
+
+                if (
+                    error &&
+                    error.name ===
+                        "AbortError"
+                ) {
+
+                    return;
+                }
+
+                showToast(
+                    "تعذر مشاركة القصة.",
+                    "warning"
+                );
             }
         }
 
         /* =========================================================
-           وضع القراءة
-        ========================================================= */
+           Font Size
+        ========================================================== */
 
-        function changeFontSize(storyId, delta) {
-            const element = document.getElementById("text-" + storyId);
+        function changeFontSize(
+            storyId,
+            delta
+        ) {
 
-            if (!element) return;
+            const element =
+                document.getElementById(
+                    "text-" + storyId
+                );
 
-            const current = parseFloat(
-                getComputedStyle(element).fontSize
-            ) || 16;
+            if (!element) {
+                return;
+            }
 
-            const next = Math.min(
-                32,
-                Math.max(14, current + delta)
-            );
+            const current =
+                parseFloat(
+                    getComputedStyle(
+                        element
+                    ).fontSize
+                ) || 16;
 
-            element.style.fontSize = next + "px";
-        }
+            const next =
+                Math.max(
+                    14,
+                    Math.min(
+                        32,
+                        current + delta
+                    )
+                );
 
-        function toggleFocusMode() {
-            document.body.classList.toggle("focus-mode");
+            element.style.fontSize =
+                next + "px";
         }
 
         /* =========================================================
-           حفظ موضع القراءة
-        ========================================================= */
+           Focus Mode
+        ========================================================== */
 
-        function saveBookmark(id, title, part) {
-            const card = document.getElementById("story-card-" + id);
+        function toggleFocusMode() {
+
+            document.body.classList.toggle(
+                "focus-mode"
+            );
+        }
+
+        /* =========================================================
+           Bookmark
+        ========================================================== */
+
+        function saveBookmark(
+            id,
+            title,
+            part
+        ) {
 
             const bookmark = {
                 id,
                 title,
                 part,
-                scroll:
-                    card
-                        ? Math.max(
-                            0,
-                            window.scrollY -
-                            card.getBoundingClientRect().top -
-                            window.scrollY
-                        )
-                        : 0,
-                time: Date.now()
+                savedAt: Date.now()
             };
 
             localStorage.setItem(
                 BOOKMARK_KEY,
-                JSON.stringify(bookmark)
+                JSON.stringify(
+                    bookmark
+                )
             );
 
-            updateResumeBox();
-            showToast("تم حفظ موضع القراءة. 🔖", "success");
+            updateResumeReading();
+
+            showToast(
+                "تم حفظ موضع القراءة 🔖",
+                "success"
+            );
         }
 
-        function updateResumeBox() {
-            const box = document.getElementById("resumeBox");
-            const text = document.getElementById("resumeText");
-            const btn = document.getElementById("resumeBtn");
+        function updateResumeReading() {
 
-            const raw = localStorage.getItem(BOOKMARK_KEY);
+            const box =
+                document.getElementById(
+                    "resumeReadingBox"
+                );
+
+            const text =
+                document.getElementById(
+                    "resumeStoryText"
+                );
+
+            const btn =
+                document.getElementById(
+                    "resumeStoryBtn"
+                );
+
+            const raw =
+                localStorage.getItem(
+                    BOOKMARK_KEY
+                );
 
             if (!raw) {
-                box.classList.remove("active");
+
+                box.classList.remove(
+                    "active"
+                );
+
                 return;
             }
 
-            let bookmark;
+            let data;
 
             try {
-                bookmark = JSON.parse(raw);
+                data =
+                    JSON.parse(raw);
             } catch {
-                box.classList.remove("active");
+
+                box.classList.remove(
+                    "active"
+                );
+
                 return;
             }
 
-            if (!bookmark || !bookmark.id) {
-                box.classList.remove("active");
+            if (!data || !data.id) {
+
+                box.classList.remove(
+                    "active"
+                );
+
                 return;
             }
 
             text.textContent =
                 "توقفت عند: " +
-                (bookmark.title || "قصة") +
-                " — " +
-                (bookmark.part || "فصل");
+                (data.title || "قصة") +
+                " (" +
+                (data.part || "فصل") +
+                ")";
 
-            box.classList.add("active");
+            box.classList.add(
+                "active"
+            );
 
             btn.onclick = () => {
-                const target = document.getElementById(
-                    "story-card-" + bookmark.id
-                );
+
+                const target =
+                    document.getElementById(
+                        "story-card-" +
+                        data.id
+                    );
 
                 if (!target) {
-                    showToast("الفصل المحفوظ غير موجود.", "danger");
+
+                    showToast(
+                        "لم يتم العثور على الفصل المحفوظ.",
+                        "danger"
+                    );
+
                     return;
                 }
 
@@ -1590,416 +2292,778 @@
         }
 
         /* =========================================================
-           البحث والكتاب
-        ========================================================= */
+           Author Search
+        ========================================================== */
 
-        function renderAuthorResults() {
-            const container = document.getElementById("authorResults");
-            const query =
-                document.getElementById("authorInput").value
-                    .trim()
-                    .toLowerCase();
+        function renderAuthorFolder(
+            query = ""
+        ) {
+
+            const container =
+                document.getElementById(
+                    "authorFolderList"
+                );
 
             container.innerHTML = "";
+
+            query =
+                query
+                    .trim()
+                    .toLowerCase();
 
             if (!query) {
                 return;
             }
 
-            const authors = [
-                ...new Set(
-                    stories
-                        .map(story => String(story.author || "").trim())
-                        .filter(Boolean)
-                )
-            ].filter(author =>
-                author.toLowerCase().includes(query)
-            );
+            const authors =
+                [
+                    ...new Set(
+                        stories
+                            .map(
+                                story =>
+                                    String(
+                                        story.author || ""
+                                    ).trim()
+                            )
+                            .filter(Boolean)
+                    )
+                ].filter(
+                    author =>
+                        author
+                            .toLowerCase()
+                            .includes(query)
+                );
 
             if (!authors.length) {
-                const empty = document.createElement("div");
-                empty.style.color = "var(--muted)";
-                empty.style.fontSize = ".82rem";
-                empty.style.padding = "8px";
-                empty.textContent = "لم يتم العثور على الكاتب.";
-                container.appendChild(empty);
+
+                const empty =
+                    document.createElement(
+                        "div"
+                    );
+
+                empty.className =
+                    "author-empty";
+
+                empty.textContent =
+                    "لم يتم العثور على الكاتب.";
+
+                container.appendChild(
+                    empty
+                );
+
                 return;
             }
 
-            authors.forEach(author => {
-                const item = document.createElement("div");
-                item.className = "author-item";
+            authors.forEach(
+                author => {
 
-                const name = document.createElement("span");
-                name.textContent = "👤 " + author;
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
 
-                const count = document.createElement("strong");
-                count.textContent =
-                    stories.filter(s => s.author === author).length +
-                    " فصل";
+                    item.className =
+                        "author-item";
 
-                item.appendChild(name);
-                item.appendChild(count);
+                    const name =
+                        document.createElement(
+                            "span"
+                        );
 
-                item.addEventListener("click", () => {
-                    activeAuthor = author;
-                    renderAll();
-                    showToast("تم عرض أعمال " + author);
-                });
+                    name.textContent =
+                        "👤 " + author;
 
-                container.appendChild(item);
-            });
+                    const count =
+                        document.createElement(
+                            "strong"
+                        );
+
+                    count.textContent =
+                        stories.filter(
+                            story =>
+                                story.author ===
+                                author
+                        ).length +
+                        " فصل";
+
+                    item.appendChild(
+                        name
+                    );
+
+                    item.appendChild(
+                        count
+                    );
+
+                    item.addEventListener(
+                        "click",
+                        () => {
+
+                            selectedAuthor =
+                                author;
+
+                            renderAll();
+
+                            showToast(
+                                "تم عرض أعمال " +
+                                author
+                            );
+                        }
+                    );
+
+                    container.appendChild(
+                        item
+                    );
+                }
+            );
         }
 
-        function resetFilters() {
-            currentSearch = "";
-            activeAuthor = "";
+        /* =========================================================
+           Stats
+        ========================================================== */
 
-            document.getElementById("searchInput").value = "";
-            document.getElementById("authorInput").value = "";
+        function updateStats() {
+
+            document.getElementById(
+                "statTotalStories"
+            ).textContent =
+                stories.length;
+
+            document.getElementById(
+                "statTotalAuthors"
+            ).textContent =
+                new Set(
+                    stories
+                        .map(
+                            story =>
+                                story.author
+                        )
+                        .filter(Boolean)
+                ).size;
+
+            document.getElementById(
+                "statTotalFavorites"
+            ).textContent =
+                favorites.length;
+
+            document.getElementById(
+                "statTotalLikes"
+            ).textContent =
+                Object.values(
+                    likes
+                ).filter(Boolean).length;
+        }
+
+        /* =========================================================
+           Reset Filters
+        ========================================================== */
+
+        function resetFilters() {
+
+            searchQuery = "";
+            selectedAuthor = "";
+
+            document.getElementById(
+                "globalSearchInput"
+            ).value = "";
+
+            document.getElementById(
+                "folderSearchInput"
+            ).value = "";
 
             renderAll();
         }
 
         /* =========================================================
-           الإحصائيات
-        ========================================================= */
-
-        function updateStats() {
-            document.getElementById("totalStories").textContent =
-                stories.length;
-
-            document.getElementById("totalAuthors").textContent =
-                new Set(
-                    stories.map(story => story.author).filter(Boolean)
-                ).size;
-
-            document.getElementById("totalFavorites").textContent =
-                favorites.length;
-
-            document.getElementById("totalLikes").textContent =
-                Object.values(likes).filter(Boolean).length;
-        }
-
-        /* =========================================================
-           النسخ الاحتياطي
-        ========================================================= */
-
-        function exportData() {
-            const data = {
-                version: 2,
-                exportedAt: new Date().toISOString(),
-                stories,
-                likes,
-                favorites
-            };
-
-            const blob = new Blob(
-                [JSON.stringify(data, null, 2)],
-                { type: "application/json;charset=utf-8" }
-            );
-
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-
-            link.href = url;
-            link.download =
-                "hikaya_backup_" +
-                new Date().toISOString().replace(/[:.]/g, "-") +
-                ".json";
-
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-
-            showToast("تم تصدير النسخة الاحتياطية. 💾", "success");
-        }
-
-        function importData(file) {
-            if (!file) return;
-
-            const reader = new FileReader();
-
-            reader.onload = event => {
-                try {
-                    const parsed = JSON.parse(event.target.result);
-
-                    if (
-                        !parsed ||
-                        typeof parsed !== "object" ||
-                        !Array.isArray(parsed.stories)
-                    ) {
-                        throw new Error("INVALID_BACKUP");
-                    }
-
-                    stories = parsed.stories
-                        .filter(story =>
-                            story &&
-                            typeof story === "object" &&
-                            story.id &&
-                            story.title &&
-                            story.content
-                        )
-                        .map(story => ({
-                            id: String(story.id),
-                            title: String(story.title),
-                            author: String(story.author || "غير معروف"),
-                            part: String(story.part || "فصل"),
-                            cover: String(story.cover || ""),
-                            content: String(story.content),
-                            ownerToken: String(story.ownerToken || "imported"),
-                            createdAt: Number(story.createdAt || Date.now())
-                        }));
-
-                    likes =
-                        parsed.likes &&
-                        typeof parsed.likes === "object"
-                            ? parsed.likes
-                            : {};
-
-                    favorites =
-                        Array.isArray(parsed.favorites)
-                            ? parsed.favorites
-                            : [];
-
-                    saveState();
-                    renderAll();
-                    closeBackupModal();
-
-                    showToast(
-                        "تمت استعادة البيانات بنجاح. ✅",
-                        "success"
-                    );
-                } catch {
-                    showToast(
-                        "ملف النسخة الاحتياطية غير صالح.",
-                        "danger"
-                    );
-                }
-            };
-
-            reader.readAsText(file, "utf-8");
-        }
-
-        /* =========================================================
-           المظهر
-        ========================================================= */
+           Theme
+        ========================================================== */
 
         function setupTheme() {
-            const saved =
-                localStorage.getItem(THEME_KEY) || "dark";
 
-            document.documentElement.dataset.theme = saved;
-            updateThemeButton(saved);
+            const savedTheme =
+                localStorage.getItem(
+                    THEME_KEY
+                ) || "dark";
+
+            document.documentElement
+                .setAttribute(
+                    "data-theme",
+                    savedTheme
+                );
+
+            updateThemeButton(
+                savedTheme
+            );
         }
 
         function toggleTheme() {
+
             const current =
-                document.documentElement.dataset.theme;
+                document.documentElement
+                    .getAttribute(
+                        "data-theme"
+                    );
 
             const next =
-                current === "light" ? "dark" : "light";
+                current === "light"
+                    ? "dark"
+                    : "light";
 
-            document.documentElement.dataset.theme = next;
-            localStorage.setItem(THEME_KEY, next);
+            document.documentElement
+                .setAttribute(
+                    "data-theme",
+                    next
+                );
 
-            updateThemeButton(next);
+            localStorage.setItem(
+                THEME_KEY,
+                next
+            );
+
+            updateThemeButton(
+                next
+            );
         }
 
-        function updateThemeButton(theme) {
-            document.getElementById("themeBtn").textContent =
+        function updateThemeButton(
+            theme
+        ) {
+
+            document.getElementById(
+                "themeToggleBtn"
+            ).textContent =
                 theme === "light"
                     ? "🌙 الوضع الداكن"
                     : "☀️ الوضع الفاتح";
         }
 
         /* =========================================================
-           شريط تقدم القراءة
-        ========================================================= */
+           Progress Bar
+        ========================================================== */
 
-        function updateProgress() {
-            const scrollTop = window.scrollY || 0;
-            const max =
-                document.documentElement.scrollHeight -
-                window.innerHeight;
+        function updateProgressBar() {
+
+            const scrollTop =
+                window.scrollY || 0;
+
+            const height =
+                document.documentElement
+                    .scrollHeight -
+                document.documentElement
+                    .clientHeight;
 
             const percent =
-                max > 0
-                    ? Math.min(100, (scrollTop / max) * 100)
+                height > 0
+                    ? (scrollTop / height) *
+                      100
                     : 0;
 
-            document.getElementById("progressBar").style.width =
+            document.getElementById(
+                "readingProgressBar"
+            ).style.width =
                 percent + "%";
         }
 
         /* =========================================================
-           النسخ الاحتياطي — نافذة
-        ========================================================= */
+           Backup Modal
+        ========================================================== */
 
         function openBackupModal() {
-            document.getElementById("backupModal")
-                .classList.add("active");
+
+            document.getElementById(
+                "backupModal"
+            ).classList.add(
+                "active"
+            );
         }
 
         function closeBackupModal() {
-            document.getElementById("backupModal")
-                .classList.remove("active");
+
+            document.getElementById(
+                "backupModal"
+            ).classList.remove(
+                "active"
+            );
         }
 
         /* =========================================================
-           التصيير الكامل
-        ========================================================= */
+           Export
+        ========================================================== */
+
+        function exportData() {
+
+            const backup = {
+
+                version: 1,
+
+                exportedAt:
+                    new Date().toISOString(),
+
+                stories,
+
+                likes,
+
+                favorites
+            };
+
+            const blob =
+                new Blob(
+                    [
+                        JSON.stringify(
+                            backup,
+                            null,
+                            2
+                        )
+                    ],
+                    {
+                        type:
+                            "application/json;charset=utf-8"
+                    }
+                );
+
+            const url =
+                URL.createObjectURL(
+                    blob
+                );
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+            link.href = url;
+
+            link.download =
+                "hikaya_backup_" +
+                Date.now() +
+                ".json";
+
+            document.body.appendChild(
+                link
+            );
+
+            link.click();
+
+            link.remove();
+
+            setTimeout(
+                () =>
+                    URL.revokeObjectURL(
+                        url
+                    ),
+                1000
+            );
+
+            showToast(
+                "تم تصدير النسخة الاحتياطية ✅",
+                "success"
+            );
+        }
+
+        /* =========================================================
+           Import
+        ========================================================== */
+
+        function importData(
+            file
+        ) {
+
+            if (!file) {
+                return;
+            }
+
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                event => {
+
+                    try {
+
+                        const data =
+                            JSON.parse(
+                                event.target.result
+                            );
+
+                        /*
+                         * دعم:
+                         * 1. النسخ الاحتياطية الجديدة
+                         * 2. ملفات JSON القديمة التي تحتوي على Array مباشر
+                         */
+
+                        let importedStories;
+
+                        if (
+                            Array.isArray(
+                                data
+                            )
+                        ) {
+
+                            importedStories =
+                                data;
+
+                            likes = {};
+                            favorites = [];
+
+                        } else if (
+                            data &&
+                            Array.isArray(
+                                data.stories
+                            )
+                        ) {
+
+                            importedStories =
+                                data.stories;
+
+                            likes =
+                                data.likes &&
+                                typeof data.likes ===
+                                    "object"
+                                    ? data.likes
+                                    : {};
+
+                            favorites =
+                                Array.isArray(
+                                    data.favorites
+                                )
+                                    ? data.favorites
+                                    : [];
+
+                        } else {
+
+                            throw new Error(
+                                "INVALID_FILE"
+                            );
+                        }
+
+                        stories =
+                            importedStories
+                                .filter(
+                                    story =>
+                                        story &&
+                                        typeof story ===
+                                            "object" &&
+                                        story.id &&
+                                        story.title &&
+                                        story.content
+                                )
+                                .map(
+                                    story => ({
+                                        id:
+                                            String(
+                                                story.id
+                                            ),
+
+                                        title:
+                                            String(
+                                                story.title
+                                            ),
+
+                                        author:
+                                            String(
+                                                story.author ||
+                                                "غير محدد"
+                                            ),
+
+                                        part:
+                                            String(
+                                                story.part ||
+                                                "الفصل"
+                                            ),
+
+                                        cover:
+                                            String(
+                                                story.cover ||
+                                                ""
+                                            ),
+
+                                        ownerToken:
+                                            String(
+                                                story.ownerToken ||
+                                                "imported"
+                                            ),
+
+                                        content:
+                                            String(
+                                                story.content
+                                            ),
+
+                                        createdAt:
+                                            Number(
+                                                story.createdAt ||
+                                                Date.now()
+                                            )
+                                    })
+                                );
+
+                        saveData();
+                        renderAll();
+                        closeBackupModal();
+
+                        showToast(
+                            "تمت استعادة البيانات بنجاح ✅",
+                            "success"
+                        );
+
+                    } catch (error) {
+
+                        console.error(
+                            error
+                        );
+
+                        showToast(
+                            "ملف JSON غير صالح.",
+                            "danger"
+                        );
+                    }
+                };
+
+            reader.readAsText(
+                file,
+                "utf-8"
+            );
+        }
+
+        /* =========================================================
+           Render All
+        ========================================================== */
 
         function renderAll() {
+
             renderStories();
-            renderAuthorResults();
+
+            renderAuthorFolder(
+                document.getElementById(
+                    "folderSearchInput"
+                ).value
+            );
+
             updateStats();
-            updateResumeBox();
+
+            updateResumeReading();
         }
 
         /* =========================================================
-           الأحداث
-        ========================================================= */
+           Events
+        ========================================================== */
 
-        function setupEvents() {
+        function setupEventListeners() {
+
+            /* Form */
             document
-                .getElementById("storyForm")
-                .addEventListener("submit", publishStory);
+                .getElementById(
+                    "storyForm"
+                )
+                .addEventListener(
+                    "submit",
+                    handlePublish
+                );
 
+            /* Theme */
             document
-                .getElementById("themeBtn")
-                .addEventListener("click", toggleTheme);
+                .getElementById(
+                    "themeToggleBtn"
+                )
+                .addEventListener(
+                    "click",
+                    toggleTheme
+                );
 
+            /* Publish scroll */
             document
-                .getElementById("publishBtn")
-                .addEventListener("click", () => {
-                    document
-                        .getElementById("publishPanel")
-                        .scrollIntoView({
-                            behavior: "smooth",
-                            block: "start"
-                        });
+                .getElementById(
+                    "publishScrollBtn"
+                )
+                .addEventListener(
+                    "click",
+                    () => {
 
-                    setTimeout(() => {
                         document
-                            .getElementById("authorName")
-                            .focus();
-                    }, 500);
-                });
-
-            document
-                .getElementById("searchInput")
-                .addEventListener("input", event => {
-                    currentSearch = event.target.value;
-                    renderStories();
-                });
-
-            document
-                .getElementById("authorInput")
-                .addEventListener("input", () => {
-                    renderAuthorResults();
-                });
-
-            document
-                .getElementById("resetBtn")
-                .addEventListener("click", resetFilters);
-
-            document
-                .getElementById("backupBtn")
-                .addEventListener("click", openBackupModal);
-
-            document
-                .getElementById("closeBackupBtn")
-                .addEventListener("click", closeBackupModal);
-
-            document
-                .getElementById("exportBtn")
-                .addEventListener("click", exportData);
-
-            document
-                .getElementById("importBtn")
-                .addEventListener("click", () => {
-                    document
-                        .getElementById("importInput")
-                        .click();
-                });
-
-            document
-                .getElementById("importInput")
-                .addEventListener("change", event => {
-                    importData(event.target.files[0]);
-                    event.target.value = "";
-                });
-
-            document
-                .getElementById("backupModal")
-                .addEventListener("click", event => {
-                    if (event.target.id === "backupModal") {
-                        closeBackupModal();
+                            .getElementById(
+                                "publishPanel"
+                            )
+                            .scrollIntoView({
+                                behavior:
+                                    "smooth",
+                                block:
+                                    "start"
+                            });
                     }
-                });
+                );
 
-            document.addEventListener("keydown", event => {
-                if (event.key === "Escape") {
-                    closeBackupModal();
-                    document.body.classList.remove("focus-mode");
+            /* Search */
+            document
+                .getElementById(
+                    "globalSearchInput"
+                )
+                .addEventListener(
+                    "input",
+                    event => {
+
+                        searchQuery =
+                            event.target.value;
+
+                        renderStories();
+                    }
+                );
+
+            /* Author search */
+            document
+                .getElementById(
+                    "folderSearchInput"
+                )
+                .addEventListener(
+                    "input",
+                    event => {
+
+                        renderAuthorFolder(
+                            event.target.value
+                        );
+                    }
+                );
+
+            /* Reset */
+            document
+                .getElementById(
+                    "resetFiltersBtn"
+                )
+                .addEventListener(
+                    "click",
+                    resetFilters
+                );
+
+            /* Backup */
+            document
+                .getElementById(
+                    "backupBtn"
+                )
+                .addEventListener(
+                    "click",
+                    openBackupModal
+                );
+
+            document
+                .getElementById(
+                    "closeBackupBtn"
+                )
+                .addEventListener(
+                    "click",
+                    closeBackupModal
+                );
+
+            document
+                .getElementById(
+                    "exportDataBtn"
+                )
+                .addEventListener(
+                    "click",
+                    exportData
+                );
+
+            document
+                .getElementById(
+                    "importDataBtn"
+                )
+                .addEventListener(
+                    "click",
+                    () => {
+
+                        document
+                            .getElementById(
+                                "importFileInput"
+                            )
+                            .click();
+                    }
+                );
+
+            document
+                .getElementById(
+                    "importFileInput"
+                )
+                .addEventListener(
+                    "change",
+                    event => {
+
+                        importData(
+                            event.target
+                                .files[0]
+                        );
+
+                        event.target.value =
+                            "";
+                    }
+                );
+
+            /* Close modal */
+            document
+                .getElementById(
+                    "backupModal"
+                )
+                .addEventListener(
+                    "click",
+                    event => {
+
+                        if (
+                            event.target.id ===
+                            "backupModal"
+                        ) {
+                            closeBackupModal();
+                        }
+                    }
+                );
+
+            /* Escape */
+            document.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key ===
+                        "Escape"
+                    ) {
+
+                        closeBackupModal();
+
+                        document.body.classList.remove(
+                            "focus-mode"
+                        );
+                    }
                 }
-            });
+            );
 
-            window.addEventListener("scroll", updateProgress, {
-                passive: true
-            });
-
-            window.addEventListener("hashchange", () => {
-                const id = location.hash.replace("#", "");
-
-                if (!id) return;
-
-                const target =
-                    document.getElementById("story-card-" + id);
-
-                if (target) {
-                    setTimeout(() => {
-                        target.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start"
-                        });
-                    }, 250);
+            /* Scroll */
+            window.addEventListener(
+                "scroll",
+                updateProgressBar,
+                {
+                    passive: true
                 }
-            });
+            );
         }
 
         /* =========================================================
-           التشغيل
-        ========================================================= */
+           Start
+        ========================================================== */
 
-        function init() {
-            getUserToken();
-            loadState();
+        function initApp() {
+
+            getCurrentUserToken();
+
+            loadData();
+
             setupTheme();
-            setupEvents();
+
+            setupEventListeners();
+
             renderAll();
-            updateProgress();
 
-            if (location.hash) {
-                setTimeout(() => {
-                    const id = location.hash.slice(1);
-                    const target =
-                        document.getElementById("story-card-" + id);
-
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start"
-                        });
-                    }
-                }, 400);
-            }
+            updateProgressBar();
         }
 
-        document.addEventListener("DOMContentLoaded", init);
+        document.addEventListener(
+            "DOMContentLoaded",
+            initApp
+        );
     </script>
+
 </body>
 </html>
