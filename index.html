@@ -2,1288 +2,3153 @@
 <html lang="ar" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>حكاية — قراءة ونشر القصص</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>حكاية — منصة القراءة والقصص</title>
 
 <style>
 :root{
---bg:#0b1120;--panel:#111827;--panel2:#172033;--text:#f8fafc;
---muted:#94a3b8;--accent:#6366f1;--accent2:#818cf8;--border:#263247;
---danger:#ef4444;--ok:#10b981;--warning:#f59e0b;--shadow:0 12px 35px #0004
+    --bg:#0b1120;
+    --panel:#111827;
+    --panel2:#172033;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --border:#2b3952;
+    --accent:#6366f1;
+    --accent2:#8b5cf6;
+    --danger:#ef4444;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --shadow:0 15px 40px rgba(0,0,0,.22);
+    --radius:15px;
 }
-[data-theme="light"]{
---bg:#f1f5f9;--panel:#fff;--panel2:#f8fafc;--text:#0f172a;
---muted:#64748b;--accent:#4f46e5;--accent2:#6366f1;--border:#e2e8f0;
---shadow:0 12px 30px #0f172a12
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-margin:0;background:radial-gradient(circle at 15% 0,#6366f11a,transparent 35%),var(--bg);
-color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
-line-height:1.8
-}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
 
-#progress{
-position:fixed;top:0;right:0;height:4px;width:0;z-index:9999;
-background:linear-gradient(90deg,var(--accent),var(--accent2))
+[data-theme="light"]{
+    --bg:#f1f5f9;
+    --panel:#ffffff;
+    --panel2:#f8fafc;
+    --text:#0f172a;
+    --muted:#64748b;
+    --border:#d7e0eb;
+    --accent:#4f46e5;
+    --accent2:#7c3aed;
+    --shadow:0 15px 40px rgba(15,23,42,.10);
 }
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    color:var(--text);
+    background:
+        radial-gradient(circle at top right,#6366f118,transparent 32%),
+        var(--bg);
+    font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
+    line-height:1.8;
+    transition:.25s;
+}
+
+button,input,textarea,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+#topProgress{
+    position:fixed;
+    top:0;
+    right:0;
+    width:0;
+    height:4px;
+    z-index:9999;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+
+/* HEADER */
 
 header{
-position:sticky;top:0;z-index:1000;backdrop-filter:blur(14px);
-background:color-mix(in srgb,var(--panel) 90%,transparent);
-border-bottom:1px solid var(--border);padding:10px 4vw;
-display:flex;align-items:center;justify-content:space-between;gap:15px
+    position:sticky;
+    top:0;
+    z-index:1000;
+    backdrop-filter:blur(14px);
+    background:color-mix(in srgb,var(--panel) 92%,transparent);
+    border-bottom:1px solid var(--border);
 }
 
-.logo img{
-display:block;width:165px;height:68px;object-fit:contain
+.header-inner{
+    width:min(1450px,94vw);
+    margin:auto;
+    min-height:70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
 }
 
-.actions{display:flex;gap:7px;flex-wrap:wrap}
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:900;
+    font-size:1.35rem;
+}
+
+.brand-icon{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 8px 20px rgba(99,102,241,.25);
+}
+
+.header-actions{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+/* BUTTONS */
 
 .btn,.tool{
-border:1px solid var(--border);background:var(--panel2);color:var(--text);
-border-radius:10px;padding:8px 11px;transition:.2s
+    border:1px solid var(--border);
+    background:var(--panel2);
+    color:var(--text);
+    border-radius:10px;
+    padding:8px 11px;
+    transition:.18s;
 }
 
-.btn:hover,.tool:hover{transform:translateY(-1px);border-color:var(--accent)}
-.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:hover,.tool:hover{
+    transform:translateY(-1px);
+    border-color:var(--accent);
+}
+
+.primary{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#fff;
+}
+
+.danger-btn{
+    color:var(--danger)!important;
+    border-color:var(--danger)!important;
+}
+
+.success-btn{
+    color:var(--success)!important;
+    border-color:var(--success)!important;
+}
+
+.favorite-btn{
+    color:var(--warning)!important;
+    border-color:var(--warning)!important;
+}
+
+/* LAYOUT */
 
 .layout{
-width:min(1450px,94vw);margin:22px auto;
-display:grid;grid-template-columns:290px 1fr;gap:18px
+    width:min(1450px,94vw);
+    margin:24px auto 50px;
+    display:grid;
+    grid-template-columns:310px minmax(0,1fr);
+    gap:18px;
 }
 
 .sidebar{
-display:flex;flex-direction:column;gap:14px;
-position:sticky;top:90px;align-self:start
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    position:sticky;
+    top:82px;
+    align-self:start;
+    max-height:calc(100vh - 100px);
+    overflow:auto;
 }
 
-.box,.bundle{
-background:var(--panel);border:1px solid var(--border);
-border-radius:14px;box-shadow:var(--shadow)
+.panel,.bundle{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
 }
 
-.box{padding:15px}
-.box h3{margin:0 0 10px}
+.panel{
+    padding:16px;
+}
+
+.panel-title{
+    font-size:1rem;
+    margin-bottom:12px;
+    padding-bottom:9px;
+    border-bottom:1px solid var(--border);
+}
+
+.hero{
+    background:
+        linear-gradient(135deg,#6366f120,transparent 58%),
+        var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:24px;
+    margin-bottom:18px;
+}
+
+.hero h1{
+    font-size:clamp(1.7rem,3vw,2.4rem);
+}
+
+.hero p{
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.hero-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:14px;
+}
+
+/* FORMS */
+
+.field-group{
+    margin-bottom:10px;
+}
+
+.field-label{
+    display:block;
+    color:var(--muted);
+    font-size:.8rem;
+    margin-bottom:5px;
+}
 
 .field{
-width:100%;background:var(--bg);color:var(--text);
-border:1px solid var(--border);border-radius:9px;
-padding:9px;margin:0 0 9px;outline:0
+    width:100%;
+    color:var(--text);
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 11px;
+    outline:none;
 }
 
 .field:focus{
-border-color:var(--accent);
-box-shadow:0 0 0 3px #6366f122
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px #6366f122;
 }
 
-textarea.field{min-height:150px;resize:vertical}
+textarea.field{
+    min-height:170px;
+    resize:vertical;
+}
+
+.grid2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+/* STATS */
 
 .stats{
-display:grid;grid-template-columns:1fr 1fr;gap:7px
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
 }
 
 .stat{
-background:var(--panel2);padding:9px;border-radius:9px;text-align:center
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:10px;
+    text-align:center;
 }
 
 .stat b{
-display:block;color:var(--accent2);font-size:1.3rem
+    display:block;
+    color:var(--accent2);
+    font-size:1.35rem;
 }
 
-.muted{color:var(--muted);font-size:.86rem}
-
-.authors{
-max-height:220px;overflow:auto
+.stat span{
+    color:var(--muted);
+    font-size:.72rem;
 }
 
-.author{
-padding:7px;border-radius:7px;
-display:flex;justify-content:space-between;cursor:pointer
+/* AUTHOR LIST */
+
+.author-list{
+    max-height:200px;
+    overflow:auto;
+    margin-top:8px;
 }
 
-.author:hover,.author.active{
-background:var(--panel2);color:var(--accent2)
+.author-item{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    padding:8px;
+    border-radius:8px;
+    cursor:pointer;
 }
 
-#resume{
-display:none
+.author-item:hover,
+.author-item.active{
+    background:var(--panel2);
+    color:var(--accent2);
 }
 
-#resume.show{
-display:block
+.muted{
+    color:var(--muted);
 }
+
+.small{
+    font-size:.82rem;
+}
+
+/* RESUME */
+
+.resume{
+    display:none;
+}
+
+.resume.show{
+    display:block;
+}
+
+/* STORY BUNDLES */
 
 .bundle{
-padding:15px;margin-bottom:16px
+    padding:16px;
+    margin-bottom:18px;
 }
 
 .bundle-head{
-display:flex;gap:13px;align-items:center;
-padding-bottom:13px;border-bottom:1px solid var(--border)
+    display:grid;
+    grid-template-columns:90px 1fr;
+    gap:15px;
+    align-items:center;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--border);
 }
 
 .cover{
-width:82px;height:110px;object-fit:cover;
-border-radius:9px;background:var(--panel2)
+    width:90px;
+    height:120px;
+    object-fit:cover;
+    border-radius:11px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
 }
 
-.bundle h2{margin:0 0 3px;font-size:1.35rem}
-
-.card{
-background:var(--panel2);border:1px solid var(--border);
-border-radius:12px;padding:14px;margin-top:13px
+.cover-placeholder{
+    width:90px;
+    height:120px;
+    border-radius:11px;
+    display:grid;
+    place-items:center;
+    font-size:2rem;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
 }
 
-.card-head{
-display:flex;justify-content:space-between;
-gap:8px;align-items:center
+.bundle-title{
+    font-size:clamp(1.25rem,2.5vw,1.75rem);
+    line-height:1.35;
 }
 
-.card h3{margin:0;font-size:1.05rem}
-
-.toolbar,.actionsbar{
-display:flex;gap:6px;flex-wrap:wrap;margin:11px 0
+.meta{
+    color:var(--muted);
+    font-size:.8rem;
+    margin-top:5px;
 }
 
-.tool{padding:6px 9px;font-size:.8rem}
+.badges{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:8px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:4px 8px;
+    color:var(--muted);
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:999px;
+    font-size:.72rem;
+}
+
+/* STORY CARD */
+
+.story-card{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:15px;
+    margin-top:13px;
+}
+
+.story-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.story-head h3{
+    font-size:1.05rem;
+}
+
+.story-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+}
+
+.toolbar,
+.actions{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin:11px 0;
+}
+
+.tool{
+    font-size:.78rem;
+    padding:6px 9px;
+}
 
 .story-text{
-font-size:1.05rem;line-height:2;
-white-space:pre-wrap;overflow-wrap:anywhere
+    font-size:1.05rem;
+    line-height:2;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
 }
 
-.actionsbar{
-border-top:1px solid var(--border);
-padding-top:10px;margin-bottom:0
+.story-footer{
+    border-top:1px solid var(--border);
+    padding-top:10px;
+    margin-top:13px;
 }
 
-.danger{color:var(--danger)!important;border-color:var(--danger)!important}
-.liked{color:#ef4444!important;border-color:#ef4444!important}
-.faved{color:#f59e0b!important;border-color:#f59e0b!important}
+.reading-progress{
+    height:6px;
+    border-radius:999px;
+    overflow:hidden;
+    background:var(--bg);
+    margin:7px 0 4px;
+}
+
+.reading-progress-bar{
+    width:0;
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+
+.progress-label{
+    color:var(--muted);
+    font-size:.7rem;
+}
+
+.note-box{
+    margin-top:10px;
+    display:none;
+}
+
+.note-box.show{
+    display:block;
+}
+
+.note-preview{
+    color:var(--muted);
+    font-size:.8rem;
+    white-space:pre-wrap;
+}
+
+/* EMPTY */
 
 .empty{
-text-align:center;padding:50px;color:var(--muted)
+    padding:55px 20px;
+    text-align:center;
+    color:var(--muted);
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
 }
 
+/* TOAST */
+
 .toast-wrap{
-position:fixed;left:15px;bottom:15px;z-index:5000;
-display:flex;flex-direction:column;gap:6px
+    position:fixed;
+    left:15px;
+    bottom:15px;
+    width:min(380px,calc(100% - 30px));
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    z-index:5000;
 }
 
 .toast{
-background:var(--panel);border:1px solid var(--border);
-border-right:4px solid var(--accent);
-padding:9px 12px;border-radius:9px;box-shadow:var(--shadow)
+    background:var(--panel);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-right:4px solid var(--accent);
+    border-radius:10px;
+    padding:9px 12px;
+    box-shadow:var(--shadow);
 }
 
-.toast.ok{border-right-color:var(--ok)}
-.toast.bad{border-right-color:var(--danger)}
+.toast.ok{
+    border-right-color:var(--success);
+}
+
+.toast.bad{
+    border-right-color:var(--danger);
+}
+
+.toast.warn{
+    border-right-color:var(--warning);
+}
+
+/* MODAL */
 
 .modal{
-position:fixed;inset:0;background:#0008;
-display:none;place-items:center;z-index:3000;padding:15px
+    position:fixed;
+    inset:0;
+    background:#0008;
+    z-index:3000;
+    display:none;
+    place-items:center;
+    padding:15px;
 }
 
-.modal.open{display:grid}
+.modal.open{
+    display:grid;
+}
 
 .modal-card{
-width:min(500px,100%);background:var(--panel);
-border:1px solid var(--border);border-radius:15px;
-padding:16px;box-shadow:var(--shadow)
+    width:min(620px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px;
+    box-shadow:var(--shadow);
 }
 
-.focus header,
-.focus .sidebar,
-.focus .toolbar,
-.focus .actionsbar{
-display:none!important
+/* FOCUS MODE */
+
+body.focus-mode header,
+body.focus-mode .sidebar,
+body.focus-mode .hero,
+body.focus-mode .toolbar,
+body.focus-mode .story-footer{
+    display:none!important;
 }
 
-.focus .layout{
-display:block;width:min(820px,94vw)
+body.focus-mode .layout{
+    display:block;
+    width:min(850px,94vw);
 }
 
-.focus .story-text{
-font-size:1.15rem;line-height:2.15
+body.focus-mode .story-text{
+    font-size:1.18rem;
+    line-height:2.15;
 }
 
-@media(max-width:900px){
-.layout{grid-template-columns:1fr}
-.sidebar{position:static;order:2}
-.logo img{width:145px;height:58px}
+/* RESPONSIVE */
+
+@media(max-width:980px){
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        position:static;
+        max-height:none;
+        order:2;
+    }
 }
 
-@media(max-width:560px){
-.logo img{width:120px;height:52px}
-.actions .btn{font-size:.75rem;padding:7px}
-.bundle,.box{border-radius:11px}
-.cover{width:65px;height:88px}
+@media(max-width:600px){
+    .header-inner{
+        width:95vw;
+    }
+
+    .brand span{
+        display:none;
+    }
+
+    .layout{
+        width:95vw;
+    }
+
+    .grid2{
+        grid-template-columns:1fr;
+    }
+
+    .bundle,
+    .panel,
+    .story-card,
+    .hero{
+        padding:12px;
+    }
+
+    .bundle-head{
+        grid-template-columns:68px 1fr;
+    }
+
+    .cover,
+    .cover-placeholder{
+        width:68px;
+        height:92px;
+    }
+
+    .header-actions .btn{
+        font-size:.75rem;
+        padding:7px 8px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div id="progress"></div>
+<div id="topProgress"></div>
 
 <header>
-    <div class="logo">
-        <img
-        alt="شعار حكاية"
-        src="data:image/webp;base64,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">
-    </div>
+    <div class="header-inner">
 
-    <div class="actions">
-        <button class="btn" id="themeBtn">☀️ الوضع الفاتح</button>
-        <button class="btn" id="backupBtn">💾 النسخ الاحتياطي</button>
-        <button class="btn primary" id="publishBtn">✍️ نشر قصة</button>
+        <div class="brand">
+            <div class="brand-icon">📖</div>
+            <span>حكاية</span>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn" id="themeBtn">☀️ الوضع الفاتح</button>
+            <button class="btn" id="backupBtn">💾 النسخ الاحتياطي</button>
+            <button class="btn primary" id="publishBtn">✍️ نشر قصة</button>
+        </div>
+
     </div>
 </header>
 
 <div class="layout">
 
-<aside class="sidebar">
+    <aside class="sidebar">
 
-<div class="box" id="resume">
-    <h3>📍 متابعة القراءة</h3>
-    <div class="muted" id="resumeText"></div>
-    <button class="btn" style="width:100%;margin-top:8px" id="resumeBtn">
-        الانتقال للنقطة الحالية
-    </button>
+        <!-- متابعة القراءة -->
+        <section class="panel resume" id="resumePanel">
+
+            <h3 class="panel-title">📍 متابعة القراءة</h3>
+
+            <div id="resumeText" class="muted small"></div>
+
+            <button
+                class="btn"
+                id="resumeBtn"
+                style="width:100%;margin-top:8px">
+                العودة لآخر موضع
+            </button>
+
+        </section>
+
+        <!-- الإحصائيات -->
+        <section class="panel">
+
+            <h3 class="panel-title">📊 الإحصائيات</h3>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <b id="statStories">0</b>
+                    <span>الفصول</span>
+                </div>
+
+                <div class="stat">
+                    <b id="statAuthors">0</b>
+                    <span>المؤلفون</span>
+                </div>
+
+                <div class="stat">
+                    <b id="statFavs">0</b>
+                    <span>المفضلة</span>
+                </div>
+
+                <div class="stat">
+                    <b id="statDone">0</b>
+                    <span>المكتمل</span>
+                </div>
+
+                <div class="stat">
+                    <b id="statLikes">0</b>
+                    <span>الإعجابات</span>
+                </div>
+
+                <div class="stat">
+                    <b id="statMinutes">0</b>
+                    <span>دقائق القراءة</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- البحث -->
+        <section class="panel">
+
+            <h3 class="panel-title">🔎 البحث والفلاتر</h3>
+
+            <input
+                class="field"
+                id="searchInput"
+                type="search"
+                placeholder="ابحث في العنوان أو الكاتب أو المحتوى..."
+                autocomplete="off">
+
+            <input
+                class="field"
+                id="authorSearch"
+                type="search"
+                placeholder="البحث عن كاتب..."
+                autocomplete="off"
+                style="margin-top:8px">
+
+            <select
+                class="field"
+                id="sortSelect"
+                style="margin-top:8px">
+
+                <option value="new">الأحدث أولاً</option>
+                <option value="old">الأقدم أولاً</option>
+                <option value="title">حسب العنوان</option>
+                <option value="long">الأطول قراءة</option>
+                <option value="short">الأقصر قراءة</option>
+
+            </select>
+
+            <label
+                class="small muted"
+                style="display:block;margin-top:8px">
+
+                <input
+                    type="checkbox"
+                    id="onlyFavorites">
+                ⭐ المفضلة فقط
+
+            </label>
+
+            <label
+                class="small muted"
+                style="display:block;margin-top:5px">
+
+                <input
+                    type="checkbox"
+                    id="onlyDone">
+                ✅ المكتملة فقط
+
+            </label>
+
+            <div id="authorList" class="author-list"></div>
+
+            <button
+                class="btn"
+                id="resetFilters"
+                style="width:100%;margin-top:8px">
+
+                إعادة ضبط البحث
+
+            </button>
+
+        </section>
+
+        <!-- نشر / تعديل -->
+        <section class="panel" id="publishPanel">
+
+            <h3 class="panel-title" id="formTitle">
+                ✍️ نشر فصل جديد
+            </h3>
+
+            <form id="storyForm">
+
+                <input
+                    type="hidden"
+                    id="editingId">
+
+                <div class="field-group">
+                    <label class="field-label">عنوان القصة</label>
+
+                    <input
+                        class="field"
+                        id="storyTitle"
+                        required>
+                </div>
+
+                <div class="grid2">
+
+                    <div class="field-group">
+                        <label class="field-label">اسم الكاتب</label>
+
+                        <input
+                            class="field"
+                            id="authorName"
+                            required>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">الفصل</label>
+
+                        <input
+                            class="field"
+                            id="storyPart"
+                            placeholder="الفصل الأول"
+                            required>
+                    </div>
+
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">التصنيف</label>
+
+                    <input
+                        class="field"
+                        id="category"
+                        placeholder="رواية، مغامرة، غموض...">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">رابط الغلاف — اختياري</label>
+
+                    <input
+                        class="field"
+                        id="coverUrl"
+                        type="url"
+                        placeholder="https://example.com/cover.jpg">
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">وصف قصير — اختياري</label>
+
+                    <textarea
+                        class="field"
+                        id="description"
+                        style="min-height:90px"></textarea>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">محتوى الفصل</label>
+
+                    <textarea
+                        class="field"
+                        id="storyContent"
+                        required
+                        placeholder="اكتب الفصل هنا..."></textarea>
+                </div>
+
+                <button
+                    class="btn primary"
+                    id="saveStoryBtn"
+                    style="width:100%"
+                    type="submit">
+
+                    نشر الفصل
+
+                </button>
+
+                <button
+                    class="btn"
+                    id="cancelEditBtn"
+                    style="width:100%;margin-top:7px"
+                    type="button">
+
+                    إلغاء
+
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- إدارة البيانات -->
+        <section class="panel">
+
+            <h3 class="panel-title">🛠️ أدوات الموقع</h3>
+
+            <button
+                class="btn"
+                id="clearLocalBtn"
+                style="width:100%;margin-bottom:7px">
+
+                🗑️ حذف البيانات المحلية
+
+            </button>
+
+            <div class="muted small">
+                البيانات محفوظة محلياً في المتصفح.
+            </div>
+
+        </section>
+
+    </aside>
+
+    <main>
+
+        <section class="hero">
+
+            <h1>📚 منصة حكاية</h1>
+
+            <p>
+                اقرأ القصص، تابع الفصول، احفظ تقدمك، أضف الملاحظات،
+                وانشر قصصك في ملف واحد دون الحاجة إلى ملفات خارجية.
+            </p>
+
+            <div class="hero-actions">
+
+                <button
+                    class="btn primary"
+                    id="heroPublishBtn">
+                    ✍️ ابدأ بنشر قصة
+                </button>
+
+                <button
+                    class="btn"
+                    id="showFavoritesBtn">
+                    ⭐ عرض المفضلة
+                </button>
+
+                <button
+                    class="btn"
+                    id="showAllBtn">
+                    📚 عرض الكل
+                </button>
+
+            </div>
+
+        </section>
+
+        <div id="storiesContainer"></div>
+
+    </main>
+
 </div>
 
-<div class="box">
-    <h3>📊 الإحصائيات</h3>
-    <div class="stats">
-        <div class="stat"><b id="totalStories">0</b>الفصول</div>
-        <div class="stat"><b id="totalAuthors">0</b>المؤلفون</div>
-        <div class="stat"><b id="totalFavs">0</b>المفضلة</div>
-        <div class="stat"><b id="totalLikes">0</b>الإعجابات</div>
+<!-- Toast -->
+<div
+    class="toast-wrap"
+    id="toastWrap">
+</div>
+
+<!-- Backup Modal -->
+<div
+    class="modal"
+    id="backupModal">
+
+    <div class="modal-card">
+
+        <h3 class="panel-title">
+            💾 النسخ الاحتياطي والاستعادة
+        </h3>
+
+        <p class="muted small" style="margin-bottom:12px">
+            يمكنك تصدير جميع بيانات الموقع أو استعادتها من ملف JSON.
+        </p>
+
+        <button
+            class="btn primary"
+            id="exportBtn"
+            style="width:100%;margin-bottom:7px">
+
+            📤 تصدير البيانات
+
+        </button>
+
+        <button
+            class="btn"
+            id="importBtn"
+            style="width:100%;margin-bottom:7px">
+
+            📥 استعادة البيانات
+
+        </button>
+
+        <input
+            type="file"
+            id="importFile"
+            accept=".json,application/json"
+            hidden>
+
+        <button
+            class="btn"
+            id="closeBackupBtn"
+            style="width:100%">
+
+            إغلاق
+
+        </button>
+
     </div>
+
 </div>
 
-<div class="box">
-    <h3>🔎 البحث والتصفية</h3>
+<!-- Notes Modal -->
+<div
+    class="modal"
+    id="noteModal">
 
-    <input
-        class="field"
-        id="searchInput"
-        type="search"
-        placeholder="ابحث في العنوان أو المحتوى...">
+    <div class="modal-card">
 
-    <input
-        class="field"
-        id="authorSearch"
-        type="search"
-        placeholder="ابحث عن الكاتب...">
-
-    <div class="authors" id="authors"></div>
-
-    <button class="btn" id="resetBtn" style="width:100%;margin-top:8px">
-        إعادة ضبط
-    </button>
-</div>
-
-<div class="box" id="publishBox">
-    <h3>✍️ نشر فصل جديد</h3>
-
-    <form id="storyForm">
-
-        <input
-            class="field"
-            id="storyTitle"
-            required
-            placeholder="عنوان القصة">
-
-        <input
-            class="field"
-            id="authorName"
-            required
-            placeholder="اسم الكاتب">
-
-        <input
-            class="field"
-            id="storyPart"
-            required
-            placeholder="الفصل الأول">
-
-        <input
-            class="field"
-            id="coverUrl"
-            type="url"
-            placeholder="رابط صورة الغلاف - اختياري">
+        <h3
+            class="panel-title"
+            id="noteTitle">
+            📝 ملاحظتي
+        </h3>
 
         <textarea
             class="field"
-            id="storyContent"
-            required
-            placeholder="اكتب الفصل هنا..."></textarea>
+            id="noteInput"
+            placeholder="اكتب ملاحظتك عن هذا الفصل..."
+            style="min-height:200px"></textarea>
 
-        <button class="btn primary" style="width:100%">
-            نشر الفصل
-        </button>
+        <div style="display:flex;gap:7px;margin-top:9px">
 
-    </form>
-</div>
+            <button
+                class="btn primary"
+                id="saveNoteBtn"
+                style="flex:1">
 
-</aside>
+                حفظ الملاحظة
 
-<main id="storiesContainer"></main>
+            </button>
 
-</div>
+            <button
+                class="btn"
+                id="closeNoteBtn"
+                style="flex:1">
 
-<div class="toast-wrap" id="toastWrap"></div>
+                إغلاق
 
-<div class="modal" id="backupModal">
-<div class="modal-card">
+            </button>
 
-<h3>💾 النسخ الاحتياطي</h3>
+        </div>
 
-<p class="muted">
-يمكنك تصدير جميع القصص أو استعادتها من ملف JSON.
-</p>
+    </div>
 
-<button class="btn" id="exportBtn" style="width:100%;margin:4px 0">
-📤 تصدير البيانات
-</button>
-
-<button class="btn" id="importBtn" style="width:100%;margin:4px 0">
-📥 استعادة البيانات
-</button>
-
-<input
-type="file"
-id="importFile"
-accept=".json,application/json"
-hidden>
-
-<button class="btn" id="closeBackup" style="width:100%;margin-top:4px">
-إغلاق
-</button>
-
-</div>
 </div>
 
 <script>
+"use strict";
 
-const STORAGE_KEY="hikaya_stories_single";
-const LIKES_KEY="hikaya_likes_single";
-const FAVS_KEY="hikaya_favs_single";
-const BOOKMARK_KEY="hikaya_bookmark_single";
-const TOKEN_KEY="hikaya_token_single";
-const THEME_KEY="hikaya_theme_single";
+/* ==========================================
+   مفاتيح التخزين
+========================================== */
 
-const INITIAL_STORY={
-id:"hikaya-rihlat-nahw-marifat-al-that",
-title:"رحلة نحو معرفة الذات",
-author:"غير محدد",
-part:"الفصل الأول",
-cover:"",
-ownerToken:"system",
-createdAt:1,
-content:`في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح. فجأة، ظهر نمر يركض خلف رجل غريب، وكانت أصوات خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين.
-​
+const KEYS = {
+    stories: "hikaya_stories_v4",
+    likes: "hikaya_likes_v4",
+    favorites: "hikaya_favorites_v4",
+    done: "hikaya_done_v4",
+    notes: "hikaya_notes_v4",
+    bookmark: "hikaya_bookmark_v4",
+    progress: "hikaya_progress_v4",
+    theme: "hikaya_theme_v4",
+    token: "hikaya_token_v4"
+};
+
+/* ==========================================
+   القصة الأساسية
+========================================== */
+
+const DEFAULT_STORY = {
+    id: "hikaya-main-story",
+    title: "رحلة نحو معرفة الذات",
+    author: "غير محدد",
+    part: "الفصل الأول",
+    category: "مغامرة / غموض",
+    cover: "",
+    description: "رحلة غامضة تبدأ في غابة مظلمة وتقود غارلون ومحمد إلى مواجهة عصابة المونيراف.",
+    ownerToken: "system",
+    createdAt: 1,
+    content: `في غابة مظلمة، كان هناك صوت رفرفة الأشجار الهادئة وأصوات الرياح. فجأة، ظهر نمر يركض خلف رجل غريب، وكانت أصوات خطوات الرجل هادئة ومخفية مثل القتلة المستأجرين.
+
 تسلق الرجل الشجرة فلاحظه النمر، لكن الرجل لم يتوتر بل انقض عليه بسيفه وقتله، ثم أكمل طريقه.
-​
+
 في اليوم التالي، جاء رجلان من قرية قريبة من تلك الغابة لجمع فطر عش الغراب. رأى أحد الرجلين منظر جثة النمر فصُدم، ونادى على زميله وقال له وهو فرح ومبتسم:
 — "هذا رائع! يمكننا بيعه في القرية".
-​
+
 فاستغرب زميله وقال:
 — "لكن النمور لا تُباع في قريتنا، أين ستبيعها وكيف؟"
-​
+
 فقال له الآخر:
 — "إن هذه قُطعت بواسطة رجل مشهور، وبالتأكيد الأغنياء سيشترونها".
-​
+
 فقال رجل القرية:
 — "ومن قتل النمر؟"
-​
+
 أجابه زميله:
 — "إنه سياف مشهور يدعى غارلون".
-​
+
 صُدم الرجل مما سمعه، وقررا بيعه في مدينة "كوراساوا" التي تبعد عنهم 7 كيلومترات، فأخذوا النمر معهم على عربة تجرها الأحصنة وانطلقا في رحلتهما.
-​
-قضى الرجلان 4 ساعات للوصول إلى كوراساوا؛ إذ كان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً. أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص بدافع الفضول. وما إن وصل حتى ملأت الصدمة وجهه؛ إذ كان أمامه السياف غارلون وهو يتدرب في الغابة.
-​
+
+قضى الرجلان 4 ساعات للوصول إلى كوراساوا؛ إذ كان الطريق مليئاً بالمطبات، وكانا متعبين بسبب الحرارة الحارقة، فقررا أن يرتاحا قليلاً.
+
+أثناء راحتهما، ظهر ظل لشخص ما في الغابة، فذهب أحد الرجلين ليرى من هذا الشخص بدافع الفضول. وما إن وصل حتى ملأت الصدمة وجهه؛ إذ كان أمامه السياف غارلون وهو يتدرب في الغابة.
+
 لمحه السياف وكان سيقتله ظناً منه أنه خطر يهدده، لكن الرجل قال له ليهدئه:
 — "اهدأ، فأنا لن أؤذيك".
-​
+
 تفهم غارلون الكلام وهدأ، وقرر أن يتركه. ولكن قبل أن يبتعد، سمع غارلون صوت حركة خلف رجل القرية، فركض وفوجئ بسياف آخر يقتل زميل رجل القرية!
-​
+
 فحزن عليه صديقه كثيراً. انقض غارلون على السياف المعتدي، وظلا يتقاتلان ويتبادلان الضربات بالسيف، وكان غارلون متفوقاً عليه في القتال بشكل ملحوظ.
-​
+
 أثناء القتال، ذهب الرجل إلى زميله الذي كان يحتضر وقال له:
 — "أين أصبت؟"
-​
+
 فقال بصوت مليء بالألم:
 — "أصابني في بطني".
-​
+
 فسأله:
 — "أين بالضبط؟"
-​
+
 أجاب بصوت متألم:
 — "لا أعرف..."
-​
+
 حاول زميله أن يعالجه لكنه فشل، فقال له المحتضر:
 — "هذه نهايتي، لا تتعب نفسك. اذهب مع غارلون فهو سيحميك بدلاً مني، فالقرية بعيدة جداً ولن تستطيع الوصول إليها بمفردك. أريد أن أقول شيئاً كنت أود قوله عند مماتي..."
-​
+
 فسأله زميله:
 — "ما هو؟"
-​
+
 قال الرجل:
 — "ليت الواقع حلم، وليت مماتي لم يكن واقعاً".
-​
+
 ثم فاضت روحه وتوفى.
-​
+
 بكى عليه زميله كثيراً، وعندما نظر إلى غارلون اندهش؛ فقد كان غارلون قد أنهى حياة السياف الآخر بمهارة متقنة. جاء غارلون إليه بخطوات هادئة وقال له:
 — "هل أنت بخير؟"
-​
+
 أجاب الرجل:
 — "نعم، لكن زميلي توفى، وقال لي أن أذهب معك".
-​
+
 رد غارلون:
 — "حسناً، ولكن هل يمكنك أن تشارك معي في رحلتي؟"
-​
+
 فقال رجل القرية:
 — "نعم، بكل سرور".
-​
+
 مشى غارلون مع رجل القرية وقال له:
 — "عرّفني عن نفسك".
-​
+
 قال الرجل:
 — "اسمي محمد، وأنا من قرية 'هيوكامارا' التي تبعد عن هنا مسافة 7 كم".
-​
+
 فقال له غارلون إنه من مدينة "ميكارليس"، وهي مدينة بعيدة جداً.
-​
+
 سأل محمد:
 — "ما هو الهدف الذي تسعى إليه يا غارلون؟"
-​
+
 أجابه غارلون:
 — "أريد أن أجمع المال وأسعى لتسديد ديوني".
-​
+
 فقال محمد مستغرباً:
 — "ولماذا أنت مديون؟"
-​
+
 رد غارلون:
 — "في الماضي، كان والدي يلعب القمار ويستلف النقود من العصابات. وعندما لم يسدد ديونه، قتله رجال العصابة وأصبحت الديون على عاتقي. ويبلغ قيمة هذا الدين 500 مليون ين".
-​
+
 انصدم محمد من الرقم وقال بصوت مهزوز من الصدمة:
 — "إلى أين سنذهب الآن يا غارلون؟"
-​
+
 قال غارلون:
 — "سنذهب إلى رجال العصابة للانتقام منهم".
-​
+
 في اليوم التالي، واصل غارلون ومحمد طريقهما نحو مدينة كوراساوا لبيع النمر. وفي الطريق مواجها العدو اللدود لأي مسافر: الجوع.
-​
+
 طلب غارلون من محمد أن ينتظر لكي يصطاد غزالاً أو أرنباً برياً. توغل غارلون في الغابة، وبعد 20 دقيقة من البحث وجد أرنباً برياً. حبس أنفاسه وركز جيدا، ثم سحب سيفه ببطء وانقض عليه مسرعاً بدون صوت وقضى عليه قتلاً رحيماً.
-​
+
 عاد غارلون، واندهش محمد مما جلبه وقال:
 — "كيف اصطدت هذا الأرنب؟ إنه أمر مذهل!"
-​
+
 أجابه غارلون ببرود:
 — "ليس من شأنك أن تعرف، اجمع الحطب وأنت صامت".
-​
+
 قال محمد:
 — "حاضر".
-​
+
 أثناء تجميع الحطب، قال محمد في نفسه إنه لن يجعل برود غارلون عائقاً، ولن يجعله شخصاً بارداً بل سيعامله بلطف دائماً. جمع الحطب وأشعل النار لشوي الأرنب وأكلا معا.
-​
+
 بعد ساعة، وصلوا إلى مدينة كوراساوا، وذهبوا إلى تاجر لجلود الحيوانات وباعوا له جلد النمر بثمن باهظ بلغ 100 ألف ين. ولكن أثناء سيرهما، كان غارلون ينضب غضباً من شيء ما.
-​
+
 لاحظ محمد غضب غارلون المكبوت، فقال له غارلون بصوت هادئ:
 — "أتلاحظ من كان التاجر الذي بعنا له النمر؟"
-​
+
 قال محمد باستغراب:
 — "لا، من يكون؟"
-​
+
 قال غارلون بصوت يتسرب منه الغضب:
 — "إنه فرد من العصابة التي قتلت والدي وأنا مديون لها".
-​
+
 انصدم محمد وغضب وقال:
 — "لماذا لم تقل لي؟!"
-​
+
 أجابه غارلون:
 — "لأن قتلك لهم الآن لن يفيدك، وأيضاً لا أريدك أن تتدخل في انتقامي منهم".
-​
+
 هدأ محمد، وقررا التفكير في طريقة للقضاء عليه. فكر غارلون في خطة وقال:
 — "سأراقبه في الليل وأنتظر الفرصة المناسبة للقضاء عليه. سيغضب قائد العصابة عندما يعلم بخبر موته وسيحاول القضاء عليّ، وحينها سننسحب وننسق سفرنا إلى الدولة التي يعيش فيها مدربي. سيكون الوقت المقدر لبحثهم عني تقريباً شهراً كاملاً، وهو ما يكفي لكي أستعد لهم. وأنت يا محمد ستتدرب معي، فقوتك ضعيفة. إن أردت أن تتطور فتعال معي، وإلا فلن تكون معي في رحلتي".
-​
+
 فكر محمد في خطة غارلون وقرر الموافقة، ثم سأله:
 — "أين تقع دولة مدربك؟"
-​
+
 أجابه غارلون:
 — "في مصر".
-​
+
 بالفعل، انطلقا نحو التاجر في الليل وراقبه غارلون. كان التاجر يُدعى "بوراينو"، وهو الفرد السابع من عصابة تُدعى "عصابة المونيراف"؛ أشهر عصابة في البلاد والمعروفة بأساليبها الخطيرة للغاية. ورغم أن عدد أعضائها قليل (15 فرداً فقط)، إلا أنهم من بين أقوى 100 سياف عرفهم التاريخ.
-​
+
 فهل سينتصر عليهم غارلون؟ هذا ما سنعرفه في الجزء القادم...`
 };
 
-let stories=[];
-let likes={};
-let favorites=[];
-let authorFilter="";
-let searchQuery="";
+/* ==========================================
+   الحالة
+========================================== */
 
-const $=id=>document.getElementById(id);
+let stories = [];
+let likes = {};
+let favorites = [];
+let completed = {};
+let notes = {};
+let progress = {};
+let bookmark = null;
+let authorFilter = "";
+let searchQuery = "";
+let noteStoryId = "";
+let currentUserToken = "";
+
+/* ==========================================
+   أدوات
+========================================== */
+
+function $(id){
+    return document.getElementById(id);
+}
+
+function safeJSON(key, fallback){
+    try{
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+    }catch{
+        return fallback;
+    }
+}
+
+function createToken(){
+    return "usr_" +
+        Math.random().toString(36).slice(2) +
+        "_" +
+        Date.now().toString(36);
+}
 
 function getToken(){
-    let token=localStorage.getItem(TOKEN_KEY);
+    let token = localStorage.getItem(KEYS.token);
+
     if(!token){
-        token="usr_"+Math.random().toString(36).slice(2)+Date.now().toString(36);
-        localStorage.setItem(TOKEN_KEY,token);
+        token = createToken();
+        localStorage.setItem(KEYS.token,token);
     }
+
     return token;
 }
 
-function showToast(message,type=""){
-    const toast=document.createElement("div");
-    toast.className="toast "+type;
-    toast.textContent=message;
-    $("toastWrap").appendChild(toast);
-    setTimeout(()=>toast.remove(),2800);
+function uid(){
+    return "story_" +
+        Date.now() +
+        "_" +
+        Math.random().toString(36).slice(2,9);
 }
 
-function saveData(){
-    try{
-        localStorage.setItem(STORAGE_KEY,JSON.stringify(stories));
-        localStorage.setItem(LIKES_KEY,JSON.stringify(likes));
-        localStorage.setItem(FAVS_KEY,JSON.stringify(favorites));
-    }catch{
-        showToast("تعذر حفظ البيانات","bad");
-    }
-    updateStats();
+function readingMinutes(text){
+    const words = String(text || "")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .length;
+
+    return Math.max(1,Math.ceil(words / 150));
 }
+
+function showToast(message,type=""){
+    const toast = document.createElement("div");
+    toast.className = "toast " + type;
+    toast.textContent = message;
+
+    $("toastWrap").appendChild(toast);
+
+    setTimeout(()=>{
+        toast.remove();
+    },3000);
+}
+
+/* ==========================================
+   تحميل وحفظ البيانات
+========================================== */
 
 function loadData(){
-    try{
-        stories=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
-        likes=JSON.parse(localStorage.getItem(LIKES_KEY)||"{}")||{};
-        favorites=JSON.parse(localStorage.getItem(FAVS_KEY)||"[]")||[];
 
-        if(!Array.isArray(stories))stories=[];
-        if(!Array.isArray(favorites))favorites=[];
+    stories = safeJSON(KEYS.stories,[]);
+    likes = safeJSON(KEYS.likes,{});
+    favorites = safeJSON(KEYS.favorites,[]);
+    completed = safeJSON(KEYS.done,{});
+    notes = safeJSON(KEYS.notes,{});
+    progress = safeJSON(KEYS.progress,{});
+    bookmark = safeJSON(KEYS.bookmark,null);
+
+    if(!Array.isArray(stories)){
+        stories = [];
+    }
+
+    if(!Array.isArray(favorites)){
+        favorites = [];
+    }
+
+    if(!stories.some(story=>story.id===DEFAULT_STORY.id)){
+        stories.unshift(DEFAULT_STORY);
+    }
+
+    saveData(false);
+}
+
+function saveData(showMessage=true){
+
+    try{
+        localStorage.setItem(
+            KEYS.stories,
+            JSON.stringify(stories)
+        );
+
+        localStorage.setItem(
+            KEYS.likes,
+            JSON.stringify(likes)
+        );
+
+        localStorage.setItem(
+            KEYS.favorites,
+            JSON.stringify(favorites)
+        );
+
+        localStorage.setItem(
+            KEYS.done,
+            JSON.stringify(completed)
+        );
+
+        localStorage.setItem(
+            KEYS.notes,
+            JSON.stringify(notes)
+        );
+
+        localStorage.setItem(
+            KEYS.progress,
+            JSON.stringify(progress)
+        );
+
+        if(bookmark){
+            localStorage.setItem(
+                KEYS.bookmark,
+                JSON.stringify(bookmark)
+            );
+        }else{
+            localStorage.removeItem(KEYS.bookmark);
+        }
 
     }catch{
-        stories=[];
-        likes={};
-        favorites=[];
+        if(showMessage){
+            showToast(
+                "تعذر حفظ البيانات في المتصفح.",
+                "bad"
+            );
+        }
+    }
+}
+
+/* ==========================================
+   الثيم
+========================================== */
+
+function setupTheme(){
+
+    const theme =
+        localStorage.getItem(KEYS.theme) || "dark";
+
+    document.documentElement.dataset.theme = theme;
+
+    $("themeBtn").textContent =
+        theme === "light"
+            ? "🌙 الوضع الداكن"
+            : "☀️ الوضع الفاتح";
+}
+
+function toggleTheme(){
+
+    const current =
+        document.documentElement.dataset.theme;
+
+    const next =
+        current === "light"
+            ? "dark"
+            : "light";
+
+    document.documentElement.dataset.theme = next;
+
+    localStorage.setItem(
+        KEYS.theme,
+        next
+    );
+
+    setupTheme();
+}
+
+/* ==========================================
+   التصفيات والفرز
+========================================== */
+
+function filteredStories(){
+
+    const query =
+        searchQuery.trim().toLowerCase();
+
+    let list = stories.filter(story=>{
+
+        const byAuthor =
+            !authorFilter ||
+            String(story.author || "").toLowerCase() ===
+            authorFilter.toLowerCase();
+
+        const searchText = [
+            story.title,
+            story.author,
+            story.part,
+            story.category,
+            story.description,
+            story.content
+        ]
+        .join(" ")
+        .toLowerCase();
+
+        const bySearch =
+            !query ||
+            searchText.includes(query);
+
+        const byFavorite =
+            !$("onlyFavorites").checked ||
+            favorites.includes(story.id);
+
+        const byDone =
+            !$("onlyDone").checked ||
+            Boolean(completed[story.id]);
+
+        return (
+            byAuthor &&
+            bySearch &&
+            byFavorite &&
+            byDone
+        );
+    });
+
+    const sort = $("sortSelect").value;
+
+    if(sort === "new"){
+        list.sort(
+            (a,b)=>
+                Number(b.createdAt || 0) -
+                Number(a.createdAt || 0)
+        );
     }
 
-    if(!stories.some(s=>s.id===INITIAL_STORY.id)){
-        stories.unshift(INITIAL_STORY);
+    if(sort === "old"){
+        list.sort(
+            (a,b)=>
+                Number(a.createdAt || 0) -
+                Number(b.createdAt || 0)
+        );
     }
 
-    saveData();
+    if(sort === "title"){
+        list.sort(
+            (a,b)=>
+                String(a.title)
+                    .localeCompare(
+                        String(b.title),
+                        "ar"
+                    )
+        );
+    }
+
+    if(sort === "long"){
+        list.sort(
+            (a,b)=>
+                readingMinutes(b.content) -
+                readingMinutes(a.content)
+        );
+    }
+
+    if(sort === "short"){
+        list.sort(
+            (a,b)=>
+                readingMinutes(a.content) -
+                readingMinutes(b.content)
+        );
+    }
+
+    return list;
 }
 
-function readTime(text){
-    const words=String(text).trim().split(/\s+/).filter(Boolean).length;
-    return Math.max(1,Math.ceil(words/150))+" دقائق قراءة";
-}
-
-function updateStats(){
-    $("totalStories").textContent=stories.length;
-    $("totalAuthors").textContent=new Set(stories.map(s=>s.author).filter(Boolean)).size;
-    $("totalFavs").textContent=favorites.length;
-    $("totalLikes").textContent=Object.values(likes).filter(Boolean).length;
-}
+/* ==========================================
+   المؤلفون
+========================================== */
 
 function renderAuthors(){
-    const q=$("authorSearch").value.trim().toLowerCase();
-    const counts={};
 
-    stories.forEach(s=>{
-        counts[s.author]=(counts[s.author]||0)+1;
+    const container = $("authorList");
+
+    const query =
+        $("authorSearch").value.trim().toLowerCase();
+
+    const counts = {};
+
+    stories.forEach(story=>{
+        if(story.author){
+            counts[story.author] =
+                (counts[story.author] || 0) + 1;
+        }
     });
 
-    const names=Object.keys(counts)
-        .filter(name=>name.toLowerCase().includes(q))
-        .sort((a,b)=>a.localeCompare(b,"ar"));
+    let authors = Object.keys(counts);
 
-    $("authors").innerHTML="";
+    if(query){
+        authors = authors.filter(
+            author =>
+                author.toLowerCase().includes(query)
+        );
+    }
 
-    if(!names.length){
-        $("authors").innerHTML=
-            '<div class="muted" style="padding:8px">لا يوجد كاتب مطابق.</div>';
+    authors.sort(
+        (a,b)=>
+            a.localeCompare(b,"ar")
+    );
+
+    container.innerHTML = "";
+
+    if(!authors.length){
+        container.innerHTML =
+            `<div class="muted small" style="padding:8px">
+                لا يوجد كاتب مطابق.
+            </div>`;
+
         return;
     }
 
-    names.forEach(name=>{
-        const item=document.createElement("div");
-        item.className="author "+(authorFilter===name?"active":"");
-        item.dataset.author=name;
+    authors.forEach(author=>{
 
-        const n=document.createElement("span");
-        n.textContent="👤 "+name;
+        const item =
+            document.createElement("div");
 
-        const c=document.createElement("b");
-        c.textContent=counts[name];
-
-        item.append(n,c);
-        $("authors").appendChild(item);
-    });
-}
-
-function updateBookmark(){
-    const raw=localStorage.getItem(BOOKMARK_KEY);
-
-    if(!raw){
-        $("resume").classList.remove("show");
-        return;
-    }
-
-    try{
-        const bookmark=JSON.parse(raw);
-
-        $("resume").classList.add("show");
-
-        $("resumeText").textContent=
-            "توقفت عند: "+
-            bookmark.title+
-            " — "+
-            bookmark.part;
-
-        $("resumeBtn").onclick=()=>{
-            const element=document.getElementById(
-                "story-"+bookmark.id
+        item.className =
+            "author-item " +
+            (
+                authorFilter === author
+                    ? "active"
+                    : ""
             );
 
-            if(element){
-                element.scrollIntoView({
-                    behavior:"smooth",
-                    block:"center"
-                });
-            }else{
-                showToast("لم يتم العثور على الفصل","bad");
-            }
+        item.dataset.author = author;
+
+        const name =
+            document.createElement("span");
+
+        name.textContent =
+            "👤 " + author;
+
+        const count =
+            document.createElement("strong");
+
+        count.textContent =
+            counts[author];
+
+        item.append(name,count);
+
+        container.appendChild(item);
+    });
+}
+
+/* ==========================================
+   الإحصائيات
+========================================== */
+
+function updateStats(){
+
+    $("statStories").textContent =
+        stories.length;
+
+    $("statAuthors").textContent =
+        new Set(
+            stories
+                .map(story=>story.author)
+                .filter(Boolean)
+        ).size;
+
+    $("statFavs").textContent =
+        favorites.length;
+
+    $("statDone").textContent =
+        Object.values(completed)
+            .filter(Boolean)
+            .length;
+
+    $("statLikes").textContent =
+        Object.values(likes)
+            .filter(Boolean)
+            .length;
+
+    $("statMinutes").textContent =
+        stories.reduce(
+            (sum,story)=>
+                sum + readingMinutes(story.content),
+            0
+        );
+}
+
+/* ==========================================
+   الغلاف
+========================================== */
+
+function createCover(story){
+
+    if(story.cover){
+
+        const img =
+            document.createElement("img");
+
+        img.className = "cover";
+
+        img.alt = "غلاف القصة";
+
+        img.src = story.cover;
+
+        img.onerror = ()=>{
+            img.replaceWith(
+                createCoverPlaceholder()
+            );
         };
 
-    }catch{
-        $("resume").classList.remove("show");
+        return img;
     }
+
+    return createCoverPlaceholder();
 }
+
+function createCoverPlaceholder(){
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "cover-placeholder";
+
+    div.textContent = "📖";
+
+    return div;
+}
+
+/* ==========================================
+   أزرار الأدوات
+========================================== */
+
+function makeButton(text,callback,className="tool"){
+
+    const button =
+        document.createElement("button");
+
+    button.type = "button";
+
+    button.className = className;
+
+    button.textContent = text;
+
+    button.addEventListener(
+        "click",
+        callback
+    );
+
+    return button;
+}
+
+/* ==========================================
+   عرض القصص
+========================================== */
 
 function renderStories(){
 
-    const container=$("storiesContainer");
+    const container =
+        $("storiesContainer");
 
-    let list=stories.filter(story=>{
-        const authorOK=
-            !authorFilter||
-            String(story.author).toLowerCase()===
-            authorFilter.toLowerCase();
+    const list =
+        filteredStories();
 
-        const query=searchQuery.trim().toLowerCase();
-
-        const searchOK=
-            !query||
-            [
-                story.title,
-                story.author,
-                story.part,
-                story.content
-            ].some(value=>
-                String(value||"")
-                .toLowerCase()
-                .includes(query)
-            );
-
-        return authorOK&&searchOK;
-    });
-
-    container.innerHTML="";
+    container.innerHTML = "";
 
     if(!list.length){
-        container.innerHTML=
-            '<div class="box empty">لم يتم العثور على قصص مطابقة.</div>';
+
+        container.innerHTML = `
+            <div class="empty">
+                <div style="font-size:2.4rem">📭</div>
+                لا توجد قصص مطابقة للفلاتر الحالية.
+            </div>
+        `;
 
         updateStats();
         renderAuthors();
+        updateResume();
+
         return;
     }
 
-    const groups={};
+    const groups = {};
 
     list.forEach(story=>{
         if(!groups[story.title]){
-            groups[story.title]=[];
+            groups[story.title] = [];
         }
+
         groups[story.title].push(story);
     });
 
     Object.values(groups).forEach(bundle=>{
 
-        const first=bundle[0];
+        bundle.sort(
+            (a,b)=>
+                Number(a.createdAt || 0) -
+                Number(b.createdAt || 0)
+        );
 
-        const bundleElement=document.createElement("section");
-        bundleElement.className="bundle";
+        const first = bundle[0];
 
-        const header=document.createElement("div");
-        header.className="bundle-head";
+        const section =
+            document.createElement("section");
 
-        if(first.cover){
+        section.className = "bundle";
 
-            const image=document.createElement("img");
-            image.className="cover";
-            image.src=first.cover;
-            image.alt="غلاف القصة";
+        const header =
+            document.createElement("div");
 
-            image.onerror=()=>{
-                image.remove();
-            };
+        header.className = "bundle-head";
 
-            header.appendChild(image);
+        header.appendChild(
+            createCover(first)
+        );
 
-        }else{
+        const info =
+            document.createElement("div");
 
-            const placeholder=document.createElement("div");
-            placeholder.className="cover";
-            placeholder.style.display="grid";
-            placeholder.style.placeItems="center";
-            placeholder.style.fontSize="2rem";
-            placeholder.textContent="📖";
+        const title =
+            document.createElement("h2");
 
-            header.appendChild(placeholder);
-        }
+        title.className = "bundle-title";
 
-        const info=document.createElement("div");
+        title.textContent =
+            first.title;
 
-        const title=document.createElement("h2");
-        title.textContent=first.title;
+        const meta =
+            document.createElement("div");
 
-        const meta=document.createElement("div");
-        meta.className="muted";
-        meta.textContent=
-            "👤 "+
-            (first.author||"غير محدد")+
-            " · "+
-            bundle.length+
-            " فصل";
+        meta.className = "meta";
+
+        meta.textContent =
+            `👤 ${first.author || "غير محدد"} · 📚 ${bundle.length} فصل`;
 
         info.append(title,meta);
-        header.appendChild(info);
-        bundleElement.appendChild(header);
 
-        bundle.forEach(story=>{
-            bundleElement.appendChild(
-                createStoryCard(story)
+        if(first.description){
+
+            const description =
+                document.createElement("div");
+
+            description.className =
+                "muted small";
+
+            description.textContent =
+                first.description;
+
+            description.style.marginTop =
+                "5px";
+
+            info.appendChild(
+                description
             );
-        });
+        }
 
-        container.appendChild(bundleElement);
+        const badges =
+            document.createElement("div");
+
+        badges.className = "badges";
+
+        if(first.category){
+
+            const badge =
+                document.createElement("span");
+
+            badge.className = "badge";
+
+            badge.textContent =
+                "🏷️ " + first.category;
+
+            badges.appendChild(
+                badge
+            );
+        }
+
+        info.appendChild(badges);
+
+        header.appendChild(info);
+
+        section.appendChild(header);
+
+        bundle.forEach(
+            story=>{
+                section.appendChild(
+                    createStoryCard(story)
+                );
+            }
+        );
+
+        container.appendChild(section);
     });
 
     updateStats();
     renderAuthors();
-    updateBookmark();
+    updateResume();
 }
+
+/* ==========================================
+   بطاقة الفصل
+========================================== */
 
 function createStoryCard(story){
 
-    const card=document.createElement("article");
-    card.className="card";
-    card.id="story-"+story.id;
+    const card =
+        document.createElement("article");
 
-    const head=document.createElement("div");
-    head.className="card-head";
+    card.className = "story-card";
 
-    const part=document.createElement("h3");
-    part.textContent=story.part;
+    card.id =
+        "story-card-" + story.id;
 
-    head.appendChild(part);
+    const head =
+        document.createElement("div");
 
-    if(story.ownerToken===getToken()){
+    head.className = "story-head";
 
-        const deleteButton=document.createElement("button");
-        deleteButton.className="tool danger";
-        deleteButton.textContent="حذف الفصل";
-        deleteButton.dataset.action="delete";
-        deleteButton.dataset.id=story.id;
+    const title =
+        document.createElement("h3");
 
-        head.appendChild(deleteButton);
+    title.textContent =
+        story.part || "الفصل";
+
+    head.appendChild(title);
+
+    const owner =
+        story.ownerToken === currentUserToken;
+
+    if(owner){
+
+        const ownerActions =
+            document.createElement("div");
+
+        ownerActions.style.display =
+            "flex";
+
+        ownerActions.style.gap =
+            "5px";
+
+        const edit =
+            makeButton(
+                "✏️ تعديل",
+                ()=>editStory(story.id)
+            );
+
+        const del =
+            makeButton(
+                "🗑️ حذف",
+                ()=>deleteStory(story.id),
+                "tool danger-btn"
+            );
+
+        ownerActions.append(
+            edit,
+            del
+        );
+
+        head.appendChild(
+            ownerActions
+        );
     }
 
     card.appendChild(head);
 
-    const time=document.createElement("div");
-    time.className="muted";
-    time.textContent="⏱️ "+readTime(story.content);
-    card.appendChild(time);
+    const meta =
+        document.createElement("div");
 
-    const toolbar=document.createElement("div");
-    toolbar.className="toolbar";
+    meta.className =
+        "story-meta";
 
-    toolbar.appendChild(
-        toolButton("A+",()=>changeFont(story.id,2))
+    meta.append(
+        makeBadge(
+            "⏱️ " +
+            readingMinutes(story.content) +
+            " دقائق"
+        )
     );
 
-    toolbar.appendChild(
-        toolButton("A-",()=>changeFont(story.id,-2))
+    meta.append(
+        makeBadge(
+            "👤 " +
+            (story.author || "غير محدد")
+        )
     );
 
-    toolbar.appendChild(
-        toolButton("👁️ وضع التركيز",toggleFocus)
+    if(story.category){
+        meta.append(
+            makeBadge(
+                "🏷️ " +
+                story.category
+            )
+        );
+    }
+
+    if(completed[story.id]){
+        meta.append(
+            makeBadge("✅ مكتمل")
+        );
+    }
+
+    card.appendChild(meta);
+
+    const toolbar =
+        document.createElement("div");
+
+    toolbar.className = "toolbar";
+
+    toolbar.append(
+        makeButton(
+            "A+",
+            ()=>changeFont(story.id,2)
+        ),
+
+        makeButton(
+            "A−",
+            ()=>changeFont(story.id,-2)
+        ),
+
+        makeButton(
+            "👁️ وضع التركيز",
+            ()=>document.body.classList.toggle("focus-mode")
+        ),
+
+        makeButton(
+            "🔖 حفظ الموضع",
+            ()=>saveBookmark(story)
+        ),
+
+        makeButton(
+            completed[story.id]
+                ? "↩️ إلغاء الاكتمال"
+                : "✅ تمت القراءة",
+            ()=>toggleCompleted(story.id)
+        ),
+
+        makeButton(
+            "📝 ملاحظة",
+            ()=>openNote(story)
+        )
     );
 
-    toolbar.appendChild(
-        toolButton("🔖 حفظ الموضع",()=>saveBookmark(story))
+    card.appendChild(
+        toolbar
     );
 
-    card.appendChild(toolbar);
+    const text =
+        document.createElement("div");
 
-    const text=document.createElement("div");
-    text.className="story-text";
-    text.id="text-"+story.id;
-    text.textContent=story.content;
+    text.className =
+        "story-text";
+
+    text.id =
+        "story-text-" + story.id;
+
+    text.textContent =
+        story.content;
 
     card.appendChild(text);
 
-    const actions=document.createElement("div");
-    actions.className="actionsbar";
+    const note =
+        document.createElement("div");
 
-    const like=document.createElement("button");
-    like.className="tool "+(likes[story.id]?"liked":"");
-    like.textContent=likes[story.id]?"❤️ أعجبني":"🤍 إعجاب";
-    like.onclick=()=>toggleLike(story.id);
+    note.className =
+        "note-box " +
+        (notes[story.id] ? "show" : "");
 
-    const favorite=document.createElement("button");
-    const isFavorite=favorites.includes(story.id);
+    const noteText =
+        document.createElement("div");
 
-    favorite.className="tool "+(isFavorite?"faved":"");
-    favorite.textContent=isFavorite?"⭐ مفضلة":"☆ حفظ";
-    favorite.onclick=()=>toggleFavorite(story.id);
+    noteText.className =
+        "note-preview";
 
-    const share=document.createElement("button");
-    share.className="tool";
-    share.textContent="🔗 مشاركة";
-    share.onclick=()=>shareStory(story);
+    noteText.textContent =
+        notes[story.id]
+            ? "📝 " + notes[story.id]
+            : "";
 
-    actions.append(like,favorite,share);
-    card.appendChild(actions);
+    note.appendChild(noteText);
+
+    card.appendChild(note);
+
+    const footer =
+        document.createElement("div");
+
+    footer.className =
+        "story-footer";
+
+    const progressWrap =
+        document.createElement("div");
+
+    progressWrap.className =
+        "reading-progress";
+
+    const progressBar =
+        document.createElement("div");
+
+    progressBar.className =
+        "reading-progress-bar";
+
+    progressBar.id =
+        "progress-bar-" + story.id;
+
+    const currentProgress =
+        completed[story.id]
+            ? 100
+            : Number(progress[story.id] || 0);
+
+    progressBar.style.width =
+        currentProgress + "%";
+
+    progressWrap.appendChild(
+        progressBar
+    );
+
+    const progressLabel =
+        document.createElement("div");
+
+    progressLabel.className =
+        "progress-label";
+
+    progressLabel.id =
+        "progress-label-" + story.id;
+
+    progressLabel.textContent =
+        "تقدم القراءة: " +
+        Math.round(currentProgress) +
+        "%";
+
+    footer.append(
+        progressWrap,
+        progressLabel
+    );
+
+    const actions =
+        document.createElement("div");
+
+    actions.className = "actions";
+
+    const likeButton =
+        makeButton(
+            likes[story.id]
+                ? "❤️ أعجبني"
+                : "🤍 إعجاب",
+            ()=>toggleLike(story.id),
+            likes[story.id]
+                ? "tool success-btn"
+                : "tool"
+        );
+
+    const favoriteButton =
+        makeButton(
+            favorites.includes(story.id)
+                ? "⭐ مفضلة"
+                : "☆ حفظ",
+            ()=>toggleFavorite(story.id),
+            favorites.includes(story.id)
+                ? "tool favorite-btn"
+                : "tool"
+        );
+
+    const shareButton =
+        makeButton(
+            "🔗 مشاركة",
+            ()=>shareStory(story)
+        );
+
+    actions.append(
+        likeButton,
+        favoriteButton,
+        shareButton
+    );
+
+    footer.appendChild(actions);
+
+    card.appendChild(footer);
 
     return card;
 }
 
-function toolButton(text,callback){
-    const button=document.createElement("button");
-    button.className="tool";
-    button.type="button";
-    button.textContent=text;
-    button.onclick=callback;
-    return button;
+function makeBadge(text){
+
+    const badge =
+        document.createElement("span");
+
+    badge.className = "badge";
+
+    badge.textContent = text;
+
+    return badge;
 }
 
-function changeFont(id,delta){
-    const element=$("text-"+id);
-    if(!element)return;
+/* ==========================================
+   التعديل
+========================================== */
 
-    const current=parseFloat(
-        getComputedStyle(element).fontSize
+function editStory(id){
+
+    const story =
+        stories.find(
+            item=>item.id===id
+        );
+
+    if(!story) return;
+
+    if(story.ownerToken !== currentUserToken){
+        showToast(
+            "لا يمكنك تعديل هذا الفصل.",
+            "bad"
+        );
+        return;
+    }
+
+    $("editingId").value =
+        story.id;
+
+    $("storyTitle").value =
+        story.title || "";
+
+    $("authorName").value =
+        story.author || "";
+
+    $("storyPart").value =
+        story.part || "";
+
+    $("category").value =
+        story.category || "";
+
+    $("coverUrl").value =
+        story.cover || "";
+
+    $("description").value =
+        story.description || "";
+
+    $("storyContent").value =
+        story.content || "";
+
+    $("formTitle").textContent =
+        "✏️ تعديل الفصل";
+
+    $("saveStoryBtn").textContent =
+        "حفظ التعديلات";
+
+    $("publishPanel").scrollIntoView({
+        behavior:"smooth"
+    });
+}
+
+/* ==========================================
+   إعادة النموذج
+========================================== */
+
+function resetForm(){
+
+    $("editingId").value = "";
+    $("storyTitle").value = "";
+    $("authorName").value = "";
+    $("storyPart").value = "";
+    $("category").value = "";
+    $("coverUrl").value = "";
+    $("description").value = "";
+    $("storyContent").value = "";
+
+    $("formTitle").textContent =
+        "✍️ نشر فصل جديد";
+
+    $("saveStoryBtn").textContent =
+        "نشر الفصل";
+}
+
+/* ==========================================
+   نشر / تعديل
+========================================== */
+
+function submitStory(event){
+
+    event.preventDefault();
+
+    const title =
+        $("storyTitle").value.trim();
+
+    const author =
+        $("authorName").value.trim();
+
+    const part =
+        $("storyPart").value.trim();
+
+    const category =
+        $("category").value.trim();
+
+    const cover =
+        $("coverUrl").value.trim();
+
+    const description =
+        $("description").value.trim();
+
+    const content =
+        $("storyContent").value.trim();
+
+    if(!title || !author || !part || !content){
+
+        showToast(
+            "أكمل الحقول المطلوبة.",
+            "bad"
+        );
+
+        return;
+    }
+
+    const editingId =
+        $("editingId").value;
+
+    if(editingId){
+
+        const story =
+            stories.find(
+                item=>item.id===editingId
+            );
+
+        if(
+            !story ||
+            story.ownerToken !== currentUserToken
+        ){
+            showToast(
+                "لا يمكنك تعديل هذا الفصل.",
+                "bad"
+            );
+            return;
+        }
+
+        story.title = title;
+        story.author = author;
+        story.part = part;
+        story.category = category;
+        story.cover = cover;
+        story.description = description;
+        story.content = content;
+
+        saveData();
+        renderStories();
+        resetForm();
+
+        showToast(
+            "تم حفظ التعديلات ✅",
+            "ok"
+        );
+
+        return;
+    }
+
+    stories.unshift({
+        id:uid(),
+        title,
+        author,
+        part,
+        category,
+        cover,
+        description,
+        content,
+        ownerToken:currentUserToken,
+        createdAt:Date.now()
+    });
+
+    saveData();
+    renderStories();
+    resetForm();
+
+    showToast(
+        "تم نشر الفصل بنجاح ✅",
+        "ok"
     );
+}
 
-    const next=Math.max(
-        14,
-        Math.min(
-            32,
-            current+delta
+/* ==========================================
+   حذف
+========================================== */
+
+function deleteStory(id){
+
+    const story =
+        stories.find(
+            item=>item.id===id
+        );
+
+    if(!story) return;
+
+    if(
+        story.ownerToken !==
+        currentUserToken
+    ){
+        showToast(
+            "لا يمكنك حذف هذا الفصل.",
+            "bad"
+        );
+        return;
+    }
+
+    if(
+        !confirm(
+            "هل أنت متأكد من حذف هذا الفصل؟"
         )
+    ){
+        return;
+    }
+
+    stories =
+        stories.filter(
+            item=>item.id!==id
+        );
+
+    delete likes[id];
+    delete completed[id];
+    delete notes[id];
+    delete progress[id];
+
+    favorites =
+        favorites.filter(
+            item=>item!==id
+        );
+
+    if(bookmark?.id === id){
+        bookmark = null;
+    }
+
+    saveData();
+    renderStories();
+
+    showToast(
+        "تم حذف الفصل.",
+        "ok"
     );
-
-    element.style.fontSize=next+"px";
 }
 
-function toggleFocus(){
-    document.body.classList.toggle("focus");
-}
+/* ==========================================
+   الإعجاب
+========================================== */
 
 function toggleLike(id){
-    likes[id]=!likes[id];
+
+    likes[id] =
+        !likes[id];
+
     saveData();
     renderStories();
 }
 
+/* ==========================================
+   المفضلة
+========================================== */
+
 function toggleFavorite(id){
 
-    const index=favorites.indexOf(id);
+    const index =
+        favorites.indexOf(id);
 
-    if(index>=0){
-        favorites.splice(index,1);
-        showToast("تمت إزالة الفصل من المفضلة");
+    if(index >= 0){
+
+        favorites.splice(
+            index,
+            1
+        );
+
+        showToast(
+            "تمت إزالة الفصل من المفضلة."
+        );
+
     }else{
+
         favorites.push(id);
-        showToast("تم حفظ الفصل في المفضلة","ok");
+
+        showToast(
+            "تم حفظ الفصل في المفضلة ⭐",
+            "ok"
+        );
     }
 
     saveData();
     renderStories();
 }
 
+/* ==========================================
+   اكتمال القراءة
+========================================== */
+
+function toggleCompleted(id){
+
+    completed[id] =
+        !completed[id];
+
+    if(completed[id]){
+        progress[id] = 100;
+    }
+
+    saveData();
+    renderStories();
+
+    showToast(
+        completed[id]
+            ? "تم تحديد الفصل كمكتمل ✅"
+            : "تم إلغاء حالة الاكتمال."
+    );
+}
+
+/* ==========================================
+   حجم الخط
+========================================== */
+
+function changeFont(id,delta){
+
+    const element =
+        $("story-text-"+id);
+
+    if(!element) return;
+
+    const current =
+        parseFloat(
+            getComputedStyle(
+                element
+            ).fontSize
+        ) || 16;
+
+    const next =
+        Math.max(
+            14,
+            Math.min(
+                32,
+                current + delta
+            )
+        );
+
+    element.style.fontSize =
+        next + "px";
+}
+
+/* ==========================================
+   Bookmark
+========================================== */
+
 function saveBookmark(story){
 
-    localStorage.setItem(
-        BOOKMARK_KEY,
-        JSON.stringify({
-            id:story.id,
-            title:story.title,
-            part:story.part
-        })
-    );
+    bookmark = {
+        id:story.id,
+        title:story.title,
+        part:story.part
+    };
 
-    updateBookmark();
-    showToast("تم حفظ موضع القراءة","ok");
+    saveData();
+
+    updateResume();
+
+    showToast(
+        "تم حفظ موضع القراءة 🔖",
+        "ok"
+    );
 }
+
+function updateResume(){
+
+    if(!bookmark){
+
+        $("resumePanel")
+            .classList.remove("show");
+
+        return;
+    }
+
+    $("resumePanel")
+        .classList.add("show");
+
+    $("resumeText").textContent =
+        bookmark.title +
+        " — " +
+        bookmark.part;
+
+    $("resumeBtn").onclick = ()=>{
+
+        const element =
+            $("story-card-"+bookmark.id);
+
+        if(element){
+
+            element.scrollIntoView({
+                behavior:"smooth",
+                block:"center"
+            });
+
+        }else{
+
+            showToast(
+                "الفصل المحفوظ غير موجود.",
+                "bad"
+            );
+        }
+    };
+}
+
+/* ==========================================
+   مشاركة
+========================================== */
 
 async function shareStory(story){
 
-    const url=
-        location.href.split("#")[0]+
-        "#story-"+encodeURIComponent(story.id);
-
-    const data={
-        title:story.title+" — "+story.part,
-        text:story.title+" — "+story.part,
-        url
-    };
+    const url =
+        location.href.split("#")[0] +
+        "#story-card-" +
+        encodeURIComponent(story.id);
 
     try{
 
         if(navigator.share){
 
-            await navigator.share(data);
+            await navigator.share({
+                title:
+                    story.title +
+                    " — " +
+                    story.part,
+                text:
+                    story.title +
+                    " — " +
+                    story.part,
+                url
+            });
 
         }else{
 
             await navigator.clipboard.writeText(url);
 
-            showToast("تم نسخ رابط القصة","ok");
+            showToast(
+                "تم نسخ رابط القصة 🔗",
+                "ok"
+            );
         }
 
     }catch(error){
 
-        if(error.name!=="AbortError"){
-            showToast("تعذر مشاركة القصة","bad");
+        if(
+            error &&
+            error.name === "AbortError"
+        ){
+            return;
         }
+
+        showToast(
+            "تعذر مشاركة القصة.",
+            "bad"
+        );
     }
 }
 
-function deleteStory(id){
+/* ==========================================
+   الملاحظات
+========================================== */
 
-    const story=stories.find(item=>item.id===id);
+function openNote(story){
 
-    if(!story)return;
+    noteStoryId =
+        story.id;
 
-    if(story.ownerToken!==getToken()){
-        showToast("لا يمكنك حذف هذا الفصل","bad");
-        return;
-    }
+    $("noteTitle").textContent =
+        "📝 ملاحظتي — " +
+        story.part;
 
-    if(!confirm("هل تريد حذف هذا الفصل؟"))return;
+    $("noteInput").value =
+        notes[story.id] || "";
 
-    stories=stories.filter(
-        item=>item.id!==id
-    );
-
-    delete likes[id];
-
-    favorites=favorites.filter(
-        item=>item!==id
-    );
-
-    saveData();
-    renderStories();
-
-    showToast("تم حذف الفصل","ok");
+    $("noteModal")
+        .classList.add("open");
 }
 
-function publishStory(event){
+function saveNote(){
 
-    event.preventDefault();
+    if(!noteStoryId) return;
 
-    const story={
-        id:
-            "story_"+
-            Date.now()+
-            "_"+
-            Math.random().toString(36).slice(2),
-
-        title:$("storyTitle").value.trim(),
-        author:$("authorName").value.trim(),
-        part:$("storyPart").value.trim(),
-        cover:$("coverUrl").value.trim(),
-        content:$("storyContent").value.trim(),
-
-        ownerToken:getToken(),
-        createdAt:Date.now()
-    };
-
-    if(
-        !story.title||
-        !story.author||
-        !story.part||
-        !story.content
-    ){
-        showToast("يرجى تعبئة الحقول المطلوبة","bad");
-        return;
-    }
-
-    stories.unshift(story);
+    notes[noteStoryId] =
+        $("noteInput")
+            .value
+            .trim();
 
     saveData();
 
-    event.target.reset();
+    $("noteModal")
+        .classList.remove("open");
 
     renderStories();
 
-    showToast("تم نشر الفصل بنجاح","ok");
+    showToast(
+        "تم حفظ الملاحظة ✅",
+        "ok"
+    );
+}
+
+/* ==========================================
+   النسخ الاحتياطي
+========================================== */
+
+function openBackup(){
+
+    $("backupModal")
+        .classList.add("open");
+}
+
+function closeBackup(){
+
+    $("backupModal")
+        .classList.remove("open");
 }
 
 function exportData(){
 
-    const data={
-        version:1,
-        exportedAt:new Date().toISOString(),
+    const backup = {
+        version:4,
+        createdAt:new Date().toISOString(),
         stories,
         likes,
-        favorites
+        favorites,
+        completed,
+        notes,
+        progress,
+        bookmark
     };
 
-    const blob=new Blob(
-        [JSON.stringify(data,null,2)],
-        {type:"application/json"}
-    );
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    backup,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:"application/json"
+            }
+        );
 
-    const url=URL.createObjectURL(blob);
-    const link=document.createElement("a");
+    const url =
+        URL.createObjectURL(blob);
 
-    link.href=url;
-    link.download=
-        "hikaya_backup_"+
-        Date.now()+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "hikaya_backup_" +
+        Date.now() +
         ".json";
+
+    document.body.appendChild(link);
 
     link.click();
 
+    link.remove();
+
     setTimeout(
-        ()=>URL.revokeObjectURL(url),
+        ()=>{
+            URL.revokeObjectURL(url);
+        },
         1000
     );
 
-    showToast("تم تصدير النسخة الاحتياطية","ok");
+    showToast(
+        "تم تصدير النسخة الاحتياطية ✅",
+        "ok"
+    );
 }
 
 function importData(file){
 
-    if(!file)return;
+    if(!file) return;
 
-    const reader=new FileReader();
+    const reader =
+        new FileReader();
 
-    reader.onload=event=>{
+    reader.onload = ()=>{
 
         try{
 
-            const data=
-                JSON.parse(event.target.result);
+            const data =
+                JSON.parse(
+                    reader.result
+                );
 
-            const importedStories=
-                Array.isArray(data)
-                    ?data
-                    :data.stories;
-
-            if(!Array.isArray(importedStories)){
+            if(
+                !data ||
+                !Array.isArray(
+                    data.stories
+                )
+            ){
                 throw new Error();
             }
 
-            stories=importedStories;
-            likes=
-                Array.isArray(data)
-                    ?{}
-                    :(data.likes||{});
+            stories = data.stories;
+            likes = data.likes || {};
+            favorites =
+                Array.isArray(data.favorites)
+                    ? data.favorites
+                    : [];
 
-            favorites=
-                Array.isArray(data)
-                    ?[]
-                    :(data.favorites||[]);
+            completed =
+                data.completed || {};
+
+            notes =
+                data.notes || {};
+
+            progress =
+                data.progress || {};
+
+            bookmark =
+                data.bookmark || null;
 
             saveData();
             renderStories();
+            updateStats();
+            updateResume();
 
-            $("backupModal").classList.remove("open");
+            closeBackup();
 
-            showToast("تمت استعادة البيانات بنجاح","ok");
+            showToast(
+                "تمت استعادة البيانات بنجاح ✅",
+                "ok"
+            );
 
         }catch{
 
             showToast(
-                "ملف JSON غير صالح",
+                "ملف النسخة الاحتياطية غير صالح.",
                 "bad"
             );
         }
     };
 
-    reader.readAsText(file,"utf-8");
+    reader.readAsText(
+        file,
+        "utf-8"
+    );
 }
 
-function setupTheme(){
+/* ==========================================
+   حذف البيانات المحلية
+========================================== */
 
-    const theme=
-        localStorage.getItem(THEME_KEY)||"dark";
+function clearLocalData(){
 
-    document.documentElement.dataset.theme=theme;
+    const ok =
+        confirm(
+            "سيتم حذف جميع القصص والبيانات المحلية من هذا المتصفح. هل أنت متأكد؟"
+        );
 
-    updateThemeButton(theme);
-}
+    if(!ok) return;
 
-function updateThemeButton(theme){
-
-    $("themeBtn").textContent=
-        theme==="light"
-            ?"🌙 الوضع الداكن"
-            :"☀️ الوضع الفاتح";
-}
-
-function toggleTheme(){
-
-    const current=
-        document.documentElement.dataset.theme;
-
-    const next=
-        current==="light"
-            ?"dark"
-            :"light";
-
-    document.documentElement.dataset.theme=next;
-
-    localStorage.setItem(
-        THEME_KEY,
-        next
+    Object.values(KEYS).forEach(
+        key=>{
+            localStorage.removeItem(key);
+        }
     );
 
-    updateThemeButton(next);
+    location.reload();
 }
+
+/* ==========================================
+   التقدم أثناء القراءة
+========================================== */
+
+function updateReadingProgress(){
+
+    const cards =
+        document.querySelectorAll(
+            ".story-card"
+        );
+
+    cards.forEach(card=>{
+
+        const rect =
+            card.getBoundingClientRect();
+
+        if(
+            rect.top <
+            window.innerHeight * .65 &&
+            rect.bottom >
+            window.innerHeight * .20
+        ){
+
+            const total =
+                Math.max(
+                    1,
+                    rect.height -
+                    window.innerHeight * .1
+                );
+
+            const seen =
+                Math.max(
+                    0,
+                    Math.min(
+                        total,
+                        window.innerHeight * .65 -
+                        rect.top
+                    )
+                );
+
+            const value =
+                Math.min(
+                    100,
+                    Math.max(
+                        0,
+                        (seen / total) * 100
+                    )
+                );
+
+            const id =
+                card.id.replace(
+                    "story-card-",
+                    ""
+                );
+
+            if(
+                value >
+                Number(progress[id] || 0)
+            ){
+
+                progress[id] =
+                    Math.round(value);
+
+                localStorage.setItem(
+                    KEYS.progress,
+                    JSON.stringify(progress)
+                );
+
+                const bar =
+                    $("progress-bar-"+id);
+
+                const label =
+                    $("progress-label-"+id);
+
+                if(bar){
+                    bar.style.width =
+                        progress[id] + "%";
+                }
+
+                if(label){
+                    label.textContent =
+                        "تقدم القراءة: " +
+                        progress[id] +
+                        "%";
+                }
+            }
+        }
+    });
+}
+
+/* ==========================================
+   الشريط العلوي
+========================================== */
+
+function updateTopProgress(){
+
+    const max =
+        document.documentElement.scrollHeight -
+        window.innerHeight;
+
+    const value =
+        max > 0
+            ? (
+                window.scrollY /
+                max
+            ) * 100
+            : 0;
+
+    $("topProgress")
+        .style.width =
+        Math.min(100,value) + "%";
+}
+
+/* ==========================================
+   الفلاتر السريعة
+========================================== */
 
 function resetFilters(){
 
-    authorFilter="";
-    searchQuery="";
+    searchQuery = "";
+    authorFilter = "";
 
-    $("searchInput").value="";
-    $("authorSearch").value="";
+    $("searchInput").value = "";
+    $("authorSearch").value = "";
+    $("sortSelect").value = "new";
+    $("onlyFavorites").checked = false;
+    $("onlyDone").checked = false;
 
     renderStories();
 }
 
-function updateProgress(){
+function showFavoritesOnly(){
 
-    const max=
-        document.documentElement.scrollHeight-
-        window.innerHeight;
+    $("onlyFavorites").checked = true;
+    $("onlyDone").checked = false;
 
-    const percent=
-        max>0
-            ?(window.scrollY/max)*100
-            :0;
-
-    $("progress").style.width=
-        percent+"%";
+    renderStories();
 }
 
-function init(){
+function showAllStories(){
 
-    getToken();
+    $("onlyFavorites").checked = false;
+    $("onlyDone").checked = false;
+
+    authorFilter = "";
+
+    renderStories();
+}
+
+/* ==========================================
+   التشغيل
+========================================== */
+
+function initialize(){
+
+    currentUserToken =
+        getToken();
+
     loadData();
     setupTheme();
+    renderStories();
 
-    $("themeBtn").onclick=toggleTheme;
+    /* أزرار */
+    $("themeBtn").onclick =
+        toggleTheme;
 
-    $("publishBtn").onclick=()=>{
-        $("publishBox").scrollIntoView({
-            behavior:"smooth"
-        });
-    };
+    $("backupBtn").onclick =
+        openBackup;
 
-    $("storyForm").onsubmit=publishStory;
+    $("closeBackupBtn").onclick =
+        closeBackup;
 
-    $("searchInput").oninput=event=>{
-        searchQuery=event.target.value;
-        renderStories();
-    };
-
-    $("authorSearch").oninput=()=>{
-        renderAuthors();
-    };
-
-    $("authors").onclick=event=>{
-
-        const item=
-            event.target.closest("[data-author]");
-
-        if(!item)return;
-
-        authorFilter=
-            item.dataset.author;
-
-        renderStories();
-    };
-
-    $("resetBtn").onclick=
-        resetFilters;
-
-    $("backupBtn").onclick=()=>{
-        $("backupModal").classList.add("open");
-    };
-
-    $("closeBackup").onclick=()=>{
-        $("backupModal").classList.remove("open");
-    };
-
-    $("exportBtn").onclick=
+    $("exportBtn").onclick =
         exportData;
 
-    $("importBtn").onclick=()=>{
-        $("importFile").click();
-    };
+    $("importBtn").onclick =
+        () => $("importFile").click();
 
-    $("importFile").onchange=
+    $("importFile").onchange =
         event=>{
-            importData(event.target.files[0]);
-            event.target.value="";
+            importData(
+                event.target.files[0]
+            );
+            event.target.value = "";
         };
 
-    $("backupModal").onclick=event=>{
-        if(event.target.id==="backupModal"){
-            $("backupModal").classList.remove("open");
-        }
-    };
+    $("publishBtn").onclick =
+        ()=>{
+            $("publishPanel")
+                .scrollIntoView({
+                    behavior:"smooth"
+                });
+        };
+
+    $("heroPublishBtn").onclick =
+        ()=>{
+            $("publishPanel")
+                .scrollIntoView({
+                    behavior:"smooth"
+                });
+        };
+
+    $("showFavoritesBtn").onclick =
+        showFavoritesOnly;
+
+    $("showAllBtn").onclick =
+        showAllStories;
+
+    /* النموذج */
+
+    $("storyForm").onsubmit =
+        submitStory;
+
+    $("cancelEditBtn").onclick =
+        resetForm;
+
+    /* البحث */
+
+    $("searchInput").oninput =
+        event=>{
+            searchQuery =
+                event.target.value;
+
+            renderStories();
+        };
+
+    $("authorSearch").oninput =
+        renderAuthors;
+
+    $("sortSelect").onchange =
+        renderStories;
+
+    $("onlyFavorites").onchange =
+        renderStories;
+
+    $("onlyDone").onchange =
+        renderStories;
+
+    $("resetFilters").onclick =
+        resetFilters;
+
+    $("authorList").onclick =
+        event=>{
+
+            const row =
+                event.target.closest(
+                    "[data-author]"
+                );
+
+            if(!row) return;
+
+            authorFilter =
+                row.dataset.author;
+
+            renderStories();
+        };
+
+    /* النسخ */
+
+    $("clearLocalBtn").onclick =
+        clearLocalData;
+
+    /* الملاحظات */
+
+    $("saveNoteBtn").onclick =
+        saveNote;
+
+    $("closeNoteBtn").onclick =
+        ()=>{
+            $("noteModal")
+                .classList.remove("open");
+        };
+
+    /* إغلاق النوافذ */
+
+    $("backupModal").onclick =
+        event=>{
+            if(
+                event.target.id ===
+                "backupModal"
+            ){
+                closeBackup();
+            }
+        };
+
+    $("noteModal").onclick =
+        event=>{
+            if(
+                event.target.id ===
+                "noteModal"
+            ){
+                $("noteModal")
+                    .classList.remove("open");
+            }
+        };
 
     document.addEventListener(
         "keydown",
         event=>{
-            if(event.key==="Escape"){
-                $("backupModal").classList.remove("open");
-                document.body.classList.remove("focus");
+
+            if(
+                event.key === "Escape"
+            ){
+
+                closeBackup();
+
+                $("noteModal")
+                    .classList.remove("open");
+
+                document.body
+                    .classList.remove(
+                        "focus-mode"
+                    );
             }
         }
     );
 
-    renderStories();
-    updateProgress();
+    /* التمرير */
+
+    window.addEventListener(
+        "scroll",
+        ()=>{
+            updateTopProgress();
+            updateReadingProgress();
+        },
+        {
+            passive:true
+        }
+    );
+
+    updateTopProgress();
+    updateResume();
 }
 
-window.addEventListener(
-    "scroll",
-    updateProgress,
-    {passive:true}
-);
+/* ==========================================
+   بدء الموقع
+========================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
-    init
+    initialize
 );
 
 </script>
